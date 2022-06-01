@@ -58,7 +58,7 @@ function App() {
           </Route>
    
           <Route element={ <RequiredAuth allowedRoles={[ ROLES.Member ]}/> }>
-            <Route path="createprofile" element = { <CreatorProfile /> } />
+            <Route path="creatorprofile" element = { <CreatorProfile /> } />
           </Route>
           <Route element={ <RequiredAuth allowedRoles={[ ROLES.Advertiser, ROLES.Member ]}/> }>
             <Route path="account" element = { <Account /> } />

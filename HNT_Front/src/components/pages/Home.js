@@ -1,7 +1,5 @@
 import { useNavigate, Link } from "react-router-dom";
 import useLogout from '../../hooks/useLogout';
-// import { useContext } from "react";
-// import AuthContext from "../context/AuthProvider";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -21,13 +19,28 @@ const Home = () => {
             <br />
             <p>You are logged in!</p>
             <br />
-            <Link to="/editor">Go to the Editor page</Link>
+            Public
+            <Link to="/homepublic">Go to homepublic</Link>
             <br />
+            <Link to="/listener">Go to listener</Link>
+            <br />
+            Private
+            {/* <Link to="/editor">Go to the Editor page</Link>
+            <br /> */}
             <Link to="/admin">Go to the Admin page</Link>
             <br />
             <Link to="/lounge">Go to the Lounge</Link>
             <br />
-            <Link to="/homepublic">Go to the link page</Link>
+            <Link to="/creatorprofile">Go to Creator Profile</Link>
+            <br />
+            <Link to="/account">Go to Account</Link>
+            <br />
+            <Link to="/ad">Go to Ad</Link>
+            <br />
+            <Link to="/advertiser">Go to Advertiser</Link>
+            <br />
+            <Link to="/campaign">Go to Campaign</Link>
+
             <div className="flexGrow">
                 <button onClick={ signOut }>Sign Out</button>
             </div>

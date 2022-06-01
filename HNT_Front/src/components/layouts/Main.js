@@ -4,7 +4,7 @@ import Navbar from './nav/Navbar';
 const Layout = () =>{
     return(
         <main className="App">
-            {/* <Navbar /> */}
+            <Navbar />
             <Outlet />
         </main>
     )

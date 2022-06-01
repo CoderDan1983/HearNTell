@@ -38,20 +38,21 @@ export default function Nav(){
                     <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
                 </div>
                 <ul className={click ? 'nav-menu active' : 'nav-menu'}>
+                    {/* Home, services, products, contact us, sign up. */}
                     <li className='nav-item'>
                         <Link to="/" className="nav-links" onClick={closeMobileMenu}>
                             Home
                         </Link>
                     </li>
                     <li className='nav-item' onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-                        <Link to="/services" className="nav-links" onClick={closeMobileMenu}>
-                            Services <i className='fas fa-caret-down' />
+                        <Link to="/listener" className="nav-links" onClick={closeMobileMenu}>
+                            Listen <i className='fas fa-caret-down' />
                         </Link>
                         {dropdown && <Dropdown />}
                     </li>
                     <li className='nav-item'>
-                        <Link to="/products" className="nav-links" onClick={closeMobileMenu}>
-                            Products
+                        <Link to="/admin" className="nav-links" onClick={closeMobileMenu}>
+                            Admin
                         </Link>
                     </li>
                     <li className='nav-item'>
@@ -60,7 +61,7 @@ export default function Nav(){
                         </Link>
                     </li>
                     <li className='nav-item'>
-                        <Link to="/sign-up" className="nav-links-mobile" onClick={closeMobileMenu}>
+                        <Link to="/register" className="nav-links-mobile" onClick={closeMobileMenu}>
                             Sign Up
                         </Link>
                     </li>
