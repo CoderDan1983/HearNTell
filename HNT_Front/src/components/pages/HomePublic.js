@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom"
 
-const LinkPage = () => {
+const HomePublic = () => {
     return (
         <section>
             <h1>Links</h1>
@@ -18,4 +18,4 @@ const LinkPage = () => {
     )
 }
 
-export default LinkPage;
+export default HomePublic;

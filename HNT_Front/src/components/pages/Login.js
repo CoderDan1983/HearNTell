@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect } from 'react';
-import useAuth from '../hooks/useAuth';
+import useAuth from '../../hooks/useAuth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import useInput from '../hooks/useInput';
-import useToggle from '../hooks/useToggle';
+import useInput from '../../hooks/useInput';
+import useToggle from '../../hooks/useToggle';
 
-import axios from '../api/axios';
+import axios from '../../api/axios';
 const LOGIN_URL = '/auth'; //* matched in his node.js course :)
 const Login = () => {
     const { setAuth } = useAuth(); //, persist, setPersist 
@@ -112,6 +112,7 @@ const Login = () => {
                 />
                 
                 <button>Sign In</button>
+                <div>Can you see me?</div>
                 <div className="persistCheck">
                     <input 
                         type="checkbox"
