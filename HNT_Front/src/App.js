@@ -27,6 +27,7 @@ const ROLES = {
   'Advertiser': 1999,
   'Admin': 5150
 }
+
 function App() {
 
   return (
@@ -42,16 +43,17 @@ function App() {
 
         {/* we want to protect these routes */}
         <Route element={ <PersistLogin /> }>
-          <Route element={ <RequiredAuth allowedRoles={[ ROLES.User ]}/> }>
+          <Route element={ <RequiredAuth allowedRoles={[ ROLES.Member, ROLES.RestrictedMember ]}/> }>
             <Route path="/" element = { <Home /> } />
           </Route>
-          <Route element={ <RequiredAuth allowedRoles={[ ROLES.Editor ]}/> }>
+          <Route element={ <RequiredAuth allowedRoles={[ ROLES.Member ]}/> }>
             <Route path="editor" element = { <Editor /> } />
           </Route>
           <Route element={ <RequiredAuth allowedRoles={[ ROLES.Admin ]}/> }>
             <Route path="admin" element = { <Admin /> } />
           </Route>
-          <Route element={ <RequiredAuth allowedRoles={[ ROLES.Editor, ROLES.Admin ]}/> }>
+          <Route element={ <RequiredAuth allowedRoles={[ 
+            ROLES.Member, ROLES.Admin, ROLES.Advertiser, ROLES.RestrictedMember ]}/> }>
             <Route path="lounge" element = { <Lounge /> } />
           </Route>
    

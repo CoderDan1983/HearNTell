@@ -143,6 +143,10 @@
       transition: 250ms;
     }
   
+    /* replacing button with .hidden class */
+    .hidden {
+      display: none;
+    }
     /* button {
       display: none;
     } */

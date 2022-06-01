@@ -7,11 +7,12 @@ const userSchema = new Schema({
         required: true
     },
     roles: {
-        User: {
+        Member: {
             type: Number,
-            default: 2001
+            default: 1984
         },
-        Editor: Number,
+        RestrictedMember: Number,
+        Advertiser: Number,
         Admin: Number
     },
     password: {

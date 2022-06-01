@@ -58,6 +58,7 @@ const Login = () => {
             resetUser();
             setPwd('');
             //# setSuccess(true);
+            
             navigate(from, { replace: true });
         }
         catch(err){

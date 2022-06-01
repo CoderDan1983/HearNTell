@@ -4,13 +4,13 @@ import jwt_decode from "jwt-decode";
 
 const RequireAuth = ({ allowedRoles }) => { //Version A: whether the user is logged in or not :D
     const { auth } = useAuth();
-
     const location = useLocation();
 
     const decoded = auth?.accessToken ?
     jwt_decode(auth.accessToken)
     : undefined;
-
+    console.log('decoded is: ');
+    console.log(decoded);
     const roles = decoded?.UserInfo?.roles || [];
 
     return (

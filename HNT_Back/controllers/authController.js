@@ -5,11 +5,12 @@ const jwt = require('jsonwebtoken');
 const handleLogin = async (req, res) => {
     console.log('handleLogin!')
     const { user, pwd } = req.body;
-    console.log(req.body);
-    console.log('.........')
+    // console.log(req.body);
+    // console.log('.........')
     if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' });
 
     const foundUser = await User.findOne({ username: user }).exec();
+
     if (!foundUser) return res.sendStatus(401); //Unauthorized 
     // evaluate password 
     const match = await bcrypt.compare(pwd, foundUser.password);
@@ -51,7 +52,7 @@ const handleLogin = async (req, res) => {
         //console.log(res);
         // Send authorization roles and access token to user
         // console.log('preparing to send: ');
-        // console.log({ roles, accessToken });
+        console.log({ accessToken }); // roles, 
         // console.log('------------------')
         res.json({ accessToken }); //roles already sent in access token ^_^
     } else {
