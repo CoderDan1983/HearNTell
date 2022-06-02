@@ -144,6 +144,10 @@ li {
     margin: 0 5px 2px 2px;
 }
 
+.audioItem {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
 
 
 

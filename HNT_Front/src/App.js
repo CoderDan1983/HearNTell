@@ -2,7 +2,7 @@ import Account from './components/pages/Account';
 import Ad from './components/pages/Ad';
 import Advertiser from './components/pages/Advertiser';
 import Campaign from './components/pages/Campaign';
-import CreatorProfile from './components/pages/CreatorProfile';
+import CreatorProfile from './components/pages/creator/CreatorProfile';
 import Listener from './components/pages/Listener';
 
 import Register from './components/pages/Register';
@@ -18,11 +18,13 @@ import HomePublic from './components/pages/HomePublic';
 import RequiredAuth from './components/pages/RequireAuth';
 import PersistLogin from './components/pages/PersistLogin';
 import { Routes, Route } from 'react-router-dom';
+import CreatorHomepage from './components/pages/creator/CreatorHomepage';
+import EditCreatorProfile from './components/pages/creator/EditCreatorProfile';
 
 //Hackers that are good enough could see your javascript
 //they would see this.  Up to you if you want to show it, though ^_^.
 const ROLES = { 
-  'RestrictedMember': 1354,
+  //'RestrictedMember': 1354,
   'Member': 1984,
   'Advertiser': 1999,
   'Admin': 5150
@@ -43,17 +45,23 @@ function App() {
 
         {/* we want to protect these routes */}
         <Route element={ <PersistLogin /> }>
-          <Route element={ <RequiredAuth allowedRoles={[ ROLES.Member, ROLES.RestrictedMember ]}/> }>
+          <Route element={ <RequiredAuth allowedRoles={[ ROLES.Member ]}/> }>
             <Route path="/" element = { <Home /> } />
           </Route>
           <Route element={ <RequiredAuth allowedRoles={[ ROLES.Member ]}/> }>
             <Route path="editor" element = { <Editor /> } />
           </Route>
+
+          <Route element={ <RequiredAuth allowedRoles={[ ROLES.Member ]}/> }>
+            <Route path="creatorHomepage" element = { <CreatorHomepage /> } />
+            <Route path="editCreatorProfile" element = { <EditCreatorProfile /> } />
+          </Route>
+
           <Route element={ <RequiredAuth allowedRoles={[ ROLES.Admin ]}/> }>
             <Route path="admin" element = { <Admin /> } />
           </Route>
           <Route element={ <RequiredAuth allowedRoles={[ 
-            ROLES.Member, ROLES.Admin, ROLES.Advertiser, ROLES.RestrictedMember ]}/> }>
+            ROLES.Member, ROLES.Admin, ROLES.Advertiser ]}/> }>
             <Route path="lounge" element = { <Lounge /> } />
           </Route>
    

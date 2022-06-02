@@ -27,6 +27,11 @@ const Home = () => {
             Private
             {/* <Link to="/editor">Go to the Editor page</Link>
             <br /> */}
+             <Link to="/creatorHomepage">Go to the Creator Home page</Link>
+            <br />
+            <Link to="/editCreatorProfile">Go to the editCreatorProfile page</Link>
+            <br />
+
             <Link to="/admin">Go to the Admin page</Link>
             <br />
             <Link to="/lounge">Go to the Lounge</Link>
