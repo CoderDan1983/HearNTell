@@ -5,7 +5,7 @@
 // }
 
 const ROLES_LIST = { 
-    'RestrictedMember': 1354,
+    //'RestrictedMember': 1354,
     'Member': 1984,
     'Advertiser': 1999,
     'Admin': 5150
