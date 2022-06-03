@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const TagFit = new Schema({
   story_id: String,
-  tag_id: String,
+  // tag_id: String, // Not sure if this is needed.
   tag_name: String,
   fit: Boolean,
 });

@@ -1,6 +1,7 @@
 //* Story Model
 
 const mongoose = require('mongoose'); 
+const TagFit = require('./TagFit');
 const Schema = mongoose.Schema;
 
 const Story = new Schema({
@@ -14,32 +15,33 @@ const Story = new Schema({
 });
 
 //* Checks to see if given tag fits this story. If the story has a hundred tag fit responses and more than 50% say it doesn't fit
-Story.methods.checkTagFit(tag) = async function() {
+Story.methods.checkTagFit(tag_name) = async function() {
   
-  //* Find campaigns that contain the tag in their array of tags.
-  const campaigns = await Campaign.find({tags: tag}); 
+  //* Get the "tag fits" for this story.
+  const tag_fits = await TagFit.find({story_id: this.id, tag_name: tag_name});
 
-  //* Find highest bidding campaign and set it to one cent more than the second highest bid.
-  let highest_bid = 0;
-  let second_highest_bid = 0;
-  let highest_bidder_id = "";
+  //* Setup variables we will need to count tag fits
+  let tag_does_fit = 0;
+  let tag_does_not_fit = 0;
 
-  //* Iternate through the campaigns and find the highest bidder and record their account_id.
-  campaigns.forEach(campaign => {
-    if (campaign.max_bid > highest_bid) {
-      second_highest_bid = highest_bid;
-      highest_bid = campaign.max_bid;
-      highest_bidder_id = campaign.account_id;
+  //* Add up the fits and doesn't fit votes.
+  tag_fits.forEach(tag_fit => {
+    if (tag_fit.fit) {
+      tag_does_fit = tag_does_fit + 1;
+  } else {
+    tag_does_not_fit = tag_does_not_fit + 1;
   });
 
-  //* Adjust highest bid to one cent above second highest bid
-  highest_bid = second_highest_bid + 0.01;
+  //* If there are a hundred responses or more and less than 50% say it fits, delete the tag from the story.
+    //* But leave the tag_fits so if the creator adds that tag again, it will be deleted.
+  if ((tag_does_fit + tag_does_not_fit) >= 100) {
+    if (tag_does_not_fit > tag_does_fit) {
+      this.tag_names = arr.filter(e => e !== tag_name);
+    }
+  }
 
   //* Save the new information
-  this.highest_bid = highest_bid;
-  this.highest_bidder_id = highest_bidder_id;
   await this.save();
-
 }
 
 module.exports = mongoose.model('story', Story);
