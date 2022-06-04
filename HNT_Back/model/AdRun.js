@@ -8,7 +8,8 @@ const AdRun = new Schema({
   ad_campaign_id: String,
   price: Number,
   tag_used_id: String,
-  time_ran: Date
+  time_ran: Date,
+  account_id: String, //* If there is one. Non-logged in listeners won't have one.
 });
 
 module.exports = mongoose.model('ad_run', AdRun);
