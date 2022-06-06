@@ -1,5 +1,6 @@
 import '../../index.css';
-export default function StoryItem({ title, rating, author, length, tags }){
+import { Link } from "react-router-dom";
+export default function StoryItem({ title, rating, author, length, tags, to }){
     function displayTime(sec){
         let time = sec;
         const hours = Math.floor(sec / 3600);
@@ -14,17 +15,20 @@ export default function StoryItem({ title, rating, author, length, tags }){
 
         return returnVal;  
     }
-    return(<div className='storyItem'>
-        <div className='storyItemTop'>
-            <span className="storyItemTitle">{title}</span>
-            <span className="storyItemAuthor">{rating}</span>
-            <span className="storyItemAuthor">{author}</span>
-            <span className="storyItemAuthor">{ displayTime(length) }</span>
+    
+    return(<Link to= { to } >
+        <div className='storyItem'>
+            <div className='storyItemTop' >
+                <span className="storyItemTitle">{title}</span>
+                <span className="storyItemAuthor">{rating}</span>
+                <span className="storyItemAuthor">{author}</span>
+                <span className="storyItemAuthor">{ displayTime(length) }</span>
+            </div>
+            <div className="storyItemTags">
+                {tags.map((tag, i)=>{
+                    return <span key={ i } >{tag}</span>
+                })}
+            </div>
         </div>
-        <div className="storyItemTags">
-            {tags.map((tag)=>{
-                return <span>{tag}</span>
-            })}
-        </div>
-    </div>)
+    </Link>)
 }

@@ -153,26 +153,54 @@ li {
     background-color: #ddd;
     color: black;
     border: 1px #aaa;
-    border-radius: 6px;
+    border-radius: 12px;
     padding: 6px;
     margin: 2px;
 }
+
+.storyItem:hover {
+    color: white;
+    background-color: aqua;
+}
+
 .storyItemTop {
     display: grid;
     grid-template-columns: auto auto auto auto;
 }
 .storyItemTitle {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .storyItemAuthor {
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .storyItemTags {
     font-size: 10px;
 }
 
+.tagContainer {
+    display: flex;
+    flex-wrap: wrap;
+    flex-flow: row wrap;
+    
+    flex-direction: row;
+    width: 300px;
+    /* grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+    grid-template-rows: auto; */
+    /* grid-template-columns: repeat(auto-fit, minmax(20px, 1fr)); */
+}
+.tag {
+    background-color: rgb(60, 94, 136);
+    border-radius: 12px;
+    border: 1px rgb(26, 62, 161) solid;
+    display: grid;
+    grid-template-columns: auto auto;
+    align-content: center;
+    justify-content: start;
+    align-items: center;
+    min-width: min-content;
+}
 
 /*
 

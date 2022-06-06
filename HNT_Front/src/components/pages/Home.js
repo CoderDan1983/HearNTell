@@ -3,6 +3,9 @@ import useLogout from '../../hooks/useLogout';
 import Listener from './listener/Listener';
 import StoryItem from "../parts/StoryItem";
 
+import { Button, Icon } from '@mui/material';
+// import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import { AccessAlarm, ThreeDRotation, Forest as ForestIcon } from '@mui/icons-material';
 const Home = () => {
     const navigate = useNavigate();
     const logout = useLogout();
@@ -13,14 +16,16 @@ const Home = () => {
             rating: 4.2,
             author: "stephen king",
             length: 2493,
-            tags: ["fairy tale", "allegory"]
+            tags: ["fairy tale", "allegory"],
+            to: '/listener',
         },
         {
             title: "boy who cried woof",
             rating: 3.7,
             author: "stephenie meyer",
             length: 99432,
-            tags: ["fairy tale", "children", "terror"]
+            tags: ["fairy tale", "children", "terror"],
+            to: '/listener',
         }
     ]
 
@@ -38,17 +43,24 @@ const Home = () => {
             <br />
             <p>You are logged in!</p>
             <br />
-
-            { fakeStories.map((story)=>{
+            <Button variant="contained">Hello World</Button>
+            <AccessAlarm />
+            <ThreeDRotation />
+            <ForestIcon />
+            <Icon>Add circle</Icon>
+            {/* <svg data-testid="AccessAlarm">Oh</svg>
+            <svg data-testid="ThreeDRotation">NO!</svg> */}
+            { fakeStories.map((story, index)=>{
                 return (<StoryItem 
+                    key= { index }
                     title={story.title} 
                     rating={story.rating}
                     author={story.author}
                     length={story.length} 
                     tags={story.tags}
+                    to= { story.to }
                 />)
             })}
-
 
 
 

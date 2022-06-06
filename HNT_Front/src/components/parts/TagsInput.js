@@ -1,5 +1,7 @@
 // TagsInput.jsx
 import { useState } from 'react';
+import { Button, Icon } from '@mui/material';
+import { Close } from '@mui/icons-material';
 
 const TagsInput = ({ selectedTags }) => {
     const [tags, setTags] = useState([]);
@@ -17,15 +19,16 @@ const TagsInput = ({ selectedTags }) => {
 
     return (
         <div className="tags-input">
-            <ul>
+            <ul className="tagContainer">
                 {tags.map((tag, index) => (
-                    <li key={index}>
-                        <span>{tag}</span>
-                        <i 
-                            className="material-icons"
-                            onClick={ ()=> removeTags(index) }>
-                            close
-                        </i>
+                    <li key={index} className="tag" >
+                        <span>
+                            {tag}
+                        </span>
+                        <Close 
+                            fontSize='inherit'
+                            onClick={ ()=> removeTags(index) } 
+                        />
                     </li>
                 ))}
             </ul>
@@ -38,3 +41,10 @@ const TagsInput = ({ selectedTags }) => {
     );
 };
 export default TagsInput;
+
+
+{/* <i 
+className="material-icons"
+onClick={ ()=> removeTags(index) }>
+close
+</i> */}
