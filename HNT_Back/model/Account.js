@@ -1,4 +1,3 @@
-//* Records when an ad is run. For billing and analytics.
 
 const mongoose = require('mongoose'); 
 const Schema = mongoose.Schema;
