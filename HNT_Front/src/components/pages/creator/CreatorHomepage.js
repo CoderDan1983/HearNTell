@@ -2,11 +2,14 @@ import AudioItem from "./AudioItem";
 import useAuth from "../../../hooks/useAuth";
 import './../../../index.css';
 
+import TagsInput from "../../parts/TagsInput";
+
 export default function CreatorHomepage({ name, imageUrl }){
     const auth = useAuth();
     const accessToken = auth?.accessToken;
     console.log('accessToken is: ');
     console.log(accessToken);
+    const selectedTags = tags => { console.log(tags) };
     const exampleStories = [
         {
             title: "old mcDonald bought the farm",
@@ -32,6 +35,7 @@ export default function CreatorHomepage({ name, imageUrl }){
     return(
         <>
             <h1>Welcome, { name }</h1>
+            <TagsInput selectedTags={ selectedTags } />
             <button onClick={ goToEditProfile() }>Edit Profile</button>
             <div>
                 <h2>My Stories</h2>

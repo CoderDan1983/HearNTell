@@ -14,7 +14,7 @@ export default function Nav(){
     const [dropdown, setDropdown] = useState(false);
     const handleClick = () => setClick(!click);
     const closeMobileMenu = () => setClick(false);
-    const [ decoded, roles ] = useGetRoles();
+    const { decoded, roles } = useGetRoles();
 
     const onMouseEnter = () => {
         if(window.innerWidth < 960){
@@ -77,7 +77,8 @@ export default function Nav(){
                             to={ item.to } 
                             name={ item.name } 
                             events={ events } 
-                            dropdown={ item.dropdown }
+                            hasDropdown = { item.hasDropdown }
+                            dropdown={ dropdown }
                         />)
                     })}
                 </ul>
@@ -86,53 +87,3 @@ export default function Nav(){
         </>
     )
 }
-
-
-
-
-{/* <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-<li className='nav-item'>
-    <Link to={ accessToken ? "/" : "/homepublic"} className="nav-links" onClick={closeMobileMenu}>
-        Home
-    </Link>
-</li>
-<li className='nav-item' onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-    <Link to="/listener" className="nav-links" onClick={closeMobileMenu}>
-        Listen <i className='fas fa-caret-down' />
-    </Link>
-    {dropdown && <Dropdown />}
-</li>
-
-<li className='nav-item'>
-    <Link to="/creatorHomepage" className="nav-links" onClick={closeMobileMenu}>
-        Content Creator
-    </Link>
-</li>
-
-<li className='nav-item'>
-    <Link to="/account" className="nav-links" onClick={closeMobileMenu}>
-        Account
-    </Link>
-</li>
-<li className='nav-item'>
-    <Link to="/advertiser" className="nav-links" onClick={closeMobileMenu}>
-        Advertiser
-    </Link>
-</li>
-<li className='nav-item'>
-    <Link to="/admin" className="nav-links" onClick={closeMobileMenu}>
-        Admin
-    </Link>
-</li>
-<li className='nav-item'>
-    <Link to="/register" className="nav-links-mobile" onClick={closeMobileMenu}>
-        Sign Up
-    </Link>
-</li>
-
-<li className='nav-item'>
-    <Link to="/login" className="nav-links-mobile" onClick={closeMobileMenu}>
-        Login
-    </Link>
-</li>
-</ul> */}

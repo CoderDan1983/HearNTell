@@ -23,6 +23,8 @@ import EditCreatorProfile from './components/pages/creator/EditCreatorProfile';
 import { Routes, Route } from 'react-router-dom';
 import { ROLES } from './hooks/useRoles';
 
+import './index.css';
+
 //Hackers that are good enough could see your javascript
 //they would see this.  Up to you if you want to show it, though ^_^.
 
