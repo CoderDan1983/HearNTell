@@ -1,34 +1,31 @@
-import Account from './components/pages/Account';
-import Ad from './components/pages/Ad';
-import Advertiser from './components/pages/Advertiser';
-import Campaign from './components/pages/Campaign';
+import Account from './components/pages/account/Account';
+import Ad from './components/pages/advertiser/Ad';
+import Advertiser from './components/pages/advertiser/Advertiser';
+import Campaign from './components/pages/advertiser/Campaign';
 import CreatorProfile from './components/pages/creator/CreatorProfile';
-import Listener from './components/pages/Listener';
+import Listener from './components/pages/listener/Listener';
 
 import Register from './components/pages/Register';
 import Login from './components/pages/Login';
 import Home from './components/pages/Home';
 import Layout from './components/layouts/Main';
 import Editor from './components/pages/Editor';
-import Admin from './components/pages/Admin';
+import Admin from './components/pages/admin/Admin';
 import Missing from './components/pages/Missing';
 import Unauthorized from './components/pages/Unauthorized';
 import Lounge from './components/pages/Lounge';
 import HomePublic from './components/pages/HomePublic';
 import RequiredAuth from './components/pages/RequireAuth';
 import PersistLogin from './components/pages/PersistLogin';
-import { Routes, Route } from 'react-router-dom';
 import CreatorHomepage from './components/pages/creator/CreatorHomepage';
 import EditCreatorProfile from './components/pages/creator/EditCreatorProfile';
 
+import { Routes, Route } from 'react-router-dom';
+import { ROLES } from './hooks/useRoles';
+
 //Hackers that are good enough could see your javascript
 //they would see this.  Up to you if you want to show it, though ^_^.
-const ROLES = { 
-  //'RestrictedMember': 1354,
-  'Member': 1984,
-  'Advertiser': 1999,
-  'Admin': 5150
-}
+
 
 function App() {
 
