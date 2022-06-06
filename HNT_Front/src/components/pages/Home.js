@@ -1,10 +1,28 @@
 import { useNavigate, Link } from "react-router-dom";
 import useLogout from '../../hooks/useLogout';
-import Listener from './listener/Listener'
+import Listener from './listener/Listener';
+import StoryItem from "../parts/StoryItem";
 
 const Home = () => {
     const navigate = useNavigate();
     const logout = useLogout();
+
+    const fakeStories = [
+        {
+            title: "3 little pigs",
+            rating: 4.2,
+            author: "stephen king",
+            length: 2493,
+            tags: ["fairy tale", "allegory"]
+        },
+        {
+            title: "boy who cried woof",
+            rating: 3.7,
+            author: "stephenie meyer",
+            length: 99432,
+            tags: ["fairy tale", "children", "terror"]
+        }
+    ]
 
     const signOut = async () => {
         // if used in more components, this should be in context 
@@ -21,16 +39,20 @@ const Home = () => {
             <p>You are logged in!</p>
             <br />
 
+            { fakeStories.map((story)=>{
+                return (<StoryItem 
+                    title={story.title} 
+                    rating={story.rating}
+                    author={story.author}
+                    length={story.length} 
+                    tags={story.tags}
+                />)
+            })}
+
+
+
 
             <Listener />
-
-
-
-
-
-
-
-
             Public
             <Link to="/homepublic">Go to homepublic</Link>
             <br />

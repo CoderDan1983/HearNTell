@@ -14,7 +14,7 @@ export default function Nav(){
     const [dropdown, setDropdown] = useState(false);
     const handleClick = () => setClick(!click);
     const closeMobileMenu = () => setClick(false);
-    const [ decoded, roles ] = useGetRoles();
+    const { decoded, roles } = useGetRoles();
 
     const onMouseEnter = () => {
         if(window.innerWidth < 960){
@@ -77,7 +77,8 @@ export default function Nav(){
                             to={ item.to } 
                             name={ item.name } 
                             events={ events } 
-                            dropdown={ item.dropdown }
+                            hasDropdown = { item.hasDropdown }
+                            dropdown={ dropdown }
                         />)
                     })}
                 </ul>
