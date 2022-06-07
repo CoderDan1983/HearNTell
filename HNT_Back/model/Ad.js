@@ -10,4 +10,6 @@ const Ad = new Schema({
   file_size: Number // In kilobytes
 });
 
+
+
 module.exports = mongoose.model('ad', Ad);

@@ -11,6 +11,7 @@ const Story = new Schema({
   name: String,
   tag_names: [String], //* Tags are stored in their own model. This is just the tag names, which can be used for searches.
   description: String,
+  duration: Number,
   private: Boolean, //Only allow subscribers to listen to this audio.
 });
 
