@@ -166,6 +166,7 @@ li {
 .storyItemTop {
     display: grid;
     grid-template-columns: auto auto auto auto;
+    gap: 10px;
 }
 .storyItemTitle {
     font-size: 14px;
@@ -202,6 +203,9 @@ li {
     min-width: min-content;
 }
 
+.storyContainer {
+    display: grid;
+}
 /*
 
 @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');

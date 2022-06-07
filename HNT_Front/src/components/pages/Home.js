@@ -2,7 +2,7 @@ import { useNavigate, Link } from "react-router-dom";
 import useLogout from '../../hooks/useLogout';
 import Listener from './listener/Listener';
 import StoryItem from "../parts/StoryItem";
-
+import { fakeStories } from '../fakeApi/fakeStories';
 import { Button, Icon } from '@mui/material';
 // import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import { AccessAlarm, ThreeDRotation, Forest as ForestIcon } from '@mui/icons-material';
@@ -10,24 +10,7 @@ const Home = () => {
     const navigate = useNavigate();
     const logout = useLogout();
 
-    const fakeStories = [
-        {
-            title: "3 little pigs",
-            rating: 4.2,
-            author: "stephen king",
-            length: 2493,
-            tags: ["fairy tale", "allegory"],
-            to: '/listener',
-        },
-        {
-            title: "boy who cried woof",
-            rating: 3.7,
-            author: "stephenie meyer",
-            length: 99432,
-            tags: ["fairy tale", "children", "terror"],
-            to: '/listener',
-        }
-    ]
+
 
     const signOut = async () => {
         // if used in more components, this should be in context 
