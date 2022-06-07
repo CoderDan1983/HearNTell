@@ -1,5 +1,7 @@
 import '../../index.css';
 import { Link } from "react-router-dom";
+import RatingComponent from './RatingComponent';
+
 export default function StoryItem({ title, rating, author, length, tags, to }){
     function displayTime(sec){
         let time = sec;
@@ -20,7 +22,9 @@ export default function StoryItem({ title, rating, author, length, tags, to }){
         <div className='storyItem'>
             <div className='storyItemTop' >
                 <span className="storyItemTitle">{title}</span>
-                <span className="storyItemAuthor">{rating}</span>
+                <span className="storyItemAuthor">
+                    <RatingComponent readOnly={ true} rated={ rating} />
+                </span>
                 <span className="storyItemAuthor">{author}</span>
                 <span className="storyItemAuthor">{ displayTime(length) }</span>
             </div>

@@ -3,6 +3,7 @@ import useAuth from "../../../hooks/useAuth";
 import './../../../index.css';
 
 import TagsInput from "../../parts/TagsInput";
+import { Autocomplete, TextField } from '@mui/material';
 
 export default function CreatorHomepage({ name, imageUrl }){
     const auth = useAuth();
@@ -28,13 +29,32 @@ export default function CreatorHomepage({ name, imageUrl }){
         },
     ]
 
+    const top100Films = ["mitt", "romney", "style"]
+
     function goToEditProfile(){
         
     }
 
+    
+
     return(
         <>
             <h1>Welcome, { name }</h1>
+            <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={top100Films}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Forced" />}
+            />
+            <Autocomplete
+                freeSolo={ true }
+                disablePortal
+                id="combo-box-demo1"
+                options={top100Films}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Free" />}
+            />
             <TagsInput selectedTags={ selectedTags } />
             <button onClick={ goToEditProfile() }>Edit Profile</button>
             <div>
