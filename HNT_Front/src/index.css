@@ -259,7 +259,22 @@ li {
     grid-template-columns: auto auto;
     justify-items: center;
     align-items: center;
-    
+}
+
+.radioGroup,  .radioGroup > label {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: start;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: olive;
+    gap: 0px 4px;
+    margin-top: 0;
+}
+
+label {
+    background-color: chartreuse;
 }
 /*
 
