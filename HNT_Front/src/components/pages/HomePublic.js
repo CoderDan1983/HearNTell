@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import StoryItem from '../parts/StoryItem';
 import SearchComponent from '../parts/SearchComponent';
-import { fakeStories, fakeStories1, fakeTags, fakeSearches } from '../fakeApi/fakeStories';
+import { fakeStories, fakeStories1, fakeTags, fakeSearches, loadStoriesByTag } from '../fakeApi/fakeStories';
 
 // import { Grid, Item } from '@mui/material';
 import '../../index.css';
@@ -13,10 +13,7 @@ export default function HomePublic(){
     console.log('fakeSearches is: ');
     console.log(fakeSearches);
     const [stories, setStories] = useState(fakeStories)
-    async function loadStoriesByTag(tag){
-        const newStories = await fakeStories1;
-        setStories(newStories)
-    }
+
     return (<div className="main">
         <h1 className="mainItems center">Hear n Tell</h1>
         <div className="mainItems center">A place for people to share stories</div>
@@ -29,7 +26,7 @@ export default function HomePublic(){
                 { fakeTags.map((tag, i)=>{
                     return(
                         // <div key={i}>Hey</div>
-                        <div key={i} className="tag"  onClick={ (e)=> loadStoriesByTag(tag) }>
+                        <div key={i} className="tag"  onClick={ (e)=> loadStoriesByTag(tag, setStories) }>
                             { tag.name }
                         </div>
                     )

@@ -17,19 +17,6 @@ body {
     background-color: dodgerblue;
 }
 
-.App {
-    display: grid;
-    grid-template-columns: 1fr;
-    /* width:100%; */
-    align-content: start;
-    justify-content: center;
-    align-items: center;
-    justify-items: center;
-    min-height: 100vh; 
-    padding: 0rem 0rem;
-    background-color: orange;
-}
-
 section {
     width: 100%;
     max-width: 420px;
@@ -74,6 +61,19 @@ button {
 
 li {
     list-style-type: none;
+}
+
+.App {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* width:100%; */
+    align-content: start;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+    min-height: 100vh; 
+    padding: 0rem 0rem;
+    background-color: orange;
 }
 
 .instructions {
@@ -152,10 +152,6 @@ li {
     grid-template-columns: auto auto auto;
 }
 
-
-
-
-
 .link {
     border: 1px #aaa;
     border-radius: 12px;
@@ -171,15 +167,13 @@ li {
     background-color: aqua;
 }
 
-.storyItem {
-    width: 100%;
-    /* width: minmax(min-content, 100%); */
-}
-
 .storyItemTop {
     display: grid;
-    grid-template-columns: auto auto auto auto;
+    /* grid-template-columns: 40% 30% 15% 15%; */
+    grid-template-columns: minmax(min-content, 300px) auto auto auto;
+    justify-items: start;
     gap: 10px;
+    width: 100%;
     /* min-width: min-content; */
 }
 .storyItemTitle {
@@ -226,13 +220,13 @@ li {
     margin: 10px 0px;
 }
 
-.center {
-    justify-self: center;
-}
+
+
 
 .main {
     /* text-align: center; */
     display: grid;
+    grid-template-columns: 1fr;
     /* justify-content: center; */
     /* justify-items: center; */
     gap: 20px 0px;
@@ -265,16 +259,41 @@ li {
     display: grid;
     grid-template-columns: auto auto;
     justify-content: start;
-    align-content: center;
+    /* align-content: center;
+    text-align: center; */
     align-items: center;
-    text-align: center;
     background-color: olive;
     gap: 0px 4px;
     margin-top: 0;
 }
 
-label {
+.storyItemWithIcon, .storyItem {
+    display: grid;
+    grid-template-columns: 1fr 32px;
+    align-items: center;
+    width: 100%;
+}
+.storyItem {
+    grid-template-columns: 1fr;
     background-color: chartreuse;
+}
+
+.tagLiker {
+    display: grid;
+    grid-template-columns: 1fr 24px 24px;
+}
+
+.center {
+    justify-self: center;
+    background-color: darkcyan;
+}
+
+.start {
+    justify-self: start;
+}
+
+.fullWidth {
+    width: 100%;
 }
 /*
 

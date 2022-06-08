@@ -7,6 +7,7 @@ export const fakeStories = [
         length: 2493,
         tags: ["fairy tale", "allegory"],
         to: '/listener',
+        _id: "0"
     },
     {
         title: "boy who cried woof",
@@ -15,6 +16,7 @@ export const fakeStories = [
         length: 99432,
         tags: ["fairy tale", "children", "terror"],
         to: '/listener',
+        _id: "1",
     }
 ]
 
@@ -26,6 +28,7 @@ export const fakeStories1 = [
         length: 2493,
         tags: ["fairy tale", "allegory"],
         to: '/listener',
+        _id: "2",
     },
     {
         title: "girl who cried woof",
@@ -34,6 +37,7 @@ export const fakeStories1 = [
         length: 99432,
         tags: ["fairy tale", "children", "terror"],
         to: '/listener',
+        _id: "3",
     }
 ]
 
@@ -136,3 +140,8 @@ export const fakeQueue = [ //? can to and _id be the same!?!
     { name: "A Salt and Battery", _id: "eee", to: "/" },
     { name: "Lit Math Test", _id: "fff", to: "/" },
 ]
+
+export async function loadStoriesByTag(tag, setter){
+    const newStories = await fakeStories1;
+    setter(newStories)
+}

@@ -2,7 +2,7 @@ import '../../index.css';
 import { Link } from "react-router-dom";
 import RatingComponent from './RatingComponent';
 
-export default function StoryItem({ title, rating, author, length, tags, to }){
+export default function StoryItem({ title, rating, author, length, tags, to, Ico }){
     function displayTime(sec){
         let time = sec;
         const hours = Math.floor(sec / 3600);
@@ -18,21 +18,24 @@ export default function StoryItem({ title, rating, author, length, tags, to }){
         return returnVal;  
     }
     
-    return(<Link to= { to } >
-        <div className='storyItem link'>
-            <div className='storyItemTop' >
-                <span className="storyItemTitle">{title}</span>
-                <span className="storyItemAuthor">
-                    <RatingComponent readOnly={ true} rated={ rating} />
-                </span>
-                <span className="storyItemAuthor">{author}</span>
-                <span className="storyItemAuthor">{ displayTime(length) }</span>
+    return(<div className={ Ico ? "storyItemWithIcon" : "storyItem" }>    
+        <Link to= { to }  className="link"> {/* no grid */}
+            <div>
+                <div className='storyItemTop' >
+                    <span className="storyItemTitle">{title}</span> {/* no grid */}
+                    <span className="storyItemAuthor"> {/* no grid */}
+                        <RatingComponent readOnly={ true } rating={ rating} />
+                    </span>
+                    <span className="storyItemAuthor">{author}</span> {/* no grid */}
+                    <span className="storyItemAuthor">{ displayTime(length) }</span> {/* no grid */}
+                </div>
+                <div className="storyItemTags"> {/* no grid */}
+                    {tags.map((tag, i)=>{
+                        return <span key={ i } >{tag}</span>
+                    })}
+                </div>            
             </div>
-            <div className="storyItemTags">
-                {tags.map((tag, i)=>{
-                    return <span key={ i } >{tag}</span>
-                })}
-            </div>
-        </div>
-    </Link>)
+        </Link>
+        { Ico && <Ico />}
+    </div>)
 }

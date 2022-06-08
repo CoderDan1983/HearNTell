@@ -19,37 +19,42 @@ function getLabelText(value) {
   return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
 }
 
-export default function RatingComponent({ readOnly, rated }) {
-  const [rating, setRating] = useState(rated);
+//* setRating should only be necessary if readOnly is false.  In this case,
+//* rating should be setRating's partner from useState :)
+export default function RatingComponent({ readOnly, rating, setRating }) {
+  // const [rating, setRating] = useState(rated);
   const [hover, setHover] = useState(-1);
 
   return (
-    <Box
-      sx={{
-        width: 125,
-        display: 'flex',
-        alignItems: 'center',
-      }}
+    <div
+      // sx={{
+      //   width: 200,
+      //   display: 'flex',
+      //   alignItems: 'center',
+      // }}
     >
       <Rating
+        size="small"
         name="hover-feedback"
-        value={ rating }
+        value={ rating ? rating : 0 }
         precision={0.5}
         getLabelText={getLabelText}
         readOnly = { readOnly }
         onChange={(event, newValue) => {           
             //alert('41')
-            setRating(newValue);
+            setRating && setRating(newValue);
         }}
         onChangeActive={(event, newHover) => {            
             //alert('47')
             setHover(newHover);            
         }}
-        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+        emptyIcon={<StarIcon fontSize="inherit" style={{ opacity: 0.55 }} />}
       />
-      {rating !== null && (
-        <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : rating]}</Box>
+      {/* {rating !== null && ( */}
+      { rating ?? (
+        // <Box sx={{ ml: 3 }}>{labels[hover !== -1 ? hover : rating]}</Box>
+        <div>{labels[hover !== -1 ? hover : rating]}</div>
       )}
-    </Box>
+    </div>
   );
 }
