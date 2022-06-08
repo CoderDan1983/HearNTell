@@ -19,7 +19,7 @@ export default function StoryItem({ title, rating, author, length, tags, to }){
     }
     
     return(<Link to= { to } >
-        <div className='storyItem'>
+        <div className='storyItem link'>
             <div className='storyItemTop' >
                 <span className="storyItemTitle">{title}</span>
                 <span className="storyItemAuthor">

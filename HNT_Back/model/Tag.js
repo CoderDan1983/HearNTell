@@ -62,11 +62,12 @@ Tag.methods.updateTagPrice = async function() {
   let highest_bidder_id = "";
 
   //* Iterate through the campaigns and find the highest bidder and record their account_id.
-  campaigns.forEach(campaign => {
+  campaigns.forEach((campaign) => {
     if (campaign.max_bid > highest_bid) {
       second_highest_bid = highest_bid;
       highest_bid = campaign.max_bid;
       highest_bidder_id = campaign.account_id;
+    }
   });
 
   //* Adjust highest bid to one cent above second highest bid

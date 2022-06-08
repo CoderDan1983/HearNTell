@@ -19,7 +19,7 @@ const TagsInput = ({ selectedTags }) => {
 
     return (
         <div className="tags-input">
-            <ul className="tagContainer">
+            <ul className="flexWrapper">
                 {tags.map((tag, index) => (
                     <li key={index} className="tag" >
                         <span>

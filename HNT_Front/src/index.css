@@ -19,12 +19,15 @@ body {
 
 .App {
     display: grid;
+    grid-template-columns: 1fr;
+    /* width:100%; */
     align-content: start;
     justify-content: center;
     align-items: center;
     justify-items: center;
     min-height: 100vh; 
     padding: 0rem 0rem;
+    background-color: orange;
 }
 
 section {
@@ -149,23 +152,35 @@ li {
     grid-template-columns: auto auto auto;
 }
 
-.storyItem {
-    background-color: #ddd;
-    color: black;
+
+
+
+
+.link {
     border: 1px #aaa;
     border-radius: 12px;
     padding: 6px;
     margin: 2px;
+
+    background-color: #ddd;
+    color: black;   
 }
 
-.storyItem:hover {
+.link:hover {
     color: white;
     background-color: aqua;
+}
+
+.storyItem {
+    width: 100%;
+    /* width: minmax(min-content, 100%); */
 }
 
 .storyItemTop {
     display: grid;
     grid-template-columns: auto auto auto auto;
+    gap: 10px;
+    /* min-width: min-content; */
 }
 .storyItemTitle {
     font-size: 14px;
@@ -179,17 +194,6 @@ li {
     font-size: 10px;
 }
 
-.tagContainer {
-    display: flex;
-    flex-wrap: wrap;
-    flex-flow: row wrap;
-    
-    flex-direction: row;
-    width: 300px;
-    /* grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
-    grid-template-rows: auto; */
-    /* grid-template-columns: repeat(auto-fit, minmax(20px, 1fr)); */
-}
 .tag {
     background-color: rgb(60, 94, 136);
     border-radius: 12px;
@@ -199,9 +203,64 @@ li {
     align-content: center;
     justify-content: start;
     align-items: center;
-    min-width: min-content;
+    /* min-width: min-content; */
 }
 
+.flexWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    flex-flow: row wrap;
+    flex-direction: row;
+
+    /* width: minmax(min-content, 700px); */
+    /* grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+    grid-template-rows: auto; */
+}
+
+.storyContainer {
+    display: grid;
+    width: 100%;
+}
+
+.mainItems {
+    margin: 10px 0px;
+}
+
+.center {
+    justify-self: center;
+}
+
+.main {
+    /* text-align: center; */
+    display: grid;
+    /* justify-content: center; */
+    /* justify-items: center; */
+    gap: 20px 0px;
+    background-color: rgb(44, 44, 167);
+    min-width: min-content;
+    width: 80%;
+    /* width: min-content; */
+    /* width: minmax(min-content, 500px); */
+}
+
+.listenerGroups {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: center;
+    justify-items: center;
+    width: 100%;
+    /* column-gap: 25px; */
+    color: black;
+    background-color: yellow;
+}
+
+.hearAStory {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-items: center;
+    align-items: center;
+    
+}
 /*
 
 @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
