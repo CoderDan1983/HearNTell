@@ -1,33 +1,59 @@
 
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import { useState } from 'react';
+
+
 import StoryItem from '../parts/StoryItem';
-import { fakeStories } from '../fakeApi/fakeStories';
+import SearchComponent from '../parts/SearchComponent';
+import { fakeStories, fakeStories1, fakeTags, fakeSearches } from '../fakeApi/fakeStories';
+
 // import { Grid, Item } from '@mui/material';
 import '../../index.css';
-const HomePublic = () => {
-    return (<div>
-        <h1>Hear n Tell</h1>
-        <div>A place for people to share stories</div>
-        <h2>Top Stories this Week:</h2>
-        <div className="storyContainer">
-            { fakeStories.map((story, i)=>{
-                return (<StoryItem 
-                    key={ i }
-                    title={ story.title}
-                    rating= {story.rating}
-                    author={story.author}
-                    length={story.length}
-                    tags={story.tags}
-                    to={ story.to}
-                />)
-            })}
+export default function HomePublic(){
+    console.log('fakeSearches is: ');
+    console.log(fakeSearches);
+    const [stories, setStories] = useState(fakeStories)
+    async function loadStoriesByTag(tag){
+        const newStories = await fakeStories1;
+        setStories(newStories)
+    }
+    return (<div className="main">
+        <h1 className="mainItems center">Hear n Tell</h1>
+        <div className="mainItems center">A place for people to share stories</div>
+        <div>
+            <div className="flexWrapper mainItems center">
+                <h2>Top Stories this Week:</h2>
+                <SearchComponent options={ fakeSearches }/>
+            </div>
+            <div className="flexWrapper mainItems">
+                { fakeTags.map((tag, i)=>{
+                    return(
+                        // <div key={i}>Hey</div>
+                        <div key={i} className="tag"  onClick={ (e)=> loadStoriesByTag(tag) }>
+                            { tag.name }
+                        </div>
+                    )
+                })}
+            </div>
+            <div className="storyContainer mainItems">
+                { stories && stories.map((story, i)=>{
+                    return (<StoryItem 
+                        key={ i }
+                        title={ story.title}
+                        rating= {story.rating}
+                        author={story.author}
+                        length={story.length}
+                        tags={story.tags}
+                        to={ story.to}
+                    />)
+                })}
+            </div>
         </div>
-        
+
+
 
     </div>)
 }
-
-export default HomePublic;
 
 {/* <div className="container" >
     <div className="row">

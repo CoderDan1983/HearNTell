@@ -26,7 +26,7 @@ export default function RatingComponent({ readOnly, rated }) {
   return (
     <Box
       sx={{
-        width: 200,
+        width: 125,
         display: 'flex',
         alignItems: 'center',
       }}
