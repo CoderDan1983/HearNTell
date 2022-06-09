@@ -46,6 +46,7 @@ app.use('/refresh', require('./routes/refresh'));
 app.use('/logout', require('./routes/logout'));
 
 app.use('/creator', require('./routes/creator'));
+app.use('/story', require('./routes/api/story'));
 
 app.use(verifyJWT); //* everything after this will use the jwt middleware!
 app.use('/employees', require('./routes/api/employees'));
