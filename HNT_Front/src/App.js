@@ -57,14 +57,14 @@ function App() {
 
         <Route path="listener" element = { <Listener /> } />
         <Route path="listenerSingleStory/:story_id" element = { <ListenerSingleStory /> } />
-        <Route path="creatorprofile" element = { <CreatorProfile /> } />
+        <Route path="creatorprofile/:creator_id" element = { <CreatorProfile /> } />
 
         {/* we want to protect these routes */}
         <Route element={ <PersistLogin /> }>
           <Route element={ <RequiredAuth allowedRoles={[ ROLES.Member ]}/> }>
             <Route path="/" element = { <Home /> } />
-            <Route path="listenerPlaylist" element = { <ListenerPlaylist /> } />
-            <Route path="ratingModal" element = { <RatingModal /> } />
+            <Route path="listenerPlaylist/:playlist_id" element = { <ListenerPlaylist /> } />
+            <Route path="ratingModal/:story_id" element = { <RatingModal /> } />
           </Route>
 
           <Route element={ <RequiredAuth allowedRoles={[ ROLES.Member ]}/> }>
@@ -83,17 +83,17 @@ function App() {
           </Route>
           <Route element={ <RequiredAuth allowedRoles={[ 
             ROLES.Member, ROLES.Admin, ROLES.Advertiser ]}/> }>
-            <Route path="lounge" element = { <Lounge /> } />
+            <Route path="lounge" element = { <Lounge /> } /> {/* tutorial route */}
           </Route>
    
           <Route element={ <RequiredAuth allowedRoles={[ ROLES.Advertiser, ROLES.Member ]}/> }>
-            <Route path="account" element = { <Account /> } />
+            <Route path="account" element = { <Account /> } /> {/* tutorial route */}
           </Route>
 
           <Route element={ <RequiredAuth allowedRoles={[ ROLES.Advertiser ]}/> }>
             <Route path="ad" element = { <Ad /> } />
-            <Route path="campaignReport" element = { <CampaignReport /> } />
-            <Route path="editCampaign" element = { <EditCampaign /> } />
+            <Route path="campaignReport/:campaign_id" element = { <CampaignReport /> } />
+            <Route path="editCampaign/:campaign_id" element = { <EditCampaign /> } />
             <Route path="campaign" element = { <Campaign /> } />
             <Route path="advertiser" element = { <Advertiser /> } />
           </Route>
