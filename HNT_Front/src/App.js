@@ -5,7 +5,6 @@ import Ad from './components/pages/advertiser/Ad';
 import Campaign from './components/pages/advertiser/Campaign';
 import CampaignReport from './components/pages/advertiser/CampaignReport'; //new
 import EditCampaign from './components/pages/advertiser/EditCampaign'; //new
-//!  AdUpload deleted
 
 import CreatorProfile from './components/pages/creator/CreatorProfile';
 import CreatorHomepage from './components/pages/creator/CreatorHomepage';
@@ -57,7 +56,8 @@ function App() {
         <Route path="unauthorized" element = { <Unauthorized /> } />
 
         <Route path="listener" element = { <Listener /> } />
-        <Route path="listenerSingleStory" element = { <ListenerSingleStory /> } />
+        <Route path="listenerSingleStory/:story_id" element = { <ListenerSingleStory /> } />
+        <Route path="creatorprofile" element = { <CreatorProfile /> } />
 
         {/* we want to protect these routes */}
         <Route element={ <PersistLogin /> }>
@@ -71,7 +71,6 @@ function App() {
             <Route path="editor" element = { <Editor /> } /> {/* tutorial route */}
             <Route path="creatorHomepage" element = { <CreatorHomepage /> } />
             <Route path="editCreatorProfile" element = { <EditCreatorProfile /> } />
-            <Route path="creatorprofile" element = { <CreatorProfile /> } />
             <Route path="creatorAddStory" element = { <CreatorAddStory /> } />
             <Route path="creatorAccessRequests" element = { <CreatorAccessRequests /> } />
           </Route>

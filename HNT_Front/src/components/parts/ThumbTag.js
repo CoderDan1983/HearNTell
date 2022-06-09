@@ -1,9 +1,8 @@
-import { ThumbUpOffAltIcon, ThumbDownOffAltIcon, ThumbDownAltIcon, ThumbUpAltIcon } 
-from '@mui/icons-material';
-// import  from '@mui/icons-material/ThumbUpOffAlt';
-// import  from '@mui/icons-material/ThumbDownOffAlt';
-// import  from '@mui/icons-material/ThumbDownAlt';
-// import  from '@mui/icons-material/ThumbUpAlt';
+//import { ThumbUpOffAltIcon, ThumbDownOffAltIcon, ThumbDownAltIcon, ThumbUpAltIcon } from '@mui/icons-material';
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
+import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 export default function ThumbTag({ tag, like, setLike, index }){
     function liker(event){
         let likeArray = JSON.parse(JSON.stringify(like));

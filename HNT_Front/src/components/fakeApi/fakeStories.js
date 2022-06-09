@@ -115,30 +115,30 @@ export const fakeSubList = [ //? can to and _id be the same!?!
     { 
         name: "Mick Donald",
         _id: "abc",
-        to: "/"
+        to: "/creatorProfile"
     },
     { 
         name: "Alice Cooper",
         _id: "def",
-        to: "/"
+        to: "/creatorProfile"
     },
     { 
         name: "Imelda Hong",
         _id: "ghi",
-        to: "/"
+        to: "/creatorProfile"
     },
 ]
 
 export const fakeBaskets = [ //? can to and _id be the same!?!
-    { name: "History", _id: "aaa", to: "/" },
-    { name: "Fairy Tales", _id: "bbb", to: "/" },
-    { name: "Children", _id: "ccc", to: "/" },
+    { name: "History", _id: "aaa", to: "/listenerPlaylist" },
+    { name: "Fairy Tales", _id: "bbb", to: "/listenerPlaylist" },
+    { name: "Children", _id: "ccc", to: "/listenerPlaylist" },
 ]
 
 export const fakeQueue = [ //? can to and _id be the same!?!
-    { name: "Once upon a Thyme", _id: "ddd", to: "/" },
-    { name: "A Salt and Battery", _id: "eee", to: "/" },
-    { name: "Lit Math Test", _id: "fff", to: "/" },
+    { name: "Once upon a Thyme", _id: "ddd", to: "/listenerSingleStory" },
+    { name: "A Salt and Battery", _id: "eee", to: "/listenerSingleStory" },
+    { name: "Lit Math Test", _id: "fff", to: "/listenerSingleStory" },
 ]
 
 export async function loadStoriesByTag(tag, setter){
