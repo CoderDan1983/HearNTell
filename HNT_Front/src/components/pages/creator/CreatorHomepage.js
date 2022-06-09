@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import AudioItem from "./AudioItem";
 import useAuth from "../../../hooks/useAuth";
 import './../../../index.css';
@@ -35,6 +37,10 @@ export default function CreatorHomepage({ name, imageUrl }){
         
     }
 
+    function goToCreatorAddStory(){
+        <Link to="CreatorAddStory" />
+    }
+
     
 
     return(
@@ -57,6 +63,7 @@ export default function CreatorHomepage({ name, imageUrl }){
             />
             <TagsInput selectedTags={ selectedTags } />
             <button onClick={ goToEditProfile() }>Edit Profile</button>
+            <button onClick={ goToCreatorAddStory() }>Add Story</button>
             <div>
                 <h2>My Stories</h2>
                 { exampleStories.map((story)=>{
