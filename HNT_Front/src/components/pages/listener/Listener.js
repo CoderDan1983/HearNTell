@@ -1,21 +1,30 @@
 
 import '../../../index.css';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useMemo } from 'react';
+// import { Link } from 'react-router-dom';
 import SearchComponent from '../../parts/SearchComponent';
 import LinkListItem from '../../parts/LinkListItem';
-import ListenerPlaylist from './ListenerPlaylist';
-import { fakeStories, fakeStories1, fakeTags, fakeSearches, fakeSubList, fakeBaskets, 
-    fakeQueue } from '../../fakeApi/fakeStories';
-
+// import ListenerPlaylist from './ListenerPlaylist';
+// import { fakeStories, fakeStories1, fakeTags, fakeSearches, fakeSubList, fakeBaskets, 
+//     fakeQueue } from '../../fakeApi/fakeStories';
+import { getByIdThenSet } from '../../../hooks/useBackendRequest';
 import { DeleteForever } from '@mui/icons-material';
 
 
 export default function Listener(){
-    const searches = fakeSearches;
-    const subscribeList = fakeSubList;
-    const baskets = fakeBaskets;
-    const queue = fakeQueue;
+    const user_id = "0a"; //* later this will be passed in/found :D
+    const [searches, setSearches] = useState([]);
+    const [subscriptions, setSubscriptions] = useState([]);
+    const [playlists, setPlaylists] = useState([]);
+    const [queue, setQueue] = useState([]);
+
+    useMemo(() => {
+        getByIdThenSet('search', user_id, setSearches);
+        getByIdThenSet('subscription/listener', user_id, setSubscriptions);
+        getByIdThenSet('playlist', user_id, setPlaylists);
+        getByIdThenSet('queue', user_id, setQueue);
+        console.log('listener should be loaded this render :) ')
+    },[user_id]);
 
     return(<div className='main'>
         <div className="hearAStory">
@@ -26,11 +35,11 @@ export default function Listener(){
         <div className="mainItems">
             <div>
                 People I subscribe to
-                { subscribeList && subscribeList.map((sub)=>{
+                { subscriptions.sublist && subscriptions.sublist.map((sub)=>{
                     return (<LinkListItem 
                         key={sub._id} 
-                        to={ sub.to } 
-                        name={ sub.name } 
+                        to= "/creatorProfile"
+                        name={ sub.author } 
                         Ico={ DeleteForever }
                     />)
                 })}
@@ -39,8 +48,12 @@ export default function Listener(){
         <div className="mainItems">
             <div>
                 My Playlists
-                { baskets && baskets.map((basket)=>{
-                    return <LinkListItem key={basket._id} to={ basket.to } name={ basket.name } />
+                { playlists.playlists && playlists.playlists.map((playlist)=>{
+                    return (<LinkListItem 
+                        key={ playlist._id } 
+                        to= "/listenerPlaylist"
+                        name={ playlist.title } 
+                    />)
                 })}
             </div>
             <button>Add Playlist</button>
@@ -50,11 +63,11 @@ export default function Listener(){
                 MyQueue <br />
                 (Where does this go?)
             </div>
-            { queue && queue.map((item)=>{
+            { queue.queue && queue.queue.map((item)=>{
                 return (<LinkListItem 
                     key={item._id} 
-                    to={ item.to } 
-                    name={ item.name } 
+                    to= "/listenerSingleStory" 
+                    name={ item.title } 
                     _id = { item._id }
                 />)
             })}

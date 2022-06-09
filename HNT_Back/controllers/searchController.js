@@ -3,20 +3,20 @@ const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
 // } from '../../HNT_Front/src/components/fakeApi/fakeStories';
 
 //* Gets a single story
-const getPlaylist = async (req, res) => {
-  console.log('getPlaylist backend!')
-  const playlist_id = req.params.playlist_id;
+const getSearch = async (req, res) => {
+  console.log('getSearch backend!')
+  const search_id = req.params.search_id;
   //we are recieving the story_id :)
-  console.log(playlist_id);
+  console.log(search_id);
   // const story_id = req.body.story_id;
   // const story = await Story.findOne({_id: story_id});
   // if (!story) return res.status(204).json({ 'message': 'No story found' });
   // // res.json(story);
-  const playlists = fake.fakeBaskets.filter((playlist)=>{
-    return playlist._id === playlist_id;
+  const searches = fake.fakeSearches.filter((search)=>{
+    return search._id === search_id;
   });
   
-  console.log('playlists matching _id of ' + playlist_id + " are: ");
-  console.log(playlists)
-  res.json({"playlists": playlists });
+  console.log('searches matching _id of ' + search_id + " are: ");
+  console.log(searches)
+  res.json({"searches": searches });
 }

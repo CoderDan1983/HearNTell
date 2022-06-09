@@ -1,6 +1,7 @@
-export const fakeStories = [
+const fakeStories = [
     {
         title: "3 little pigs",
+        to: '/listener',
         _id: "0",
         rating: 4.2,
         author: "stephen king",
@@ -9,6 +10,7 @@ export const fakeStories = [
     },
     {
         title: "boy who cried woof",
+        to: '/listener',
         _id: "1",
         rating: 3.7,
         author: "stephenie meyer",
@@ -18,6 +20,7 @@ export const fakeStories = [
     { 
         title: "Once upon a Thyme", 
         _id: "4", 
+        to: "/listener",
         rating: 4.8,
         author: "stephen king",
         length: 934293,
@@ -25,6 +28,7 @@ export const fakeStories = [
     },
     { title: "A Salt and Battery", 
         _id: "5", 
+        to: "/listener",
         rating: 1.9,
         author: "shakespeare",
         length: 3429,
@@ -33,6 +37,7 @@ export const fakeStories = [
     { 
         title: "Lit Math Test", 
         _id: "6", 
+        to: "/listener",
         rating: 3.9,
         author: "henry david throw",
         length: 9999,
@@ -40,13 +45,14 @@ export const fakeStories = [
     },
 ]
 
-export const fakeStories1 = [
+const fakeStories1 = [
     {
         title: "34 little pigsssssssssssssssssssssssssssssssssssssssssssss",
         rating: 4.2,
         author: "stephen king",
         length: 2493,
         tags: ["fairy tale", "allegory"],
+        to: '/listener',
         _id: "2",
     },
     {
@@ -55,11 +61,12 @@ export const fakeStories1 = [
         author: "fred meyer",
         length: 99432,
         tags: ["fairy tale", "children", "terror"],
+        to: '/listener',
         _id: "3",
     }
 ]
 
-export const fakeTags = [
+const fakeTags = [
     {
         title: "antidisestablishmentarianism",
         highest_bid: 4,
@@ -104,7 +111,7 @@ export const fakeTags = [
     },
 ]
 
-export const fakeSearches = [
+const fakeSearches = [
     {
         user_id: "0a",
         searches: [
@@ -126,7 +133,7 @@ export const fakeSearches = [
     
 ]
 
-export const fakeSubList = [ //? can to and _id be the same!?!
+const fakeSubList = [ //? can to and _id be the same!?!
     {
         user_id: "0a",
         sublist: [    
@@ -163,7 +170,7 @@ export const fakeSubList = [ //? can to and _id be the same!?!
     },
 ]
 
-export const fakeBaskets = [ //? can to and _id be the same!?!
+const fakeBaskets = [ //? can to and _id be the same!?!
     {   
         user_id: "0a",
         playlists: [
@@ -182,7 +189,7 @@ export const fakeBaskets = [ //? can to and _id be the same!?!
     },
 ]
 
-export const fakeQueue = [ //? can to and _id be the same!?!
+const fakeQueue = [ //? can to and _id be the same!?!
     {
         user_id: "0a",
         queue: [
@@ -201,17 +208,17 @@ export const fakeQueue = [ //? can to and _id be the same!?!
     },
 ]
 
-export async function loadStoriesByTag(tag, setter){
+async function loadStoriesByTag(tag, setter){
     const newStories = await fakeStories1;
     setter(newStories)
 }
 
-// exports.default = {
-//     fakeStories, 
-//     fakeStories1,
-//     fakeTags,
-//     fakeSearches,
-//     fakeSubList,
-//     fakeBaskets,
-//     fakeQueue
-// }
+exports.default = {
+    fakeStories, 
+    fakeStories1,
+    fakeTags,
+    fakeSearches,
+    fakeSubList,
+    fakeBaskets,
+    fakeQueue
+}

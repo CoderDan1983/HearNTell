@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const creatorController = require('../controllers/creatorController.js');
+const tagController = require('../../controllers/tagController.js');
 
 router.get('/:tag_id', tagController.getTag);
 
