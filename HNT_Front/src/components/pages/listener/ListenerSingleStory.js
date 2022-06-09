@@ -1,13 +1,29 @@
 import { useState } from 'react'
+import { useParams } from 'react-router-dom';
 
 import RatingComponent from "../../parts/RatingComponent";
 import LinkListItem from "../../parts/LinkListItem";
 import ShareThisStory from "../../parts/ShareThisStory";
 import { fakeStories, loadStoriesByTag } from '../../fakeApi/fakeStories';
 
+import axios from '../../../api/axios';
+// import axios from '../../api/axios';
+
 export default function ListenerSingleStory(){
-    const { title, rating, author, length, tags, to, _id } = fakeStories[0];
-    const [stories, setStories] = useState()
+    const { title, rating, author, length, tags, to, _id } = fakeStories[1];
+    const [stories, setStories] = useState();
+    const { story_id } = useParams();
+    async function getStory(story_id){
+        const story = await axios.get(`/api/story/${story_id}`,{
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true
+        });
+        return story;
+    }
+    
+    const st = getStory(story_id);
+    console.log(st);
+
     return(<div className="main">
         <div>
 
@@ -19,6 +35,7 @@ export default function ListenerSingleStory(){
             Tags:{' '}
             { tags && tags.map((tag, i)=>{
                 return (<LinkListItem 
+                    key={ i }
                     _id= { i } 
                     to={`tags/${tag}`} 
                     name= { tag } 
@@ -29,3 +46,4 @@ export default function ListenerSingleStory(){
         <ShareThisStory _id= { _id } />
     </div>)
 }
+

@@ -1,3 +1,4 @@
+
 import '../../../index.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -14,7 +15,8 @@ export default function Listener(){
     const searches = fakeSearches;
     const subscribeList = fakeSubList;
     const baskets = fakeBaskets;
-    const queue = fakeQueue
+    const queue = fakeQueue;
+
     return(<div className='main'>
         <div className="hearAStory">
         <h1 className="consulting">Hear a Story</h1>
