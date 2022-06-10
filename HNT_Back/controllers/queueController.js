@@ -3,24 +3,24 @@ const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
 // } from '../../HNT_Front/src/components/fakeApi/fakeStories';
 
 //* Gets a single story
-const getTag = async (req, res) => {
-  console.log('getTag backend!')
-  const tag_id = req.params.tag_id;
+const getQueue = async (req, res) => {
+  console.log('getQueue backend!')
+  const user_id = req.params.user_id;
   //we are recieving the story_id :)
-  console.log(tag_id);
+  console.log(user_id);
   // const story_id = req.body.story_id;
   // const story = await Story.findOne({_id: story_id});
   // if (!story) return res.status(204).json({ 'message': 'No story found' });
   // // res.json(story);
-  const tags = fake.fakeTags.filter((tag)=>{
-    return tag._id === tag_id;
+  const queue = fake.fakeQueue.filter((item)=>{
+    return item.user_id === user_id;
   });
   
-  console.log('tags matching _id of ' + tag_id + " are: ");
-  console.log(tags)
-  res.json(tags);
+  // console.log('queue matching _id of ' + user_id + " are: ");
+  // console.log(queue)
+  res.json(queue[0]["queue"]);
 }
 
 module.exports = {
-  getTag,
+  getQueue,
 }

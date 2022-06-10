@@ -1,7 +1,6 @@
-
-import { Link } from "react-router-dom";
-import { useState } from 'react';
-
+import { useNavigate, Link, useParams } from "react-router-dom";
+import { useState, useMemo } from 'react';
+import { getThenSet } from '../../hooks/useBackendRequest'
 
 import StoryItem from '../parts/StoryItem';
 import SearchComponent from '../parts/SearchComponent';
@@ -10,9 +9,16 @@ import { fakeStories, fakeStories1, fakeTags, fakeSearches, loadStoriesByTag } f
 // import { Grid, Item } from '@mui/material';
 import '../../index.css';
 export default function HomePublic(){
-    console.log('fakeSearches is: ');
-    console.log(fakeSearches);
-    const [stories, setStories] = useState(fakeStories)
+    const [stories, setStories] = useState([]);
+
+    // const { story_id } = useParams();
+
+    //* this fetches the story with story_id, and sets the story to the returned value :)
+    useMemo(() => getThenSet('getpublic/story', setStories),[]);
+
+    // console.log('fakeSearches is: ');
+    // console.log(fakeSearches);
+    // const [stories, setStories] = useState(fakeStories)
 
     return (<div className="main">
         <h1 className="mainItems center">Hear n Tell</h1>
@@ -23,7 +29,7 @@ export default function HomePublic(){
                 <SearchComponent options={ fakeSearches }/>
             </div>
             <div className="flexWrapper mainItems">
-                { fakeTags.map((tag, i)=>{
+                { stories && stories.map((tag, i)=>{
                     return(
                         // <div key={i}>Hey</div>
                         <div key={i} className="tag"  onClick={ (e)=> loadStoriesByTag(tag, setStories) }>
@@ -41,7 +47,7 @@ export default function HomePublic(){
                         author={story.author}
                         length={story.length}
                         tags={story.tags}
-                        to={ story.to}
+                        to= '/listener'
                     />)
                 })}
             </div>

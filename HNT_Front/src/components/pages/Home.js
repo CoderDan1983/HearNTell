@@ -1,16 +1,28 @@
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
+import { useState, useMemo } from 'react';
 import useLogout from '../../hooks/useLogout';
 import Listener from './listener/Listener';
-import StoryItem from "../parts/StoryItem";
-import { fakeStories } from '../fakeApi/fakeStories';
 import { Button, Icon } from '@mui/material';
+
+
+
+// import { fakeStories } from '../../fakeApi/fakeStories';
+import StoryItem from '../parts/StoryItem';
+// import { DeleteForever } from '@mui/icons-material';
+import '../../index.css';
+import { getThenSet } from '../../hooks/useBackendRequest'
+
 // import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import { AccessAlarm, ThreeDRotation, Forest as ForestIcon } from '@mui/icons-material';
 const Home = () => {
     const navigate = useNavigate();
     const logout = useLogout();
+    const [stories, setStories] = useState([]);
 
+    // const { story_id } = useParams();
 
+    //* this fetches the story with story_id, and sets the story to the returned value :)
+    useMemo(() => getThenSet('story', setStories),[]);
 
     const signOut = async () => {
         // if used in more components, this should be in context 
@@ -33,7 +45,7 @@ const Home = () => {
             <Icon>Add circle</Icon>
             {/* <svg data-testid="AccessAlarm">Oh</svg>
             <svg data-testid="ThreeDRotation">NO!</svg> */}
-            { fakeStories.map((story, index)=>{
+            { stories && stories.map((story, index)=>{
                 return (<StoryItem 
                     key= { index }
                     title={story.title} 
@@ -41,7 +53,7 @@ const Home = () => {
                     author={story.author}
                     length={story.length} 
                     tags={story.tags}
-                    to= { story.to }
+                    to= '/listener'
                 />)
             })}
 
