@@ -1,0 +1,42 @@
+API Routes
+
+
+STORY Routes /api/story
+  Create a new story                          POST /api/story
+
+  Get single story                            GET /api/story/{story_id}
+
+  Update an existing story                    POST /api/story/{story_id}
+
+  Delete a story                              DELETE /api/story/{story_id}
+  
+  Get most popular stories for a tag          GET /api/story/tag/{tag_id}
+  
+  Get most popular stories for all tags       GET /api/story/tag/all
+
+  Search stories (tag, author, title)         GET /api/story/search/{search_string}
+
+
+TAG Routes /api/tag
+
+  Get most popular tags
+
+
+
+PLAYLIST Routes /api/playlist
+
+  Get single playlist                         /api/playlist/{playlist_id}
+
+  Get playlists for user                      /api/playlist/user/{user_id}
+
+  Get users queue                             /api/playlist/queue/{user_id}
+
+CREATOR Routes /api/creator
+
+SUBSCRIBER Routes /api/subscriber
+
+  Get list of subscriptions for user          /api/subscriber/user/{user_id}
+
+ACCOUNT Routes /api/account
+
+USER Routes /api/user
