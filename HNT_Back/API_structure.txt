@@ -42,9 +42,9 @@ PLAYLIST Routes /api/playlist
 
     Create a new playlist                       POST /api/playlist
 
-    Get playlists for user                      GET /api/playlist/user/{user_id}
+    Get playlists for user                      GET /api/playlist/user/{account_id}
 
-    Get users queue                             GET /api/playlist/queue/{user_id}
+    Get users queue                             GET /api/playlist/queue/{account_id}
 
     Get single playlist                         GET /api/playlist/{playlist_id}
 
@@ -83,15 +83,15 @@ TAG FIT Routes /api/tag_fit
 
 CREATOR Routes /api/creator
 
-    Create / update creator profile             POST /api/creator/{user_id}
+    Create / update creator profile             POST /api/creator/{account_id}
 
-    Get creator profile                         GET /api/creator/{user_id}
+    Get creator profile                         GET /api/creator/{account_id}
 
-    Subscription requests                       GET /api/creator/{user_id}/subscription_requests
+    Subscription requests                       GET /api/creator/{account_id}/subscription_requests
 
-    Subscription requests approved              GET /api/creator/{user_id}/subscription_requests/approved
+    Subscription requests approved              GET /api/creator/{account_id}/subscription_requests/approved
 
-    Subscription requests pending               GET /api/creator/{user_id}/subscription_requests/pending
+    Subscription requests pending               GET /api/creator/{account_id}/subscription_requests/pending
 
 
 CAMPAIGN Routes /api/campaign

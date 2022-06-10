@@ -3,16 +3,16 @@ const router = express.Router();
 const playlistController = require('../../controllers/playlistController.js');
 
 
-//todo PLAYLIST Routes /api/playlist
+//* PLAYLIST Routes /api/playlist
 
 //     Create a new playlist                       POST /api/playlist
-router.post('/:playlist_id', playlistController.create);
+router.post('/', playlistController.create);
 
-//     Get playlists for user                      GET /api/playlist/user/{user_id}
-router.get('/:playlist_id/user/:user_id', playlistController.userPlaylists);
+//     Get playlists for user                      GET /api/playlist/user/{account_id}
+router.get('/user/:account_id', playlistController.userPlaylists);
 
-//     Get users queue                             GET /api/playlist/queue/{user_id}
-router.get('/queue/:user_id', playlistController.userQueue);
+//     Get users queue                             GET /api/playlist/queue/{account_id}
+router.get('/queue/:account_id', playlistController.userQueue);
 
 //     Get single playlist                         GET /api/playlist/{playlist_id}
 router.get('/:playlist_id', playlistController.show);
