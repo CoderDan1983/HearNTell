@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const FollowPermission = new Schema({
   listener_account_id: String,
   creator_account_id: String,
+  approved: Boolean
 });
 
 module.exports = mongoose.model('follow_permission', FollowPermission);
