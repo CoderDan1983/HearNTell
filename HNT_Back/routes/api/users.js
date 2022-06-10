@@ -11,7 +11,7 @@ router.route('/')
 router.route('/:id')
     .get(verifyRoles(ROLES_LIST.Admin), usersController.getUser);
 
-module.exports = router;
+
 
 // const express = require('express');
 // const router = express.Router();
@@ -33,8 +33,14 @@ module.exports = router;
 
 // todo USER Routes /api/user
 
-//     Create a user                               POST /api/user
+// //     Create a user                               POST /api/user
+// router.post('/', usersController.create);
 
-//     Update a user                               POST /api/user/{user_id}
+// //     Update a user                               POST /api/user/{user_id}
+// router.post('/:user_id', usersController.update);
 
-//     Remove a user                               DELETE /api/user/{user_id}
+// //     Remove a user                               DELETE /api/user/{user_id}
+// router.delete('/:user_id', usersController.create);
+
+
+module.exports = router;

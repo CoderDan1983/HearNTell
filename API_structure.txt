@@ -25,7 +25,7 @@ TAG Routes /api/tag
 
     Create a new tag                            POST /api/tag
 
-    Get a list of all tags                      GET /api/tag/all
+    Get a list of all tags                      GET /api/tag
 
     Get tags for a story                        GET /api/tag/story/{story_id}
 
@@ -67,7 +67,7 @@ STORY RATING Routes /api/rating
 
     Get a story rating by id                    GET /api/rating/{story_rating_id}
 
-    Update an existing rating                   POST /api/rating/{story_id}
+    Update an existing rating                   POST /api/rating/{story_rating_id}
 
     Delete a rating                             DELETE /api/rating/{story_rating_id}      
 
@@ -87,11 +87,11 @@ CREATOR Routes /api/creator
 
     Get creator profile                         GET /api/creator/{user_id}
 
-    Subscriber requests                         GET /api/creator/{user_id}/subscriber_requests
+    Subscription requests                       GET /api/creator/{user_id}/subscription_requests
 
-    Subscriber requests approved                GET /api/creator/{user_id}/subscriber_requests/approved
+    Subscription requests approved              GET /api/creator/{user_id}/subscription_requests/approved
 
-    Subscriber requests pending                 GET /api/creator/{user_id}/subscriber_requests/pending
+    Subscription requests pending               GET /api/creator/{user_id}/subscription_requests/pending
 
 
 CAMPAIGN Routes /api/campaign
@@ -115,7 +115,7 @@ AD Routes /api/ad
 
     Create an ad                                POST /api/ad
 
-    Get list of ads                             GET /api/ad
+    Get list of all ads                             GET /api/ad
 
     Update an ad                                POST /api/ad/{ad_id}
 
