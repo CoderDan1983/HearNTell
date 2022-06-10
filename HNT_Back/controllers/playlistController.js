@@ -1,3 +1,6 @@
+const Playlist = require('../model/Playlist');
+
+
 const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
 // import { fakeStories, fakeStories1,  fakeTags, fakeSearches, fakeSubList, fakeBaskets, fakeQueue,
 // } from '../../HNT_Front/src/components/fakeApi/fakeStories';
@@ -21,7 +24,63 @@ const getPlaylist = async (req, res) => {
   res.json(playlists[0]["playlists"]);
 }
 
+//* Create a new playlist
+const create = async (req, res) => {
+
+  res.json('');
+};
+
+//* Get playlists for user
+const userPlaylists = async (req, res) => {
+
+  res.json('');
+};
+
+//* Get user's queue
+const userQueue = async (req, res) => {
+
+  res.json('');
+};
+
+//* Get single playlist
+const show = async (req, res) => {
+
+  res.json('');
+};
+
+//* Update an existing playlist
+const update = async (req, res) => {
+
+  res.json('');
+};
+
+//* Add story to playlist
+const addStory = async (req, res) => {
+
+  res.json('');
+};
+
+//* Remove story from playlist
+const removeStory = async (req, res) => {
+
+  res.json('');
+};
+
+//* Subscription requests pending
+const subscrptionsPending = async (req, res) => {
+
+  res.json('');
+};
+
 module.exports = {
   getPlaylist,
+  create,
+  userPlaylists,
+  userQueue,
+  show,
+  update,
+  remove,
+  addStory,
+  removeStory
 }
 

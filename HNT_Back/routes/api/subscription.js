@@ -25,12 +25,12 @@ router.delete('/:subscription_id', subscriptionController.remove);
 router.post('/request', subscriptionController.createRequest);
 
 //     Approve subscription request                POST /api/subscription/request/{subscription_request_id}/approve
-router.post('/request/:subscription_request_id/approve', subscriptionController.getListenerSubscription);
+router.post('/request/:subscription_request_id/approve', subscriptionController.approveRequest);
 
 //     Reject subscription request                 POST /api/subscription/request/{subscription_request_id}/reject
-router.post('/request/:subscription_request_id/reject', subscriptionController.getListenerSubscription);
+router.post('/request/:subscription_request_id/reject', subscriptionController.rejectRequest);
 
 //     Delete subscription request                 DELETE /api/subscription/request/{subscription_request_id}
-router.delete('/request/:subscription_request_id', subscriptionController.getListenerSubscription);
+router.delete('/request/:subscription_request_id', subscriptionController.removeRequest);
 
 module.exports = router;

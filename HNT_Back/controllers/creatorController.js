@@ -1,39 +1,42 @@
-// console.log('creatorController!') //thus far ^_^
-const updateCreatorProfile = async(req, res) => {
-    console.log('updateCreatorProfile: ');
-    console.log(req.body);
-}
-//const User = require('../model/User');
+const Creator = require('../model/Creator');
 
-const getAllUsers = async (req, res) => {
-    console.log('getAllUsers');
-    const users = await User.find();
-    if (!users) return res.status(204).json({ 'message': 'No users found' });
-    res.json(users);
-}
 
-const deleteUser = async (req, res) => {
-    if (!req?.body?.id) return res.status(400).json({ "message": 'User ID required' });
-    const user = await User.findOne({ _id: req.body.id }).exec();
-    if (!user) {
-        return res.status(204).json({ 'message': `User ID ${req.body.id} not found` });
-    }
-    const result = await user.deleteOne({ _id: req.body.id });
-    res.json(result);
-}
+//* Create / Update creator profile
+const create = async (req, res) => {
 
-const getUser = async (req, res) => {
-    if (!req?.params?.id) return res.status(400).json({ "message": 'User ID required' });
-    const user = await User.findOne({ _id: req.params.id }).exec();
-    if (!user) {
-        return res.status(204).json({ 'message': `User ID ${req.params.id} not found` });
-    }
-    res.json(user);
-}
+    res.json('');
+};
+
+//* Get creator profile
+const creatorProfile = async (req, res) => {
+
+  res.json('');
+};
+
+//* Subscription requests
+const subscriptionRequests = async (req, res) => {
+
+  res.json('');
+};
+
+//* Subscription requests approved
+const subscriptionsApproved = async (req, res) => {
+
+  res.json('');
+};
+
+//* Subscription requests pending
+const subscriptionsPending = async (req, res) => {
+
+  res.json('');
+};
+
+
 
 module.exports = {
-    updateCreatorProfile,
-    getAllUsers,
-    deleteUser,
-    getUser
+  create,
+  creatorProfile,
+  subscriptionRequests,
+  subscriptionsApproved,
+  subscriptionsPending
 }

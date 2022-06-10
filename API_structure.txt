@@ -115,7 +115,9 @@ AD Routes /api/ad
 
     Create an ad                                POST /api/ad
 
-    Get list of all ads                             GET /api/ad
+    Get list of all ads                         GET /api/ad
+
+    Get single ad                               GET /api/ad/{ad_id}
 
     Update an ad                                POST /api/ad/{ad_id}
 

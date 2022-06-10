@@ -12,6 +12,9 @@ router.post('/', adController.create);
 // Get list of all ads                         GET /api/ad
 router.get('/', adController.index);
 
+// Get single ad                        GET /api/ad/{ad_id}
+router.get('/:ad_id', adController.show);
+
 // Update an ad                                POST /api/ad/{ad_id}
 router.post('/:ad_id', adController.update);
 

@@ -1,26 +1,60 @@
-const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
-// import { fakeStories, fakeStories1,  fakeTags, fakeSearches, fakeSubList, fakeBaskets, fakeQueue,
-// } from '../../HNT_Front/src/components/fakeApi/fakeStories';
+const Subscription = require('../model/Subscription');
 
-//* Gets a single story
-const getListenerSubscription = async (req, res) => {
-  console.log('getListenerSubscription backend!')
-  const sub_id = req.params.sub_id;
-  //we are recieving the story_id :)
-  console.log(sub_id);
-  // const story_id = req.body.story_id;
-  // const story = await Story.findOne({_id: story_id});
-  // if (!story) return res.status(204).json({ 'message': 'No story found' });
-  // // res.json(story);
-  const subscriptions = fake.fakeSubList.filter((sub)=>{
-    return sub.user_id === sub_id;
-  });
-  
-  // console.log('subscriptions matching _id of ' + sub_id + " are: ");
-  // console.log(subscriptions)
-  res.json(subscriptions[0]["sublist"]);
-}
+//* Get list of subscriptions for user
+const userIndex = async (req, res) => {
+
+  res.json('');
+};
+
+//* Create subscription
+const create = async (req, res) => {
+
+  res.json('');
+};
+
+//* Update subscription
+const update = async (req, res) => {
+
+  res.json('');
+};
+
+//* Delete subscription
+const remove = async (req, res) => {
+
+  res.json('');
+};
+
+//* Create subscription request
+const createRequest = async (req, res) => {
+
+  res.json('');
+};
+
+//* Approve subscription request
+const approveRequest = async (req, res) => {
+
+  res.json('');
+};
+
+//* Reject subscription request
+const rejectRequest = async (req, res) => {
+
+  res.json('');
+};
+
+//* Delete subscription request
+const removeRequest = async (req, res) => {
+
+  res.json('');
+};
 
 module.exports = {
-  getListenerSubscription,
+  userIndex,
+  create,
+  update,
+  remove,
+  createRequest,
+  approveRequest,
+  rejectRequest,
+  removeRequest
 }

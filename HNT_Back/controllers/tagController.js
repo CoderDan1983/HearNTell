@@ -1,8 +1,10 @@
+const Tag = require('../model/Tag');
+
 const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
 // import { fakeStories, fakeStories1,  fakeTags, fakeSearches, fakeSubList, fakeBaskets, fakeQueue,
 // } from '../../HNT_Front/src/components/fakeApi/fakeStories';
 
-//* Gets a single story
+//* Get a single tag
 const getTag = async (req, res) => {
   console.log('getTag backend!')
   const tag_id = req.params.tag_id;
@@ -21,6 +23,52 @@ const getTag = async (req, res) => {
   res.json(tags);
 }
 
+
+//* Create a new tag
+const create = async (req, res) => {
+
+  res.json('');
+};
+
+//* Get a list of all tags
+const index = async (req, res) => {
+
+  res.json('');
+};
+
+//* Get all the tags for a specific story
+const tagsForStory = async (req, res) => {
+
+  res.json('');
+};
+
+//* Get most popular tags
+const popular = async (req, res) => {
+
+  res.json('');
+};
+
+//* Update an existing tag
+const update = async (req, res) => {
+
+  res.json('');
+};
+
+//* Delete a tag
+const remove = async (req, res) => {
+
+  res.json('');
+};
+
+
+
+
 module.exports = {
+  create,
+  index,
+  tagsForStory,
+  popular,
   getTag,
+  update,
+  remove
 }

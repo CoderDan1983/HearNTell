@@ -13,13 +13,13 @@ router.post('/:user_id', creatorController.create);
 // Get creator profile                         GET /api/creator/{user_id}
 router.get('/:user_id', creatorController.creatorProfile);
 
-// Subscriber requests                         GET /api/creator/{user_id}/subscription_requests
+// Subscription requests                         GET /api/creator/{user_id}/subscription_requests
 router.get('/:user_id/subscription_requests', creatorController.subscriptionRequests);
 
-// Subscriber requests approved                GET /api/creator/{user_id}/subscription_requests/approved
+// Subscription requests approved                GET /api/creator/{user_id}/subscription_requests/approved
 router.get('/:user_id/subscription_requests/approved', creatorController.subscriptionsApproved);
 
-// Subscriber requests pending                 GET /api/creator/{user_id}/subscription_requests/pending
+// Subscription requests pending                 GET /api/creator/{user_id}/subscription_requests/pending
 router.get('/:user_id/subscription_requests/pending', creatorController.subscrptionsPending);
 
 

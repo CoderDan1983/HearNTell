@@ -1,4 +1,3 @@
-
 const Story = require('../model/Story');
 const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
 // import { fakeStories, fakeStories1,  fakeTags, fakeSearches, fakeSubList, fakeBaskets, fakeQueue,
@@ -61,17 +60,72 @@ const saveStory = async (req, res) => {
 
 }
 
-//todo API to search for stories by tag, creator, or title contains.
-//* takes in 
-// const searchStories = await (req, res) => {
+//* Create a new story
+const create = async (req, res) => {
 
-// }
+  res.json('');
+};
+
+//* Get most popular stories for all tags
+const popular = async (req, res) => {
+
+  res.json('');
+};
+
+//* Get most popular stories for a tag
+const popularByTag = async (req, res) => {
+
+  res.json('');
+};
+
+//* Search stories (tag, author, title)
+const search = async (req, res) => {
+
+  res.json('');
+};
+
+//* Get stories by playlist
+const storiesForPlaylist = async (req, res) => {
+
+  res.json('');
+};
+
+//* Get stories by creator
+const storiesByCreator = async (req, res) => {
+
+  res.json('');
+};
+
+//* Get single story
+const show = async (req, res) => {
+
+  res.json('');
+};
+
+//* Update an existing story
+const update = async (req, res) => {
+
+  res.json('');
+};
+
+//* Delete a story
+const remove = async (req, res) => {
+
+  res.json('');
+};
 
 module.exports = {
   getStory,
   getStories,
-  // saveStory,
-  // searchStories,
+  create,
+  popular,
+  popularByTag,
+  search,
+  storiesForPlaylist,
+  storiesByCreator,
+  show,
+  update,
+  remove
 }
 
 

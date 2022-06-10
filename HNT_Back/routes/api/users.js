@@ -40,7 +40,7 @@ router.route('/:id')
 // router.post('/:user_id', usersController.update);
 
 // //     Remove a user                               DELETE /api/user/{user_id}
-// router.delete('/:user_id', usersController.create);
+// router.delete('/:user_id', usersController.deleteUser);
 
 
 module.exports = router;
