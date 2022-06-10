@@ -12,7 +12,7 @@ router.post('/', campaignController.create);
 router.get('/', campaignController.index);
 
 // Get all an advertiser's Campaigns           GET /api/campaign/advertiser/{user_id}
-router.get('/advertiser/:user_id', campaignController.advertiserIndex);
+router.get('/advertiser/:account_id', campaignController.advertiserIndex);
 
 // Get single campaign                         GET /api/campaign/{campaign_id}
 router.get('/:campaign_id', campaignController.show);
