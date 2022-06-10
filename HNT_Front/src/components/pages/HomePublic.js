@@ -1,6 +1,6 @@
 import { useNavigate, Link, useParams } from "react-router-dom";
 import { useState, useMemo } from 'react';
-import { getThenSet } from '../../../hooks/useBackendRequest'
+import { getThenSet } from '../../hooks/useBackendRequest'
 
 import StoryItem from '../parts/StoryItem';
 import SearchComponent from '../parts/SearchComponent';

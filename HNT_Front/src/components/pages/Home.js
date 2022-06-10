@@ -7,9 +7,9 @@ import { Button, Icon } from '@mui/material';
 
 
 // import { fakeStories } from '../../fakeApi/fakeStories';
-import StoryItem from '../../parts/StoryItem';
+import StoryItem from '../parts/StoryItem';
 // import { DeleteForever } from '@mui/icons-material';
-import '../../../index.css';
+import '../../index.css';
 import { getThenSet } from '../../hooks/useBackendRequest'
 
 // import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';

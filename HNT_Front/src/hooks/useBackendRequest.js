@@ -7,7 +7,7 @@ export async function getThenSet(url, setter){
             headers: { 'Content-Type': 'application/json' },
             withCredentials: true
         });
-        console.log(story?.data);
+        // console.log(story?.data);
         if(story?.data){
             const data = story.data;
             if(Array.isArray(setter)){
@@ -33,6 +33,7 @@ export async function getByIdThenSet(path, _id, setter){
             headers: { 'Content-Type': 'application/json' },
             withCredentials: true
         });
+        console.log(typeof(story?.data));
         console.log(story?.data);
         if(story?.data){
             const data = story.data;

@@ -1,8 +1,8 @@
 import { Autocomplete, TextField } from '@mui/material';
 
 export default function SearchComponent({ options }){
-    console.log('options are: ');
-    console.log(options);
+    // console.log('options are: ');
+    // console.log(options);
     return(<Autocomplete
         freeSolo={ true }
         disablePortal

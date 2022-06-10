@@ -12,11 +12,16 @@ const getSearch = async (req, res) => {
   // const story = await Story.findOne({_id: story_id});
   // if (!story) return res.status(204).json({ 'message': 'No story found' });
   // // res.json(story);
+
   const searches = fake.fakeSearches.filter((search)=>{
-    return search._id === search_id;
+    return search.user_id === search_id;
   });
   
-  console.log('searches matching _id of ' + search_id + " are: ");
-  console.log(searches)
-  res.json({"searches": searches });
+  // console.log('searches matching _id of ' + search_id + " are: ");
+  // console.log(searches)
+  res.json(searches[0]["searches"]);
+}
+
+module.exports = {
+  getSearch,
 }

@@ -17,13 +17,15 @@ export default function Listener(){
     const [subscriptions, setSubscriptions] = useState([]);
     const [playlists, setPlaylists] = useState([]);
     const [queue, setQueue] = useState([]);
-
+    // const [loading, setLoading] = useState(false);
+    console.log('render!')
     useMemo(() => {
         getByIdThenSet('search', user_id, setSearches);
         getByIdThenSet('subscription/listener', user_id, setSubscriptions);
         getByIdThenSet('playlist', user_id, setPlaylists);
         getByIdThenSet('queue', user_id, setQueue);
-        console.log('listener should be loaded this render :) ')
+        console.log('listener should be loaded this render :) ');
+        // setLoading(true);
     },[user_id]);
 
     return(<div className='main'>
@@ -35,12 +37,13 @@ export default function Listener(){
         <div className="mainItems">
             <div>
                 People I subscribe to
-                { subscriptions.sublist && subscriptions.sublist.map((sub)=>{
+                { subscriptions && subscriptions.map((sub)=>{
                     return (<LinkListItem 
                         key={sub._id} 
                         to= "/creatorProfile"
                         name={ sub.author } 
                         Ico={ DeleteForever }
+                        _id = { sub._id } 
                     />)
                 })}
             </div>
@@ -48,11 +51,14 @@ export default function Listener(){
         <div className="mainItems">
             <div>
                 My Playlists
-                { playlists.playlists && playlists.playlists.map((playlist)=>{
+                { playlists && playlists.map((playlist)=>{
+                    console.log('playlist is: ')
+                    console.log(playlist)
                     return (<LinkListItem 
                         key={ playlist._id } 
                         to= "/listenerPlaylist"
-                        name={ playlist.title } 
+                        name={ playlist.title }
+                        _id = { playlist._id } 
                     />)
                 })}
             </div>
@@ -63,7 +69,7 @@ export default function Listener(){
                 MyQueue <br />
                 (Where does this go?)
             </div>
-            { queue.queue && queue.queue.map((item)=>{
+            { queue && queue.map((item)=>{
                 return (<LinkListItem 
                     key={item._id} 
                     to= "/listenerSingleStory" 

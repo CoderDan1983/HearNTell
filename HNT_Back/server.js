@@ -11,7 +11,7 @@ const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
 const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
-const { fakeSearches } = require('../HNT_Front/src/components/fakeApi/fakeStories');
+
 const PORT = process.env.PORT || 3500;
 
 // Connect to MongoDB
@@ -48,14 +48,16 @@ app.use('/logout', require('./routes/logout'));
 
 app.use('/getpublic', require('./routes/getpublic')); //* see notes in getpublic :)
 
-app.use(verifyJWT); //* everything after this will use the jwt middleware!
-
 app.use('/creator', require('./routes/creator'));
 app.use('/story', require('./routes/api/story'));
 app.use('/search', require('./routes/api/search'));
 app.use('/subscription', require('./routes/api/subscriber'));
 app.use('/playlist', require('./routes/api/playlist'));
 app.use('/queue', require('./routes/api/queue'));
+
+app.use(verifyJWT); //* everything after this will use the jwt middleware!
+
+
 
 app.use('/employees', require('./routes/api/employees'));
 app.use('/users', require('./routes/api/users')); //

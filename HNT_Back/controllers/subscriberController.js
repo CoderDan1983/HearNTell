@@ -13,10 +13,14 @@ const getListenerSubscription = async (req, res) => {
   // if (!story) return res.status(204).json({ 'message': 'No story found' });
   // // res.json(story);
   const subscriptions = fake.fakeSubList.filter((sub)=>{
-    return sub._id === sub_id;
+    return sub.user_id === sub_id;
   });
   
-  console.log('subscriptions matching _id of ' + sub_id + " are: ");
-  console.log(subscriptions)
-  res.json({"subscriptions": subscriptions });
+  // console.log('subscriptions matching _id of ' + sub_id + " are: ");
+  // console.log(subscriptions)
+  res.json(subscriptions[0]["sublist"]);
+}
+
+module.exports = {
+  getListenerSubscription,
 }

@@ -33,7 +33,7 @@ const getStories = async (req, res) => {
 
   console.log('stories are: ');
   console.log(stories)
-  res.json({"stories": stories });
+  res.json(stories);
 }
 
 //* Create or update a single story
@@ -69,6 +69,7 @@ const saveStory = async (req, res) => {
 
 module.exports = {
   getStory,
+  getStories,
   // saveStory,
   // searchStories,
 }

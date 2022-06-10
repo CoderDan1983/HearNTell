@@ -13,10 +13,15 @@ const getPlaylist = async (req, res) => {
   // if (!story) return res.status(204).json({ 'message': 'No story found' });
   // // res.json(story);
   const playlists = fake.fakeBaskets.filter((playlist)=>{
-    return playlist._id === playlist_id;
+    return playlist.user_id === playlist_id;
   });
   
-  console.log('playlists matching _id of ' + playlist_id + " are: ");
-  console.log(playlists)
-  res.json({"playlists": playlists });
+  // console.log('playlists matching _id of ' + playlist_id + " are: ");
+  // console.log(playlists)
+  res.json(playlists[0]["playlists"]);
 }
+
+module.exports = {
+  getPlaylist,
+}
+

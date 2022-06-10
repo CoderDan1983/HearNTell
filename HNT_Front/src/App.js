@@ -63,7 +63,7 @@ function App() {
         <Route element={ <PersistLogin /> }>
           <Route element={ <RequiredAuth allowedRoles={[ ROLES.Member ]}/> }>
             <Route path="/" element = { <Home /> } />
-            <Route path="listenerPlaylist/:playlist_id" element = { <ListenerPlaylist /> } />
+            <Route path="listenerPlaylist/:story_id" element = { <ListenerPlaylist /> } />
             <Route path="ratingModal/:story_id" element = { <RatingModal /> } />
           </Route>
 

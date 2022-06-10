@@ -118,7 +118,8 @@ const fakeSearches = [
             "cat videos", "tails wagging",
             "fairy tale", "suspense",
             "ducks", "adventure",
-            "hats", "superheroes"
+            "hats", "superheroes",
+            "zero", "hero",
         ]
     },
     {
@@ -213,7 +214,7 @@ async function loadStoriesByTag(tag, setter){
     setter(newStories)
 }
 
-exports.default = {
+module.exports = {
     fakeStories, 
     fakeStories1,
     fakeTags,
