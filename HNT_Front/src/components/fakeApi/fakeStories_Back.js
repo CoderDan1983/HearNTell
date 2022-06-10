@@ -1,7 +1,7 @@
 const fakeStories = [
     {
         title: "3 little pigs",
-        to: '/listener',
+        //to: '/listener',
         _id: "0",
         rating: 4.2,
         author: "stephen king",
@@ -10,7 +10,7 @@ const fakeStories = [
     },
     {
         title: "boy who cried woof",
-        to: '/listener',
+        //to: '/listener',
         _id: "1",
         rating: 3.7,
         author: "stephenie meyer",
@@ -20,7 +20,7 @@ const fakeStories = [
     { 
         title: "Once upon a Thyme", 
         _id: "4", 
-        to: "/listener",
+        //to: "/listener",
         rating: 4.8,
         author: "stephen king",
         length: 934293,
@@ -28,7 +28,7 @@ const fakeStories = [
     },
     { title: "A Salt and Battery", 
         _id: "5", 
-        to: "/listener",
+        //to: "/listener",
         rating: 1.9,
         author: "shakespeare",
         length: 3429,
@@ -37,7 +37,7 @@ const fakeStories = [
     { 
         title: "Lit Math Test", 
         _id: "6", 
-        to: "/listener",
+        //to: "/listener",
         rating: 3.9,
         author: "henry david throw",
         length: 9999,
@@ -52,7 +52,7 @@ const fakeStories1 = [
         author: "stephen king",
         length: 2493,
         tags: ["fairy tale", "allegory"],
-        to: '/listener',
+        //to: '/listener',
         _id: "2",
     },
     {
@@ -61,7 +61,7 @@ const fakeStories1 = [
         author: "fred meyer",
         length: 99432,
         tags: ["fairy tale", "children", "terror"],
-        to: '/listener',
+        //to: '/listener',
         _id: "3",
     }
 ]

@@ -1,6 +1,6 @@
-import { useNavigate, Link, useParams } from "react-router-dom";
+// import { Link, useParams } from "react-router-dom";
 import { useState, useMemo } from 'react';
-import { getThenSet } from '../../hooks/useBackendRequest'
+import { getThenSet_public } from '../../hooks/useBackendRequest';
 
 import StoryItem from '../parts/StoryItem';
 import SearchComponent from '../parts/SearchComponent';
@@ -9,12 +9,16 @@ import { fakeStories, fakeStories1, fakeTags, fakeSearches, loadStoriesByTag } f
 // import { Grid, Item } from '@mui/material';
 import '../../index.css';
 export default function HomePublic(){
+    // const axP = useAxiosPrivate();
+    // const nav = useNavigate();
+    // const loc = useLocation();
+
     const [stories, setStories] = useState([]);
 
     // const { story_id } = useParams();
 
     //* this fetches the story with story_id, and sets the story to the returned value :)
-    useMemo(() => getThenSet('getpublic/story', setStories),[]);
+    useMemo(() => getThenSet_public(setStories, 'getpublic/story'),[]);
 
     // console.log('fakeSearches is: ');
     // console.log(fakeSearches);

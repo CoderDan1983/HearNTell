@@ -2,6 +2,23 @@ const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
 // import { fakeStories, fakeStories1,  fakeTags, fakeSearches, fakeSubList, fakeBaskets, fakeQueue,
 // } from '../../HNT_Front/src/components/fakeApi/fakeStories';
 
+
+
+
+// const getUser = async (req, res) => {
+//   if (!req?.params?.id) return res.status(400).json({ "message": 'User ID required' });
+//   const user = await User.findOne({ _id: req.params.id }).exec();
+//   if (!user) {
+//       return res.status(204).json({ 'message': `User ID ${req.params.id} not found` });
+//   }
+//   res.json(user);
+// }
+
+
+
+
+
+
 //* Gets a single story
 const getPlaylist = async (req, res) => {
   console.log('getPlaylist backend!')
