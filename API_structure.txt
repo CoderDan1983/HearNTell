@@ -1,17 +1,16 @@
-API Routes
-
+API Routes Planning Doc
 
 STORY Routes /api/story
   
-     Create a new story                         POST /api/story
+    Create a new story                          POST /api/story
 
-     Get most popular stories for all tags      GET /api/story/tag/all
+    Get most popular stories for all tags       GET /api/story/tag/all
 
-     Get most popular stories for a tag         GET /api/story/tag/{tag_id}
+    Get most popular stories for a tag          GET /api/story/tag/{tag_id}
 
-     Search stories (tag, author, title)        GET /api/story/search/{search_string}
+    Search stories (tag, author, title)         GET /api/story/search/{search_string}
 
-     Get stories by playlist                    GET /api/story/playlist/{playlist_id}
+    Get stories by playlist                     GET /api/story/playlist/{playlist_id}
 
     Get stories by creator                      GET /api/story/creator/{creator_id}
 
@@ -21,17 +20,16 @@ STORY Routes /api/story
 
     Delete a story                              DELETE /api/story/{story_id}
 
-  
 
 TAG Routes /api/tag
 
     Create a new tag                            POST /api/tag
 
-     Get a list of all tags                     GET /api/tag/all
+    Get a list of all tags                      GET /api/tag/all
 
     Get tags for a story                        GET /api/tag/story/{story_id}
 
-     Get most popular tags                      GET /api/tag/popular
+    Get most popular tags                       GET /api/tag/popular
 
     Get single tag                              GET /api/tag/{tag_id}
 
@@ -137,7 +135,6 @@ ACCOUNT Routes /api/account
     Delete an account                           DELETE /api/account/{account_id}
   
 
-
 SUBSCRIPTION Routes /api/subscription
 
     Get list of subscriptions for user          GET /api/subscription/user/{user_id}
@@ -166,3 +163,10 @@ USER Routes /api/user
     Remove a user                               DELETE /api/user/{user_id}
 
 
+USER SEARCH Routes /api/user_search
+
+    Create (record) new search                  POST /api/user_search
+
+    Remove search record                        DELETE /api/user_search/{user_search_id}
+
+    Get searches by user                        GET /api/user_search/{user_id}

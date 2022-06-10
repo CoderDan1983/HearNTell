@@ -3,10 +3,10 @@
 const mongoose = require('mongoose'); 
 const Schema = mongoose.Schema;
 
-const FollowPermission = new Schema({
+const SubscriptionRequest = new Schema({
   listener_account_id: String,
   creator_account_id: String,
   approved: Boolean
 });
 
-module.exports = mongoose.model('follow_permission', FollowPermission);
+module.exports = mongoose.model('subscription_request', SubscriptionRequest);

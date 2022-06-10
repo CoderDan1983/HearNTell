@@ -27,3 +27,14 @@ module.exports = router;
 //     .get(verifyRoles(ROLES_LIST.Admin), usersController.getUser);
 
 // module.exports = router;
+
+
+
+
+// todo USER Routes /api/user
+
+//     Create a user                               POST /api/user
+
+//     Update a user                               POST /api/user/{user_id}
+
+//     Remove a user                               DELETE /api/user/{user_id}
