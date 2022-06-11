@@ -9,8 +9,8 @@ const tagFitController = require('../../controllers/tagFitController.js');
 // Create/update a new tag_fit                 POST /api/tag_fit
 router.post('/', storyController.create);
 
-// Get all the tag_fits for a tag              GET /api/tag_fit/tag/{tag_id}
-router.get('/tag/:tag_id', storyController.tagIndex);
+// Get all the tag_fits for a tag              GET /api/tag_fit/tag/{tag_name}
+router.get('/tag/:tag_name', storyController.tagIndex);
 
 // Remove a tag fit                            DELETE /api/tag_fit/{tag_fit_id}
 router.delete('/:tag_fit_id', storyController.remove);
