@@ -1,5 +1,9 @@
 const Story = require('../model/Story');
-const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
+const Tag = require('../model/Tag');
+const Playlist = require('../model/Playlist');
+
+const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back");
+
 // import { fakeStories, fakeStories1,  fakeTags, fakeSearches, fakeSubList, fakeBaskets, fakeQueue,
 // } from '../../HNT_Front/src/components/fakeApi/fakeStories';
 
@@ -63,12 +67,24 @@ const saveStory = async (req, res) => {
 //* Create a new story
 const create = async (req, res) => {
 
-  res.json('');
+  const new_story_info = {
+      id: req.body.story_id,
+      account_id: req.body.account_id,
+      audio_url: req.body.audio_url,
+      name: req.body.name,
+      tag_names: req.body.tag_names, 
+      description: req.body.description,
+      duration: req.body.duration,
+      private: req.body.private, 
+    };
+
+  let story = await Story.create(new_story_info);
+  res.json(story);
 };
 
 //* Get most popular stories for all tags
 const popular = async (req, res) => {
-
+  
   res.json('');
 };
 
@@ -86,32 +102,58 @@ const search = async (req, res) => {
 
 //* Get stories by playlist
 const storiesForPlaylist = async (req, res) => {
+  const playlist_id = req.params.playlist_id;
+  let playlist_stories = [];
 
-  res.json('');
+  let playlist = await Playlist.findOne({_id: playlist_id});
+  let playlist_story_ids = playlist.story_ids;
+
+  playlist_story_ids.forEach(story_id => {
+    let story = await Story.findOne({_id: story_id});
+    playlist_stories.push(story);
+  });
+  
+  res.json(playlist_stories);
 };
 
 //* Get stories by creator
 const storiesByCreator = async (req, res) => {
-
-  res.json('');
+  const creator_id = req.params.creator_id;
+  let stories = await Story.find({account_id: creator_id});
+  res.json(stories);
 };
 
 //* Get single story
 const show = async (req, res) => {
-
-  res.json('');
+  const story_id = req.params.story_id;
+  let story = await Story.findOne({_id: story_id});
+  res.json(story);
 };
 
 //* Update an existing story
 const update = async (req, res) => {
+  const story_id = req.params.story_id;
+  const story_data = {
+      id: req.body.story_id,
+      account_id: req.body.account_id,
+      audio_url: req.body.audio_url,
+      name: req.body.name,
+      tag_names: req.body.tag_names, 
+      description: req.body.description,
+      duration: req.body.duration,
+      private: req.body.private, 
+    };
 
-  res.json('');
+  const story = await Story.findOneAndUpdate({_id: story_id}, story_data, {upsert: true});
+  res.json(story);
 };
 
 //* Delete a story
 const remove = async (req, res) => {
+  const story_id = req.params.story_id;
 
-  res.json('');
+  let story = await Story.findOneAndDelete({_id: story_id});
+  res.json(story);
 };
 
 module.exports = {
@@ -129,4 +171,7 @@ module.exports = {
 }
 
 
+//* How should we calculate the most popular stories?
 
+  // Total stars from all the ratings a story received?
+    // Should we consider time, like the past 30 days?

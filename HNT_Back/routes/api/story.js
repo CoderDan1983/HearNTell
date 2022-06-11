@@ -8,7 +8,7 @@ module.exports = router;
 //* STORY Routes /api/story
   
 //     Create a new story                          POST /api/story
-router.post('/:story_id', storyController.create);
+router.post('/', storyController.create);
 
 //     Get most popular stories for all tags       GET /api/story/tag/all
 router.get('/tag/all', storyController.popular);
