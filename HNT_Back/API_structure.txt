@@ -6,7 +6,7 @@ STORY Routes /api/story
 
     Get most popular stories for all tags       GET /api/story/tag/all
 
-    Get most popular stories for a tag          GET /api/story/tag/{tag_id}
+    Get most popular stories for a tag          GET /api/story/tag/{tag_name}
 
     Search stories (tag, author, title)         GET /api/story/search/{search_string}
 

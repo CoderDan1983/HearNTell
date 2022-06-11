@@ -13,8 +13,8 @@ router.post('/', storyController.create);
 //     Get most popular stories for all tags       GET /api/story/tag/all
 router.get('/tag/all', storyController.popular);
 
-//     Get most popular stories for a tag          GET /api/story/tag/{tag_id}
-router.get('/tag/:tag_id', storyController.popularByTag);
+//     Get most popular stories for a tag          GET /api/story/tag/{tag_name}
+router.get('/tag/:tag_name', storyController.popularByTag);
 
 //     Search stories (tag, author, title)         GET /api/story/search/{search_string}
 router.get('/search/:search_string', storyController.search);

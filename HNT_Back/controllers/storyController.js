@@ -82,22 +82,38 @@ const create = async (req, res) => {
   res.json(story);
 };
 
-//* Get most popular stories for all tags
+//todo Get most popular stories for all tags
 const popular = async (req, res) => {
-  
-  res.json('');
+  let stories = await Story.find({},) // sort by popularity_rating
+  res.json(stories);
 };
 
-//* Get most popular stories for a tag
+//todo Get most popular stories for a tag
 const popularByTag = async (req, res) => {
-
-  res.json('');
+  const tag_name = req.params.tag_name;
+  let stories = await Story.find({tag_name: tag_name}, ) // sort by popularity_rating
+  res.json(stories);
 };
 
-//* Search stories (tag, author, title)
+//Search stories (tag, author, title)
 const search = async (req, res) => {
+  const search_string = req.params.search_string;
 
-  res.json('');
+  //? Get tags that match
+  let tag_stories = await Story.find({tag_names: search_string});
+
+  //? Get creator accounts that match name
+  let creator_accounts = await Creator.find({name: search_string});
+
+  //? get titles that match
+  let title_stories = await Story.find({name: search_string});
+
+  let search_results = {
+    tag_matched_stories: tag_stories,
+    creator_account_matches: creator_accounts,
+    title_matched_stories: title_stories
+  }
+  res.json(search_results);
 };
 
 //* Get stories by playlist
