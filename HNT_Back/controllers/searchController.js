@@ -1,7 +1,7 @@
 const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
 // import { fakeStories, fakeStories1,  fakeTags, fakeSearches, fakeSubList, fakeBaskets, fakeQueue,
 // } from '../../HNT_Front/src/components/fakeApi/fakeStories';
-console.log('search controller!')
+// console.log('search controller!')
 //* Gets a single story
 const getSearch = async (req, res) => {
   // console.log('getSearch backend!')

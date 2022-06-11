@@ -6,6 +6,5 @@ const verifyRoles = require('../../middleware/verifyRoles');
 
 router.route('/:tag_id')
     .get(verifyRoles(ROLES_LIST.Member), tagController.getTag)
-// router.get('/:tag_id', );
 
 module.exports = router;

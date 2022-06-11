@@ -7,6 +7,5 @@ const verifyRoles = require('../../middleware/verifyRoles');
 //* Get a single "queue"
 router.route('/:user_id')
     .get(verifyRoles(ROLES_LIST.Member), queueController.getQueue);
-// router.get('/:user_id', queueController.getQueue);
 
 module.exports = router;

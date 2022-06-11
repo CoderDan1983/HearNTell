@@ -32,41 +32,6 @@ const Home = () => {
     //* this should fetch all the stories ^_^
     useEffect(() => getThenSet_private(axP, navigate, loc, setStories, 'story'),[axP, loc, navigate]);
 
-    // useEffect(()=>{
-    //     //const url = _id ? `/${path}/${_id}` : `/${path}/`
-    //     const url = 'story/';
-    //     let isMounted = true;
-    //     const controller = new AbortController();
-    
-    //     const getSomething = async () => {
-    //         console.log('running getThenSet_private: ')
-    //         try {
-    //             console.log('trying again...')
-    //             const response = await axiosPrivate.get('story/', { // ./users
-    //                 signal: controller.signal
-    //             });
-    //             // const userNames = response.data.map(user => user.username); //grab usernames only. :)
-    //             // console.log(response.data);
-    //             // // console.log(userNames);
-    //             isMounted && setStories(response.data) //if isMounted, then setUsers :D
-    //             // console.log('stateVal is: ');
-    //             // console.log(stateVal); //why undefined???
-    //             //the parameter was response.data, but we didn't need to set/send all that :)
-    //         }
-    //         catch (err){
-    //             console.log("I'm gonna log an error!")
-    //             console.error(err);
-    //             navigate('/login', { state: { from: location }, replace: true })
-    //         }
-    //     }
-    //     getSomething();
-    
-    //     return () =>{ //* cleanup function ^_^
-    //         isMounted = false;
-    //         controller.abort();
-    //     }
-    // }, [])
-
     const signOut = async () => {
         // if used in more components, this should be in context 
         // axios to /logout endpoint 
@@ -89,13 +54,16 @@ const Home = () => {
             {/* <svg data-testid="AccessAlarm">Oh</svg>
             <svg data-testid="ThreeDRotation">NO!</svg> */}
             { stories && stories.map((story, index)=>{
+                const tags = story.tags.map((tag) => tag.tag);
+                console.log('tags: ');
+                console.log(tags);
                 return (<StoryItem 
                     key= { index }
                     title={story.title} 
                     rating={story.rating}
                     author={story.author}
                     length={story.length} 
-                    tags={story.tags}
+                    tags={ tags }
                     to= '/listener'
                 />)
             })}

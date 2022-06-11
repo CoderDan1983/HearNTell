@@ -7,7 +7,7 @@ const getListenerSubscription = async (req, res) => {
   console.log('getListenerSubscription backend!')
   const sub_id = req.params.sub_id;
   //we are recieving the story_id :)
-  console.log(sub_id);
+  // console.log(sub_id);
   // const story_id = req.body.story_id;
   // const story = await Story.findOne({_id: story_id});
   // if (!story) return res.status(204).json({ 'message': 'No story found' });

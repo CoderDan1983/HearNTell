@@ -24,7 +24,7 @@ const getPlaylist = async (req, res) => {
   console.log('getPlaylist backend!')
   const playlist_id = req.params.playlist_id;
   //we are recieving the story_id :)
-  console.log(playlist_id);
+  // console.log(playlist_id);
   // const story_id = req.body.story_id;
   // const story = await Story.findOne({_id: story_id});
   // if (!story) return res.status(204).json({ 'message': 'No story found' });

@@ -76,55 +76,45 @@ export const postThenSet_private = (axiosPrivate, navigate, location, setValue, 
 }
 
 //* for "public" routes. (well, it can be used for that ^_^ )
-// //^ for setter: pass in a single setter, or an array of { setter: setSomething, key: "something" }
-// export async function getThenSet_public(url, setter){
-//     try{
-//         const story = await axios.get(url ,{ //`/api/story/${story_id}`
-//             headers: { 'Content-Type': 'application/json' },
-//             withCredentials: true
-//         });
-//         // console.log(story?.data);
-//         if(story?.data){
-//             const data = story.data;
-//             if(Array.isArray(setter)){
-//                 for(let s=0; s < setter.length; s++){
-//                     setter[s].setter(data[setter[s].key]);
-//                 }
-//             }
-//             else{
-//                 setter(data);
-//             }
-//         }
-//     }
-//     catch(err){
-//         console.log(err);
-//     }
-// }
-
 //^ for setter: pass in a single setter, or an array of { setter: setSomething, key: "something" }
-export async function getThenSet_public(setter, path, { _id } = {}){
+export const getThenSet_public = (setter, path, { _id } = {}) => {
     const url = _id ? `/${path}/${_id}` : `/${path}/`
-    try{
-        const story = await axios.get(url ,{ //`/api/story/${story_id}`
-            headers: { 'Content-Type': 'application/json' },
-            withCredentials: true
-        });
-        console.log(typeof(story?.data));
-        console.log(story?.data);
-        if(story?.data){
-            const data = story.data;
-            if(Array.isArray(setter)){
-                for(let s=0; s < setter.length; s++){
-                    setter[s].setter(data[setter[s].key]);
-                }
-            }
-            else{
-                setter(data);
-            }
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getSomething = async () => {
+        console.log('running getThenSet_public: ')
+        try{
+            const response = await axios.get(url ,{ //`/api/story/${story_id}`
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true,
+                signal: controller.signal,
+            });
+            console.log(typeof(response?.data));
+            console.log(response?.data);
+            isMounted && setter(response.data);
+            // if(story?.data){
+            //     const data = story.data;
+            //     if(Array.isArray(setter)){
+            //         for(let s=0; s < setter.length; s++){
+            //             setter[s].setter(data[setter[s].key]);
+            //         }
+            //     }
+            //     else{
+            //         setter(data);
+            //     }
+            // }
+        }
+        catch(err){
+            console.log(err);
         }
     }
-    catch(err){
-        console.log(err);
+
+    getSomething();
+
+    return () =>{ //* cleanup function ^_^
+        isMounted = false;
+        controller.abort();
     }
 }
 
@@ -155,3 +145,63 @@ export async function postByIdThenSet(setter, path, { _id, payload } = {} ){
         console.log(err);
     }
 }
+
+// export async function getThenSet_public(setter, path, { _id } = {}){
+//     const url = _id ? `/${path}/${_id}` : `/${path}/`
+//     let isMounted = true;
+//     const controller = new AbortController();
+//     try{
+//         const story = await axios.get(url ,{ //`/api/story/${story_id}`
+//             headers: { 'Content-Type': 'application/json' },
+//             withCredentials: true
+//         });
+//         console.log(typeof(story?.data));
+//         console.log(story?.data);
+//         if(story?.data){
+//             const data = story.data;
+//             if(Array.isArray(setter)){
+//                 for(let s=0; s < setter.length; s++){
+//                     setter[s].setter(data[setter[s].key]);
+//                 }
+//             }
+//             else{
+//                 setter(data);
+//             }
+//         }
+//     }
+//     catch(err){
+//         console.log(err);
+//     }
+
+//     return () =>{ //* cleanup function ^_^
+//         isMounted = false;
+//         controller.abort();
+//     }
+// }
+// //^ for setter: pass in a single setter, or an array of { setter: setSomething, key: "something" }
+// export async function postByIdThenSet(setter, path, { _id, payload } = {} ){
+//     const url = _id ? `/${path}/${_id}` : `/${path}/`
+//     try{
+//         const story = await axios.post(url , 
+//         JSON.stringify(payload),
+//         {
+//             headers: { 'Content-Type': 'application/json' },
+//             withCredentials: true
+//         });
+//         console.log(story?.data);
+//         if(story?.data){
+//             const data = story.data;
+//             if(Array.isArray(setter)){
+//                 for(let s=0; s < setter.length; s++){
+//                     setter[s].setter(data[setter[s].key]);
+//                 }
+//             }
+//             else{
+//                 setter(data);
+//             }
+//         }
+//     }
+//     catch(err){
+//         console.log(err);
+//     }
+// }

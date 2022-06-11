@@ -32,25 +32,28 @@ export default function HomePublic(){
                 <h2>Top Stories this Week:</h2>
                 <SearchComponent options={ fakeSearches }/>
             </div>
-            <div className="flexWrapper mainItems">
-                { stories && stories.map((tag, i)=>{
+            {/* <div className="flexWrapper mainItems">
+                { stories && stories.map((story, i)=>{
+                    //lolz, it doesn't matter what tags you pass in.  It loads the same anywayz ^_^
+                    const tags = story.tags.map((tag)=> tag.tag);
                     return(
                         // <div key={i}>Hey</div>
-                        <div key={i} className="tag"  onClick={ (e)=> loadStoriesByTag(tag, setStories) }>
-                            { tag.name }
+                        <div key={i} className="tag"  onClick={ (e)=> loadStoriesByTag(tags, setStories) }>
+                            { story.name }
                         </div>
                     )
                 })}
-            </div>
+            </div> */}
             <div className="storyContainer mainItems">
                 { stories && stories.map((story, i)=>{
+                    const tags = story.tags.map((tag)=> tag.tag);
                     return (<StoryItem 
                         key={ i }
                         title={ story.title}
                         rating= {story.rating}
                         author={story.author}
                         length={story.length}
-                        tags={story.tags}
+                        tags={ tags }
                         to= '/listener'
                     />)
                 })}

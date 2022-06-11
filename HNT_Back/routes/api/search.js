@@ -7,6 +7,5 @@ const verifyRoles = require('../../middleware/verifyRoles');
 //* Get a single "search"
 router.route('/:search_id')
     .get(verifyRoles(ROLES_LIST.Member), searchController.getSearch);
-// router.get('/:search_id', searchController.getSearch);
 
 module.exports = router;

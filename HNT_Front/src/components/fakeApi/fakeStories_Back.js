@@ -6,7 +6,11 @@ const fakeStories = [
         rating: 4.2,
         author: "stephen king",
         length: 2493,
-        tags: ["fairy tale", "allegory", "suspense"],  
+        tags: [
+            { tag: "fairy tale", likes: 984, dislikes: 23 },
+            { tag: "allegory", likes: 323, dislikes: 4 },   
+            { tag: "suspense", likes: 1234, dislikes: 51 },
+        ],
     },
     {
         title: "boy who cried woof",
@@ -15,7 +19,12 @@ const fakeStories = [
         rating: 3.7,
         author: "stephenie meyer",
         length: 99432,
-        tags: ["fairy tale", "children", "terror", "suspense"],
+        tags: [
+            { tag: "fairy tale", likes: 998, dislikes: 103 },
+            { tag: "children", likes: 3429, dislikes: 1 },   
+            { tag: "terror", likes: 19, dislikes: 983 },
+            { tag: "parable", likes: 9382932, dislikes: 0 },
+        ],
     },
     { 
         title: "Once upon a Thyme", 
@@ -24,24 +33,35 @@ const fakeStories = [
         rating: 4.8,
         author: "stephen king",
         length: 934293,
-        tags: ["fairy tale", "allegory", "mythical", "adventure"],  
+        tags: [
+            { tag: "fairy tale", likes: 2342, dislikes: 56 },
+            { tag: "parable", likes: 5532, dislikes: 193 },   
+            { tag: "mythical", likes: 2342, dislikes: 19 },
+            { tag: "adventure", likes: 34568, dislikes: 154 },
+        ],
     },
     { title: "A Salt and Battery", 
         _id: "5", 
-        //to: "/listener",
         rating: 1.9,
         author: "shakespeare",
         length: 3429,
-        tags: ["fairy tale", "clean", "positive"],  
+        tags: [
+            { tag: "fairy tale", likes: 293, dislikes: 155 },
+            { tag: "clean", likes: 352, dislikes: 15 },   
+            { tag: "suspense", likes: 342, dislikes: 34 },
+        ],
     },
     { 
         title: "Lit Math Test", 
         _id: "6", 
-        //to: "/listener",
         rating: 3.9,
         author: "henry david throw",
         length: 9999,
-        tags: ["historical", "aventure", "positive"],  
+        tags: [
+            { tag: "historical", likes: 9384, dislikes: 233 },
+            { tag: "adventure", likes: 3675, dislikes: 94 },   
+            { tag: "positive", likes: 237, dislikes: 15 },
+        ],
     },
 ]
 
@@ -51,18 +71,25 @@ const fakeStories1 = [
         rating: 4.2,
         author: "stephen king",
         length: 2493,
-        tags: ["fairy tale", "allegory"],
         //to: '/listener',
         _id: "2",
+        tags: [
+            { tag: "fairy tale", likes: 35, dislikes: 522123 },
+            { tag: "allegory", likes: 1, dislikes: 16674 },   
+        ],
     },
     {
         title: "girl who cried woof",
         rating: 3.7,
         author: "fred meyer",
         length: 99432,
-        tags: ["fairy tale", "children", "terror"],
         //to: '/listener',
         _id: "3",
+        tags: [
+            { tag: "fairy tale", likes: 3251, dislikes: 16 },
+            { tag: "children", likes: 9846, dislikes: 61 },   
+            { tag: "terror", likes: 163, dislikes: 43 },
+        ],
     }
 ]
 
