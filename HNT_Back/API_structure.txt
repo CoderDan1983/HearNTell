@@ -139,7 +139,7 @@ ACCOUNT Routes /api/account
 
 SUBSCRIPTION Routes /api/subscription
 
-    Get list of subscriptions for user          GET /api/subscription/user/{user_id}
+    Get list of subscriptions for user          GET /api/subscription/account/{account_id}
 
     Create subscription                         POST /api/subscription            
 
@@ -150,8 +150,6 @@ SUBSCRIPTION Routes /api/subscription
     Create subscription request                 POST /api/subscription/request
 
     Approve subscription request                POST /api/subscription/request/{subscription_request_id}/approve
-
-    Reject subscription request                 POST /api/subscription/request/{subscription_request_id}/reject
 
     Delete subscription request                 DELETE /api/subscription/request/{subscription_request_id}
 

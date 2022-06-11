@@ -6,7 +6,11 @@ const Schema = mongoose.Schema;
 const SubscriptionRequest = new Schema({
   listener_account_id: String,
   creator_account_id: String,
-  approved: Boolean
+  approved: {
+    type: Boolean,
+    default: false
+  }
+
 });
 
 module.exports = mongoose.model('subscription_request', SubscriptionRequest);

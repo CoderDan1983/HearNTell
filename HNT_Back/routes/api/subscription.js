@@ -9,14 +9,14 @@ router.get('/listener/:sub_id', subscriptionController.getListenerSubscription);
 
 //* SUBSCRIPTION Routes /api/subscription
 
-//     Get list of subscriptions for user          GET /api/subscription/user/{user_id}
-router.get('/user/:user_id', subscriptionController.userIndex);
+//     Get list of subscriptions for user          GET /api/subscription/account/{account_id}
+router.get('/account/:account_id', subscriptionController.accountIndex);
 
 //     Create subscription                         POST /api/subscription            
 router.post('/', subscriptionController.create);
 
 //     Update subscription                         POST /api/subscription/{subscription_id}
-router.get('/:subcription_id', subscriptionController.update);
+router.get('/:subscription_id', subscriptionController.update);
 
 //     Delete subscription                         DELETE /api/subscription/{subscription_id}
 router.delete('/:subscription_id', subscriptionController.remove);
@@ -26,9 +26,6 @@ router.post('/request', subscriptionController.createRequest);
 
 //     Approve subscription request                POST /api/subscription/request/{subscription_request_id}/approve
 router.post('/request/:subscription_request_id/approve', subscriptionController.approveRequest);
-
-//     Reject subscription request                 POST /api/subscription/request/{subscription_request_id}/reject
-router.post('/request/:subscription_request_id/reject', subscriptionController.rejectRequest);
 
 //     Delete subscription request                 DELETE /api/subscription/request/{subscription_request_id}
 router.delete('/request/:subscription_request_id', subscriptionController.removeRequest);
