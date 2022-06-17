@@ -2,7 +2,7 @@ const Profile = require('../model/Profile');
 const SubscriptionRequest = require('../model/SubscriptionRequest');
 
 
-//* Create / Update creator profile
+//* Create creator profile
 const create = async (req, res) => {
   let request_data = req.body;
   let profile_data = {
@@ -12,6 +12,19 @@ const create = async (req, res) => {
     about_me: request_data.about_me,
   }
   let profile = await Profile.create(profile_data);
+    res.json(profile);
+};
+
+//* Update creator profile
+const updateCreatorProfile = async (req, res) => {
+  let request_data = req.body;
+  let profile_data = {
+    name: request_data.name,
+    account_id: request_data.account_id,
+    image_url: request_data.image_url,
+    about_me: request_data.about_me,
+  }
+  let profile = await Profile.findOneAndUpdate({_id: req.body.id},profile_data);
     res.json(profile);
 };
 
@@ -50,5 +63,6 @@ module.exports = {
   creatorProfile,
   subscriptionRequests,
   subscriptionsApproved,
-  subscriptionsPending
+  subscriptionsPending,
+  updateCreatorProfile,
 }

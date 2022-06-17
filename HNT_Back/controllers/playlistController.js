@@ -90,6 +90,12 @@ const update = async (req, res) => {
   res.json(playlist);
 };
 
+const remove = async (req, res) => {
+  const playlist_id = req.params.playlist_id;
+  let playlist = await Playlist.findOneAndDelete({_id: playlist_id});
+  res.json(playlist);
+}
+
 //* Add story to playlist
 const addStory = async (req, res) => {
   const playlist_id = req.params.playlist_id;
@@ -112,7 +118,7 @@ const removeStory = async (req, res) => {
   let playlist = await Playlist.findOne({_id: playlist_id});
   let story_ids = playlist.story_ids;
 
-  let updated_story_ids = story_ids.filter(e => !== story_id)
+  let updated_story_ids = story_ids.filter(id => id !== story_id);
 
   playlist.story_ids = updated_story_ids;
   playlist.save()

@@ -30,6 +30,6 @@ router.route('/:account_id/subscription_requests/approved')
 
 // Subscription requests pending                 GET /api/creator/{account_id}/subscription_requests/pending
 router.route('/:account_id/subscription_requests/pending')
-    .get(verifyRoles(ROLES_LIST.Member), creatorController.subscrptionsPending);
+    .get(verifyRoles(ROLES_LIST.Member), creatorController.subscriptionsPending);
 
 module.exports = router;

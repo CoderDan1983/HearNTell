@@ -3,7 +3,7 @@ const SubscriptionRequest = require('../model/SubscriptionRequest');
 
 
 //* Get list of subscriptions for user account
-const accountIndex = async (req, res) => {
+const index = async (req, res) => {
   const account_id = req.params.account_id;
   let subscriptions = await Subscription.find({listener_id: account_id});
   res.json(subscriptions);
@@ -62,12 +62,11 @@ const removeRequest = async (req, res) => {
 };
 
 module.exports = {
-  userIndex,
+  index,
   create,
   update,
   remove,
   createRequest,
   approveRequest,
-  rejectRequest,
   removeRequest
 }

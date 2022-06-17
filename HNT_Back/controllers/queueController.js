@@ -21,11 +21,6 @@ const getQueue = async (req, res) => {
   res.json(queue[0]["queue"]);
 }
 
-const test = async (req, res) => {
-  res.json("test": "Worked");
-}
-
 module.exports = {
   getQueue,
-  test
 }

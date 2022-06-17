@@ -1,18 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const subscriptionController = require('../../controllers/subscriptionController.js');
+const subscriberController = require('../../controllers/subscriberController.js');
 const ROLES_LIST = require('../../config/roles_list');
 const verifyRoles = require('../../middleware/verifyRoles');
 
 // router.get('/listener_subscriptions/:listener_id', subscriptionController.getListenerSubscriptions);
-// router.route('/listener/:sub_id')
-//   .get(verifyRoles(ROLES_LIST.Member), subscriptionController.getListenerSubscription);
-router.get('/listener/:sub_id', subscriptionController.getListenerSubscription);
+router.route('/listener/:sub_id')
+  .get(verifyRoles(ROLES_LIST.Member), subscriberController.getListenerSubscription);
+// router.get('/listener/:sub_id', subscriptionController.getListenerSubscription);
 //* SUBSCRIPTION Routes /api/subscription
 
 //     Get list of subscriptions for user          GET /api/subscription/account/{account_id}
 router.route('/account/:account_id')
-  .get(verifyRoles(ROLES_LIST.Member), subscriptionController.accountIndex);
+  .get(verifyRoles(ROLES_LIST.Member), subscriptionController.index);
 
 //     Create subscription                         POST /api/subscription            
 router.route('/')
