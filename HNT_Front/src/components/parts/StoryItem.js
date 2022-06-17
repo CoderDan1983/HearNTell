@@ -7,13 +7,15 @@ export default function StoryItem({ title, rating, author, length, tags, to, Ico
         let time = sec;
         const hours = Math.floor(sec / 3600);
         time -= (hours * 3600);
-
+        
         const minutes = Math.floor(time / 60);
+        const minInsert = (minutes < 10) ? "0" : "";
         time -= (minutes * 60);
         const seconds = time;
+        const secInsert = (seconds < 10) ? "0" : "";
 
-        const returnVal = hours ? `${hours}:${minutes}:${seconds}` :
-        `${minutes}:${seconds}`;
+        const returnVal = hours ? `${hours}:${minInsert}${minutes}:${secInsert}${seconds}` :
+        `${minInsert}${minutes}:${secInsert}${seconds}`;
 
         return returnVal;  
     }

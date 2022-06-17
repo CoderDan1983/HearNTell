@@ -1,32 +1,39 @@
 
 import '../../../index.css';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
+import { useNavigate, useLocation } from "react-router-dom";
+
 // import { Link } from 'react-router-dom';
 import SearchComponent from '../../parts/SearchComponent';
 import LinkListItem from '../../parts/LinkListItem';
 // import ListenerPlaylist from './ListenerPlaylist';
 // import { fakeStories, fakeStories1, fakeTags, fakeSearches, fakeSubList, fakeBaskets, 
 //     fakeQueue } from '../../fakeApi/fakeStories';
-import { getByIdThenSet } from '../../../hooks/useBackendRequest';
+import { getThenSet_private } from '../../../hooks/useBackendRequest';
 import { DeleteForever } from '@mui/icons-material';
 
 
 export default function Listener(){
+    const axP = useAxiosPrivate();
+    const nav = useNavigate();
+    const loc = useLocation();
+    
     const user_id = "0a"; //* later this will be passed in/found :D
     const [searches, setSearches] = useState([]);
     const [subscriptions, setSubscriptions] = useState([]);
     const [playlists, setPlaylists] = useState([]);
     const [queue, setQueue] = useState([]);
     // const [loading, setLoading] = useState(false);
-    console.log('render!')
-    useMemo(() => {
-        getByIdThenSet('search', user_id, setSearches);
-        getByIdThenSet('subscription/listener', user_id, setSubscriptions);
-        getByIdThenSet('playlist', user_id, setPlaylists);
-        getByIdThenSet('queue', user_id, setQueue);
+    console.log('render!', user_id)
+    useEffect(() => {
+        getThenSet_private(axP, nav, loc, setSearches, 'search', { _id: user_id });
+        getThenSet_private(axP, nav, loc, setSubscriptions, 'subscription/listener', { _id: user_id });
+        getThenSet_private(axP, nav, loc, setPlaylists, 'playlist', { _id: user_id });
+        getThenSet_private(axP, nav, loc, setQueue, 'queue', { _id: user_id });
         console.log('listener should be loaded this render :) ');
-        // setLoading(true);
-    },[user_id]);
+    },[axP, nav, loc, user_id]);
 
     return(<div className='main'>
         <div className="hearAStory">

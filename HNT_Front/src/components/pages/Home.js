@@ -1,5 +1,7 @@
-import { useNavigate, Link, useParams } from "react-router-dom";
-import { useState, useMemo } from 'react';
+import { useNavigate, useLocation, Link, useParams } from "react-router-dom";
+import { useState, useMemo, useEffect } from 'react';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+
 import useLogout from '../../hooks/useLogout';
 import Listener from './listener/Listener';
 import { Button, Icon } from '@mui/material';
@@ -10,19 +12,25 @@ import { Button, Icon } from '@mui/material';
 import StoryItem from '../parts/StoryItem';
 // import { DeleteForever } from '@mui/icons-material';
 import '../../index.css';
-import { getThenSet } from '../../hooks/useBackendRequest'
+import { getThenSet_private } from '../../hooks/useBackendRequest'
 
 // import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import { AccessAlarm, ThreeDRotation, Forest as ForestIcon } from '@mui/icons-material';
 const Home = () => {
+    // const axP = useAxiosPrivate();
+    // const loc = useLocation();
+    // const nav = useNavigate();
+    const axP = useAxiosPrivate();
     const navigate = useNavigate();
+    const loc = useLocation();
+
     const logout = useLogout();
     const [stories, setStories] = useState([]);
 
     // const { story_id } = useParams();
 
-    //* this fetches the story with story_id, and sets the story to the returned value :)
-    useMemo(() => getThenSet('story', setStories),[]);
+    //* this should fetch all the stories ^_^
+    useEffect(() => getThenSet_private(axP, navigate, loc, setStories, 'story'),[axP, loc, navigate]);
 
     const signOut = async () => {
         // if used in more components, this should be in context 
@@ -46,13 +54,16 @@ const Home = () => {
             {/* <svg data-testid="AccessAlarm">Oh</svg>
             <svg data-testid="ThreeDRotation">NO!</svg> */}
             { stories && stories.map((story, index)=>{
+                const tags = story.tags.map((tag) => tag.tag);
+                console.log('tags: ');
+                console.log(tags);
                 return (<StoryItem 
                     key= { index }
                     title={story.title} 
                     rating={story.rating}
                     author={story.author}
                     length={story.length} 
-                    tags={story.tags}
+                    tags={ tags }
                     to= '/listener'
                 />)
             })}

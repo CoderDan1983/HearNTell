@@ -12,7 +12,7 @@ const getStory = async (req, res) => {
   console.log('getStory backend!')
   const story_id = req.params.story_id;
   //we are recieving the story_id :)
-  console.log(story_id);
+  // console.log(story_id);
   // const story_id = req.body.story_id;
   // const story = await Story.findOne({_id: story_id});
   // if (!story) return res.status(204).json({ 'message': 'No story found' });
@@ -20,13 +20,18 @@ const getStory = async (req, res) => {
   const story = fake.fakeStories.filter((story)=>{
     return story._id === story_id;
   });
-  console.log('story matching _id of ' + story_id + " are: ");
-  console.log(story)
-  res.json({"story": story });
+  // console.log('story matching _id of ' + story_id + " are: ");
+  // console.log(story)
+  if(Array.isArray(story)){
+    res.json(story[0]);
+  }
+  else{
+    res.json(story);
+  }
 }
 
 const getStories = async (req, res) => {
-  console.log('getStories backend!')
+  // console.log('getStories backend!')
   
   // const story_id = req.body.story_id;
   // const story = await Story.findOne({_id: story_id});
@@ -34,8 +39,8 @@ const getStories = async (req, res) => {
   // // res.json(story);
   const stories = fake.fakeStories;
 
-  console.log('stories are: ');
-  console.log(stories)
+  // console.log('stories are: ');
+  // console.log(stories)
   res.json(stories);
 }
 

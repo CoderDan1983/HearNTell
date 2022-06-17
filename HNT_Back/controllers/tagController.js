@@ -11,7 +11,7 @@ const getTag = async (req, res) => {
   console.log('getTag backend!')
   const tag_id = req.params.tag_id;
   //we are recieving the story_id :)
-  console.log(tag_id);
+  // console.log(tag_id);
   // const story_id = req.body.story_id;
   // const story = await Story.findOne({_id: story_id});
   // if (!story) return res.status(204).json({ 'message': 'No story found' });
@@ -20,8 +20,8 @@ const getTag = async (req, res) => {
     return tag._id === tag_id;
   });
   
-  console.log('tags matching _id of ' + tag_id + " are: ");
-  console.log(tags)
+  // console.log('tags matching _id of ' + tag_id + " are: ");
+  // console.log(tags)
   res.json(tags);
 }
 

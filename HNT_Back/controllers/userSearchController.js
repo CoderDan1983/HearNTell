@@ -25,9 +25,6 @@ const searchesByUser = async (req, res) => {
   res.json(searches);
 };
 
-
-
-
 module.exports = {
   create,
   remove,

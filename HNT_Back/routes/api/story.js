@@ -2,37 +2,49 @@ const express = require('express');
 const router = express.Router();
 const storyController = require('../../controllers/storyController.js');
 
-module.exports = router;
+const ROLES_LIST = require('../../config/roles_list');
+const verifyRoles = require('../../middleware/verifyRoles');
 
+//* get stories :)
+router.route('/')
+    .get(verifyRoles(ROLES_LIST.Member), storyController.getStories);
+
+//* Get a single story
+router.route('/:story_id')
+    .get(verifyRoles(ROLES_LIST.Member), storyController.getStory);
 
 //* STORY Routes /api/story
   
 //     Create a new story                          POST /api/story
-router.post('/', storyController.create);
+router.route('/')
+    .post(verifyRoles(ROLES_LIST.Member), storyController.create);
 
 //     Get most popular stories for all tags       GET /api/story/tag/all
-router.get('/tag/all', storyController.popular);
+router.route('/tag/all')
+    .get(verifyRoles(ROLES_LIST.Member), storyController.popular);
 
 //     Get most popular stories for a tag          GET /api/story/tag/{tag_name}
-router.get('/tag/:tag_name', storyController.popularByTag);
+router.route('/tag/:tag_name')
+    .get(verifyRoles(ROLES_LIST.Member), storyController.popularByTag);
 
 //     Search stories (tag, author, title)         GET /api/story/search/{search_string}
-router.get('/search/:search_string', storyController.search);
+router.route('/search/:search_string')
+    .get(verifyRoles(ROLES_LIST.Member), storyController.search);
 
 //     Get stories by playlist                     GET /api/story/playlist/{playlist_id}
-router.get('/playlist/:playlist_id', storyController.storiesForPlaylist);
+router.route('/playlist/:playlist_id')
+    .get(verifyRoles(ROLES_LIST.Member), storyController.storiesForPlaylist);
 
 //     Get stories by creator                      GET /api/story/creator/{creator_id}
-router.get('/creator/:creator_id', storyController.storiesByCreator);
+router.route('/creator/:creator_id')
+    .get(verifyRoles(ROLES_LIST.Member), storyController.storiesByCreator);
 
 //     Get single story                            GET /api/story/{story_id}
-router.get('/:story_id', storyController.show);
+// router.get('/:story_id', storyController.show);  //todo change it to this later!
 
 //     Update an existing story                    POST /api/story/{story_id}
-router.post('/:story_id', storyController.update);
-
-//     Delete a story                              DELETE /api/story/{story_id}
-router.delete('/:story_id', storyController.remove);
-
-
+router.route('/:story_id')
+    .post(verifyRoles(ROLES_LIST.Member), storyController.update)
+    .delete(verifyRoles(ROLES_LIST.Member), storyController.remove); //DELETE /api/story/{story_id}
+    
 module.exports = router;

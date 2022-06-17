@@ -1,18 +1,25 @@
 import { useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 
 import { fakeStories } from '../../fakeApi/fakeStories';
 import StoryItem from '../../parts/StoryItem';
 import { DeleteForever } from '@mui/icons-material';
 import '../../../index.css';
-import { getByIdThenSet } from '../../../hooks/useBackendRequest'
+import { getThenSet_private } from '../../../hooks/useBackendRequest'
 
 export default function ListenerPlaylist({ playlistName }){
+    const axP = useAxiosPrivate();
+    const nav = useNavigate();
+    const loc = useLocation();
+
     const [playlist, setPlaylist] = useState([]); //fakeStories
     const { story_id } = useParams();
 
     //* this fetches the story with story_id, and sets the story to the returned value :)
-    useMemo(() => getByIdThenSet('playlist', story_id, setPlaylist),[story_id]);
+    useMemo(() => { 
+        getThenSet_private(axP, nav, loc, setPlaylist, 'playlist', { _id: story_id }) },
+    [axP, nav, loc, story_id]);
 
     return(
         <div className="main fullWidth"> 

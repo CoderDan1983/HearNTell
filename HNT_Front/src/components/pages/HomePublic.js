@@ -1,6 +1,6 @@
-import { useNavigate, Link, useParams } from "react-router-dom";
+// import { Link, useParams } from "react-router-dom";
 import { useState, useMemo } from 'react';
-import { getThenSet } from '../../hooks/useBackendRequest'
+import { getThenSet_public } from '../../hooks/useBackendRequest';
 
 import StoryItem from '../parts/StoryItem';
 import SearchComponent from '../parts/SearchComponent';
@@ -9,12 +9,16 @@ import { fakeStories, fakeStories1, fakeTags, fakeSearches, loadStoriesByTag } f
 // import { Grid, Item } from '@mui/material';
 import '../../index.css';
 export default function HomePublic(){
+    // const axP = useAxiosPrivate();
+    // const nav = useNavigate();
+    // const loc = useLocation();
+
     const [stories, setStories] = useState([]);
 
     // const { story_id } = useParams();
 
     //* this fetches the story with story_id, and sets the story to the returned value :)
-    useMemo(() => getThenSet('getpublic/story', setStories),[]);
+    useMemo(() => getThenSet_public(setStories, 'getpublic/story'),[]);
 
     // console.log('fakeSearches is: ');
     // console.log(fakeSearches);
@@ -28,25 +32,28 @@ export default function HomePublic(){
                 <h2>Top Stories this Week:</h2>
                 <SearchComponent options={ fakeSearches }/>
             </div>
-            <div className="flexWrapper mainItems">
-                { stories && stories.map((tag, i)=>{
+            {/* <div className="flexWrapper mainItems">
+                { stories && stories.map((story, i)=>{
+                    //lolz, it doesn't matter what tags you pass in.  It loads the same anywayz ^_^
+                    const tags = story.tags.map((tag)=> tag.tag);
                     return(
                         // <div key={i}>Hey</div>
-                        <div key={i} className="tag"  onClick={ (e)=> loadStoriesByTag(tag, setStories) }>
-                            { tag.name }
+                        <div key={i} className="tag"  onClick={ (e)=> loadStoriesByTag(tags, setStories) }>
+                            { story.name }
                         </div>
                     )
                 })}
-            </div>
+            </div> */}
             <div className="storyContainer mainItems">
                 { stories && stories.map((story, i)=>{
+                    const tags = story.tags.map((tag)=> tag.tag);
                     return (<StoryItem 
                         key={ i }
                         title={ story.title}
                         rating= {story.rating}
                         author={story.author}
                         length={story.length}
-                        tags={story.tags}
+                        tags={ tags }
                         to= '/listener'
                     />)
                 })}

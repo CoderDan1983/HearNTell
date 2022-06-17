@@ -1,31 +1,27 @@
 const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
 // import { fakeStories, fakeStories1,  fakeTags, fakeSearches, fakeSubList, fakeBaskets, fakeQueue,
 // } from '../../HNT_Front/src/components/fakeApi/fakeStories';
-
+// console.log('search controller!')
 //* Gets a single story
-const getQueue = async (req, res) => {
-  // console.log('getQueue backend!')
-  const user_id = req.params.user_id;
+const getSearch = async (req, res) => {
+  // console.log('getSearch backend!')
+  const search_id = req.params.search_id;
   //we are recieving the story_id :)
-  // console.log(user_id);
+  // console.log(search_id);
   // const story_id = req.body.story_id;
   // const story = await Story.findOne({_id: story_id});
   // if (!story) return res.status(204).json({ 'message': 'No story found' });
   // // res.json(story);
-  const queue = fake.fakeQueue.filter((item)=>{
-    return item.user_id === user_id;
+
+  const searches = fake.fakeSearches.filter((search)=>{
+    return search.user_id === search_id;
   });
   
-  // console.log('queue matching _id of ' + user_id + " are: ");
-  // console.log(queue)
-  res.json(queue[0]["queue"]);
-}
-
-const test = async (req, res) => {
-  res.json("test": "Worked");
+  // console.log('searches matching _id of ' + search_id + " are: ");
+  // console.log(searches)
+  res.json(searches[0]["searches"]);
 }
 
 module.exports = {
-  getQueue,
-  test
+  getSearch,
 }

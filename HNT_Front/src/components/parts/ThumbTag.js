@@ -15,7 +15,7 @@ export default function ThumbTag({ tag, like, setLike, index }){
             {tag}
         </div>
         { like ? <ThumbUpAltIcon onClick={ liker }/> : <ThumbUpOffAltIcon onClick={ liker } /> }
-        { like ? <ThumbUpOffAltIcon  onClick={ liker }/> : <ThumbDownAltIcon  onClick={ liker } />}
+        { like ? <ThumbDownOffAltIcon  onClick={ liker }/> : <ThumbDownAltIcon  onClick={ liker } />}
     </div>)
 }
 
