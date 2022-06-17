@@ -124,12 +124,17 @@ const storiesForPlaylist = async (req, res) => {
   let playlist = await Playlist.findOne({_id: playlist_id});
   let playlist_story_ids = playlist.story_ids;
 
-  playlist_story_ids.forEach(story_id => {
-    let story = await Story.findOne({_id: story_id});
-    playlist_stories.push(story);
-  });
+  playlist_story_ids.forEach((story_id) => {
+    // let story = await Story.findOne({_id: story_id});
+    Story.findOne({_id: story_id})
+    .then((story) => {
+      playlist_stories.push(story);
+    })
+  })
+  .then(() => {
+    res.json(playlist_stories);
+  })
   
-  res.json(playlist_stories);
 };
 
 //* Get stories by creator
