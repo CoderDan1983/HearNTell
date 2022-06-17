@@ -13,6 +13,10 @@ const Story = new Schema({
   description: String,
   duration: Number,
   private: Boolean, //Only allow subscribers to listen to this audio.
+  popularity_rating: { // 
+    type: Number,
+    default: 0 
+  }
 });
 
 //* Checks to see if given tag fits this story. If the story has a hundred tag fit responses and more than 50% say it doesn't fit

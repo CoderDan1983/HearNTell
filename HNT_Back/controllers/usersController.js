@@ -26,6 +26,8 @@ const getUser = async (req, res) => {
     res.json(user);
 }
 
+
+
 module.exports = {
     getAllUsers,
     deleteUser,

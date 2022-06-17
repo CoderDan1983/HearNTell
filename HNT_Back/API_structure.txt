@@ -1,0 +1,172 @@
+API Routes Planning Doc
+
+STORY Routes /api/story
+  
+    Create a new story                          POST /api/story
+
+    Get most popular stories for all tags       GET /api/story/tag/all
+
+    Get most popular stories for a tag          GET /api/story/tag/{tag_name}
+
+    Search stories (tag, author, title)         GET /api/story/search/{search_string}
+
+    Get stories by playlist                     GET /api/story/playlist/{playlist_id}
+
+    Get stories by creator                      GET /api/story/creator/{creator_id}
+
+    Get single story                            GET /api/story/{story_id}
+
+    Update an existing story                    POST /api/story/{story_id}
+
+    Delete a story                              DELETE /api/story/{story_id}
+
+
+TAG Routes /api/tag
+
+    Create a new tag                            POST /api/tag
+
+    Get a list of all tags                      GET /api/tag
+
+    Get tags for a story                        GET /api/tag/story/{story_id}
+
+    Get most popular tags                       GET /api/tag/popular
+
+    Get single tag                              GET /api/tag/{tag_id}
+
+    Update an existing tag                      POST /api/tag/{tag_id}
+
+    Delete a tag                                DELETE /api/tag/{tag_id}
+
+
+PLAYLIST Routes /api/playlist
+
+    Create a new playlist                       POST /api/playlist
+
+    Get playlists for user                      GET /api/playlist/user/{account_id}
+
+    Get users queue                             GET /api/playlist/queue/{account_id}
+
+    Get single playlist                         GET /api/playlist/{playlist_id}
+
+    Update an existing playlist                 POST /api/playlist/{playlist_id}
+
+    Delete a playlist                           DELETE /api/playlist/{playlist_id}
+
+    Add story to playlist                       POST /api/playlist/{playlist_id}/story/{story_id}
+
+    Remove story from playlist                  DELETE /api/playlist/{playlist_id}/story/{story_id}
+
+
+STORY RATING Routes /api/rating 
+
+    Create a new rating                         POST /api/rating 
+
+    Get a single rating by story and user       GET /api/rating/user/{account_id}/story/{story_id}
+
+    Get all the ratings for a story             GET /api/rating/story/{story_id}
+
+    Get a story rating by id                    GET /api/rating/{story_rating_id}
+
+    Update an existing rating                   POST /api/rating/{story_rating_id}
+
+    Delete a rating                             DELETE /api/rating/{story_rating_id}      
+
+
+TAG FIT Routes /api/tag_fit
+
+    Create/update a new tag_fit                 POST /api/tag_fit
+
+    Get all the tag_fits for a tag              GET /api/tag_fit/tag/{tag_name}
+
+    Remove a tag fit                            DELETE /api/tag_fit/{tag_fit_id}
+
+
+CREATOR Routes /api/creator
+
+    Create / update creator profile             POST /api/creator/{account_id}
+
+    Get creator profile                         GET /api/creator/{account_id}
+
+    Subscription requests                       GET /api/creator/{account_id}/subscription_requests
+
+    Subscription requests approved              GET /api/creator/{account_id}/subscription_requests/approved
+
+    Subscription requests pending               GET /api/creator/{account_id}/subscription_requests/pending
+
+
+CAMPAIGN Routes /api/campaign
+
+    Create a campaign                           POST /api/campaign
+
+    Get list of all campaigns                   GET /api/campaign
+
+    Get all an advertiser's Campaigns           GET /api/campaign/advertiser/{account_id}
+
+    Get single campaign                         GET /api/campaign/{campaign_id}
+
+    Update a campaign                           POST /api/campaign/{campaign_id}
+
+    Delete a campaign                           DELETE /api/campaign/{campaign_id}
+
+    List of ad runs for a campaign              GET /api/campaign/{campaign_id}/ad_runs
+
+
+AD Routes /api/ad
+
+    Create an ad                                POST /api/ad
+
+    Get list of all ads                         GET /api/ad
+
+    Get single ad                               GET /api/ad/{ad_id}
+
+    Update an ad                                POST /api/ad/{ad_id}
+
+    Delete an ad                                DELETE /api/ad/{ad_id}
+
+
+ACCOUNT Routes /api/account
+
+    Create an account                           POST /api/account
+
+    Get list of accounts                        GET /api/account
+
+    Get single account                          GET /api/account/{account_id}
+
+    Update an account                           POST /api/account/{account_id}
+
+    Delete an account                           DELETE /api/account/{account_id}
+  
+
+SUBSCRIPTION Routes /api/subscription
+
+    Get list of subscriptions for user          GET /api/subscription/account/{account_id}
+
+    Create subscription                         POST /api/subscription            
+
+    Update subscription                         POST /api/subscription/{subscription_id}
+
+    Delete subscription                         DELETE /api/subscription/{subscription_id}
+
+    Create subscription request                 POST /api/subscription/request
+
+    Approve subscription request                POST /api/subscription/request/{subscription_request_id}/approve
+
+    Delete subscription request                 DELETE /api/subscription/request/{subscription_request_id}
+
+
+USER Routes /api/user
+
+    Create a user                               POST /api/user
+
+    Update a user                               POST /api/user/{user_id}
+
+    Remove a user                               DELETE /api/user/{user_id}
+
+
+USER SEARCH Routes /api/user_search
+
+    Create (record) new search                  POST /api/user_search
+
+    Remove search record                        DELETE /api/user_search/{user_search_id}
+
+    Get searches by user                        GET /api/user_search/{user_id}

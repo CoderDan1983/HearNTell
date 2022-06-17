@@ -3,9 +3,9 @@
 const mongoose = require('mongoose'); 
 const Schema = mongoose.Schema;
 
-const Subscriber = new Schema({
+const Subscription = new Schema({
   listener_id: String,
   creator_id: String,
 });
 
-module.exports = mongoose.model('subscriber', Subscriber);
+module.exports = mongoose.model('subscription', Subscription);

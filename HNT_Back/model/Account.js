@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const Account = new Schema({
-  id: String,
   name: String,
   paid_subscription: Boolean,
   next_billing_date: Date,
