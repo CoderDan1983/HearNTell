@@ -22,10 +22,10 @@ app.use(logger);
 
 //* Handle options credentials check - before CORS!
 // and fetch cookies credentials requirement
-app.use(credentials);
+// app.use(credentials);
 
 // Cross Origin Resource Sharing
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 // built-in middleware to handle urlencoded form data
 app.use(express.urlencoded({ extended: false }));
@@ -51,7 +51,7 @@ app.use('/', require('./routes/root'));
     // app.use('/api/playlist', require('./routes/api/playlist'));
     // app.use('/api/user_search', require('./routes/api/user_search'));
     // app.use('/api/story_rating', require('./routes/api/story_rating'));
-    // app.use('/api/story', require('./routes/api/story'));
+    app.use('/api/story', require('./routes/api/story'));
     // app.use('/api/substription', require('./routes/api/substription'));
     // app.use('/api/tag_fit', require('./routes/api/tag_fit'));
     // app.use('/api/tag', require('./routes/api/tag'));
@@ -66,12 +66,12 @@ app.use('/getpublic', require('./routes/api/getpublic')); //* see notes in getpu
 
 app.use(verifyJWT); //* everything after this will use the jwt middleware!
 
-app.use('/creator', require('./routes/api/creator'));
-app.use('/story', require('./routes/api/story'));
-app.use('/search', require('./routes/api/user_search'));
-app.use('/subscription', require('./routes/api/subscription'));
-app.use('/playlist', require('./routes/api/playlist'));
-app.use('/queue', require('./routes/api/queue'));
+// app.use('/creator', require('./routes/api/creator'));
+// app.use('/story', require('./routes/api/story'));
+// app.use('/search', require('./routes/api/user_search'));
+// app.use('/subscription', require('./routes/api/subscription'));
+// app.use('/playlist', require('./routes/api/playlist'));
+// app.use('/queue', require('./routes/api/queue'));
 
 app.use('/employees', require('./routes/api/employees'));
 app.use('/users', require('./routes/api/users')); //
