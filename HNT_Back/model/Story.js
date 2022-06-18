@@ -5,7 +5,6 @@ const TagFit = require('./TagFit');
 const Schema = mongoose.Schema;
 
 const Story = new Schema({
-  id: String,
   account_id: String,
   audio_url: String,
   name: String,

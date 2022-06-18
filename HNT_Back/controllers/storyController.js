@@ -137,6 +137,9 @@ const storiesForPlaylist = async (req, res) => {
   res.json(playlist_stories);
 };
 
+//0) playlist_id
+//1) we get the playlist (an array of story_id 's) by its playlist_id
+
 //* Get stories by creator
 const storiesByCreator = async (req, res) => {
   const creator_id = req.params.creator_id;

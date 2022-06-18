@@ -1,9 +1,14 @@
 const fakeStories = [
     {
+        account_id: "0a",//todo new!
+        audio_url: "www.bob.ko",//todo new!
+        description: "www.bob.ko",//todo new!
+        private: false,//todo new!
+
         title: "3 little pigs",
         //to: '/listener',
         _id: "0",
-        rating: 4.2,
+        rating: 4.2, //ie- popularity_rating
         author: "stephen king",
         length: 2493,
         tags: [
@@ -13,6 +18,11 @@ const fakeStories = [
         ],
     },
     {
+        account_id: "0a",//todo new!
+        audio_url: "www.bob.ko",//todo new!
+        description: "www.bob.ko",//todo new!
+        private: false,//todo new!
+
         title: "boy who cried woof",
         //to: '/listener',
         _id: "1",
@@ -26,7 +36,12 @@ const fakeStories = [
             { tag: "parable", likes: 9382932, dislikes: 0 },
         ],
     },
-    { 
+    {
+        account_id: "0a",//todo new!
+        audio_url: "www.bob.ko",//todo new!
+        description: "www.bob.ko",//todo new!
+        private: false,//todo new!
+
         title: "Once upon a Thyme", 
         _id: "4", 
         //to: "/listener",
@@ -40,7 +55,13 @@ const fakeStories = [
             { tag: "adventure", likes: 34568, dislikes: 154 },
         ],
     },
-    { title: "A Salt and Battery", 
+    { 
+        account_id: "0a",//todo new!
+        audio_url: "www.bob.ko",//todo new!
+        description: "www.bob.ko",//todo new!
+        private: false,//todo new!
+
+        title: "A Salt and Battery", 
         _id: "5", 
         rating: 1.9,
         author: "shakespeare",
@@ -52,6 +73,11 @@ const fakeStories = [
         ],
     },
     { 
+        account_id: "0b",//todo new!
+        audio_url: "www.harry.ko",//todo new!
+        description: "www.sue.ko",//todo new!
+        private: true,//todo new!
+
         title: "Lit Math Test", 
         _id: "6", 
         rating: 3.9,
@@ -63,6 +89,41 @@ const fakeStories = [
             { tag: "positive", likes: 237, dislikes: 15 },
         ],
     },
+    {
+        account_id: "0a",//todo new!
+        audio_url: "www.bob.ko",//todo new!
+        description: "www.bob.ko",//todo new!
+        private: true,//todo new!
+
+        title: "34 little pigsssssssssssssssssssssssssssssssssssssssssssss",
+        rating: 4.2,
+        author: "stephen king",
+        length: 2493,
+        //to: '/listener',
+        _id: "2",
+        tags: [
+            { tag: "fairy tale", likes: 35, dislikes: 522123 },
+            { tag: "allegory", likes: 1, dislikes: 16674 },   
+        ],
+    },
+    {
+        account_id: "0b",//todo new!
+        audio_url: "www.bob.ko",//todo new!
+        description: "www.bob.ko",//todo new!
+        private: false,//todo new!
+
+        title: "girl who cried woof",
+        rating: 3.7,
+        author: "fred meyer",
+        length: 99432,
+        //to: '/listener',
+        _id: "3",
+        tags: [
+            { tag: "fairy tale", likes: 3251, dislikes: 16 },
+            { tag: "children", likes: 9846, dislikes: 61 },   
+            { tag: "terror", likes: 163, dislikes: 43 },
+        ],
+    }
 ]
 
 const fakeStories1 = [
@@ -217,6 +278,45 @@ const fakeBaskets = [ //? can to and _id be the same!?!
     },
 ]
 
+const fakePlaylist = [
+    {
+        _id: "qqq",
+        story_ids: [
+            "1", "3", "5"
+        ]
+    },
+    {
+        _id: "vvv",
+        story_ids: [
+            "0", "1", "2"
+        ]
+    },
+    {
+        _id: "www",
+        story_ids: [
+            "1", "2", "3"
+        ]
+    },
+    {
+        _id: "xxx",
+        story_ids: [
+            "2", "3", "4"
+        ]
+    },
+    {
+        _id: "yyy",
+        story_ids: [
+            "3", "4", "5"
+        ]
+    },
+    {
+        _id: "zzz",
+        story_ids: [
+            "4", "5", "6"
+        ]
+    },
+]
+
 const fakeQueue = [ //? can to and _id be the same!?!
     {
         user_id: "0a",
@@ -236,10 +336,10 @@ const fakeQueue = [ //? can to and _id be the same!?!
     },
 ]
 
-async function loadStoriesByTag(tag, setter){
-    const newStories = await fakeStories1;
-    setter(newStories)
-}
+// async function loadStoriesByTag(tag, setter){
+//     const newStories = await fakeStories1;
+//     setter(newStories)
+// }
 
 module.exports = {
     fakeStories, 
@@ -248,5 +348,6 @@ module.exports = {
     fakeSearches,
     fakeSubList,
     fakeBaskets,
+    fakePlaylist,
     fakeQueue
 }

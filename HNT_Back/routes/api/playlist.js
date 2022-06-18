@@ -5,7 +5,13 @@ const ROLES_LIST = require('../../config/roles_list');
 const verifyRoles = require('../../middleware/verifyRoles'); //6/10/2022
 
 router.route('/:playlist_id')
-    .get(verifyRoles(ROLES_LIST.Member), playlistController.getPlaylist); //! old route
+    .get(verifyRoles(ROLES_LIST.Member), playlistController.getPlaylist); //! old route.  To load a playlist
+
+router.route('/myBaskets/:playlist_id') //! old route.  To load my baskets/playlists
+    .get(verifyRoles(ROLES_LIST.Member), playlistController.getMyBaskets);
+
+
+
 
 
 //* PLAYLIST Routes /api/playlist
@@ -23,8 +29,8 @@ router.route('/queue/:account_id')
     .get(verifyRoles(ROLES_LIST.Member), playlistController.userQueue);
 
 //     Get single playlist                         GET /api/playlist/{playlist_id}
-router.route('/:playlist_id')
-    .get(verifyRoles(ROLES_LIST.Member), playlistController.show);
+// router.route('/:playlist_id')
+//     .get(verifyRoles(ROLES_LIST.Member), playlistController.show);
 
 //     Update an existing playlist                 POST /api/playlist/{playlist_id}
 router.route('/:playlist_id')

@@ -2,7 +2,9 @@ import '../../index.css';
 import { Link } from "react-router-dom";
 import RatingComponent from './RatingComponent';
 
-export default function StoryItem({ title, rating, author, length, tags, to, Ico }){
+export default function StoryItem({ story, to, Ico }){
+    const { title, rating, author, length, account_id, audio_url, description } = story; //private
+    const tags = story.tags.map((tag) => tag.tag);
     function displayTime(sec){
         let time = sec;
         const hours = Math.floor(sec / 3600);
@@ -35,7 +37,7 @@ export default function StoryItem({ title, rating, author, length, tags, to, Ico
                     {tags.map((tag, i)=>{
                         return <span key={ i } >{tag}</span>
                     })}
-                </div>            
+                </div>
             </div>
         </Link>
         { Ico && <Ico />}

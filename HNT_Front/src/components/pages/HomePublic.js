@@ -46,14 +46,9 @@ export default function HomePublic(){
             </div> */}
             <div className="storyContainer mainItems">
                 { stories && stories.map((story, i)=>{
-                    const tags = story.tags.map((tag)=> tag.tag);
-                    return (<StoryItem 
+                    return ( story.private && <StoryItem 
+                        story = { story }
                         key={ i }
-                        title={ story.title}
-                        rating= {story.rating}
-                        author={story.author}
-                        length={story.length}
-                        tags={ tags }
                         to= '/listener'
                     />)
                 })}

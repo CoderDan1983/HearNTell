@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const userSearchController = require('../../controllers/userSearchController.js');
+
 const ROLES_LIST = require('../../config/roles_list');
 const verifyRoles = require('../../middleware/verifyRoles');
 
 //* USER SEARCH Routes /api/user_search
+router.route('/:search_id') //! old route using fakeApi!
+    .get(verifyRoles(ROLES_LIST.Member), userSearchController.getSearch);
 
 //     Create (record) new search                  POST /api/user_search
 router.route('/')

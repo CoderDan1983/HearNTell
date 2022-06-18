@@ -6,8 +6,8 @@ const verifyJWT = (req, res, next) => {
     console.log('authHeader is: ' + authHeader);
     if (!authHeader?.startsWith('Bearer ')) return res.sendStatus(401);
     const token = authHeader.split(' ')[1];
-    console.log("verifying token.  Beep boop beep!: ")
-    console.log(token)
+    // console.log("verifying token.  Beep boop beep!: ")
+    // console.log(token)
     jwt.verify(
         token,
         process.env.ACCESS_TOKEN_SECRET,
@@ -15,7 +15,7 @@ const verifyJWT = (req, res, next) => {
             if (err) return res.sendStatus(403); //invalid token
             req.user = decoded.UserInfo.username;
             req.roles = decoded.UserInfo.roles.filter((role)=> role !== null);
-            console.log('reckoning: ', req.user, req.roles);
+            // console.log('reckoning: ', req.user, req.roles);
             next();
         }
     );

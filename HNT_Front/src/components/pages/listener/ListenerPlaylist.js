@@ -1,8 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 
-import { fakeStories } from '../../fakeApi/fakeStories';
 import StoryItem from '../../parts/StoryItem';
 import { DeleteForever } from '@mui/icons-material';
 import '../../../index.css';
@@ -17,7 +16,10 @@ export default function ListenerPlaylist({ playlistName }){
     const { story_id } = useParams();
 
     //* this fetches the story with story_id, and sets the story to the returned value :)
-    useMemo(() => { 
+    // useMemo(() => { 
+    //     getThenSet_private(axP, nav, loc, setPlaylist, 'playlist', { _id: story_id }) },
+    // [axP, nav, loc, story_id]);
+    useEffect(() => { 
         getThenSet_private(axP, nav, loc, setPlaylist, 'playlist', { _id: story_id }) },
     [axP, nav, loc, story_id]);
 
@@ -30,16 +32,15 @@ export default function ListenerPlaylist({ playlistName }){
 
             <div className="center">           
                 { playlist.map((story, index)=>{
-                    return (<StoryItem 
-                        key= { index }
-                        title={story.title} 
-                        rating={story.rating}
-                        author={story.author}
-                        length={story.length} 
-                        tags={story.tags}
-                        to= { `/listener/${story._id}` }
-                        Ico= { DeleteForever }
-                    />)
+                    return ( !story.private && 
+                    (<div key = { index }>
+                        <StoryItem 
+                            story = { story }
+                            key= { index }
+                            to= { `/listener/${story._id}` }
+                            Ico= { DeleteForever }
+                        />
+                    </div>))
                 })}
             </div>
         </div>

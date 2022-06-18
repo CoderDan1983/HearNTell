@@ -30,8 +30,9 @@ export default function Listener(){
     useEffect(() => {
         getThenSet_private(axP, nav, loc, setSearches, 'search', { _id: user_id });
         getThenSet_private(axP, nav, loc, setSubscriptions, 'subscription/listener', { _id: user_id });
-        getThenSet_private(axP, nav, loc, setPlaylists, 'playlist', { _id: user_id });
+        getThenSet_private(axP, nav, loc, setPlaylists, 'playlist/myBaskets', { _id: user_id });
         getThenSet_private(axP, nav, loc, setQueue, 'queue', { _id: user_id });
+        
         console.log('listener should be loaded this render :) ');
     },[axP, nav, loc, user_id]);
 
@@ -58,6 +59,7 @@ export default function Listener(){
         <div className="mainItems">
             <div>
                 My Playlists
+                { console.log('playlists is: ', playlists)}
                 { playlists && playlists.map((playlist)=>{
                     console.log('playlist is: ')
                     console.log(playlist)

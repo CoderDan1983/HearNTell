@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const storyController = require('../../controllers/storyController');
+const playlistController = require('../../controllers/playlistController');
 
 router.get('/story/:story_id', storyController.getStory);
 router.get('/story', storyController.getStories);
+// router.get('/getPlaylist/:playlist_id', playlistController.getPlaylist);
 
 module.exports = router;
 

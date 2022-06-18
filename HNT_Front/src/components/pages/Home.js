@@ -54,16 +54,12 @@ const Home = () => {
             {/* <svg data-testid="AccessAlarm">Oh</svg>
             <svg data-testid="ThreeDRotation">NO!</svg> */}
             { stories && stories.map((story, index)=>{
-                const tags = story.tags.map((tag) => tag.tag);
-                console.log('tags: ');
-                console.log(tags);
+                // const tags = story.tags.map((tag) => tag.tag);
+                // console.log('tags: ');
+                // console.log(tags);
                 return (<StoryItem 
+                    story = { story }
                     key= { index }
-                    title={story.title} 
-                    rating={story.rating}
-                    author={story.author}
-                    length={story.length} 
-                    tags={ tags }
                     to= '/listener'
                 />)
             })}

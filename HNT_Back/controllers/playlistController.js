@@ -1,30 +1,9 @@
 const Playlist = require('../model/Playlist');
-
-
 const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
-// import { fakeStories, fakeStories1,  fakeTags, fakeSearches, fakeSubList, fakeBaskets, fakeQueue,
-// } from '../../HNT_Front/src/components/fakeApi/fakeStories';
-
-
-
-
-// const getUser = async (req, res) => {
-//   if (!req?.params?.id) return res.status(400).json({ "message": 'User ID required' });
-//   const user = await User.findOne({ _id: req.params.id }).exec();
-//   if (!user) {
-//       return res.status(204).json({ 'message': `User ID ${req.params.id} not found` });
-//   }
-//   res.json(user);
-// }
-
-
-
-
-
 
 //* Gets a single story
-const getPlaylist = async (req, res) => {
-  console.log('getPlaylist backend!')
+const getMyBaskets = async (req, res) => {
+  // console.log('getPlaylist backend!')  //thus far :)
   const playlist_id = req.params.playlist_id;
   //we are recieving the story_id :)
   // console.log(playlist_id);
@@ -32,13 +11,46 @@ const getPlaylist = async (req, res) => {
   // const story = await Story.findOne({_id: story_id});
   // if (!story) return res.status(204).json({ 'message': 'No story found' });
   // // res.json(story);
-  const playlists = fake.fakeBaskets.filter((playlist)=>{
-    return playlist.user_id === playlist_id;
+  const playlists = fake.fakeBaskets.filter((basket)=>{
+    return basket.user_id === playlist_id; //"www"
+  });
+
+  const returnThis = playlists[0]?.playlists ? playlists[0]["playlists"] : [];
+  // console.log('playlist is: ', playlist);
+
+  res.json(returnThis); //sending correct info, I believe :)
+}
+
+
+//* Gets a single story
+const getPlaylist = async (req, res) => {
+  console.log('getPlaylist backend!')  //thus far :)
+  console.log('wooooo!')
+  console.log('wooooo!')
+  console.log('wooooo!')
+  console.log('wooooo!')
+  console.log('wooooo!')
+  console.log('wooooo!')
+  const playlist_id = req.params.playlist_id;
+  //we are recieving the story_id :)
+  // console.log(playlist_id);
+  // const story_id = req.body.story_id;
+  // const story = await Story.findOne({_id: story_id});
+  // if (!story) return res.status(204).json({ 'message': 'No story found' });
+  // // res.json(story);
+  const playlists = fake.fakePlaylist.filter((playlist)=>{
+    return playlist._id === playlist_id; //"www"
   });
   
-  // console.log('playlists matching _id of ' + playlist_id + " are: ");
-  // console.log(playlists)
-  res.json(playlists[0]["playlists"]);
+  const story_ids = playlists.length ? playlists[0]["story_ids"] : [];
+
+  const playlist = fake.fakeStories.filter((story) => {
+    return story_ids.includes(story._id);
+  });
+
+  // console.log('playlist is: ', playlist);
+
+  res.json(playlist); //sending correct info, I believe :)
 }
 
 //* Create a new playlist
@@ -128,6 +140,7 @@ const removeStory = async (req, res) => {
 
 module.exports = {
   getPlaylist,
+  getMyBaskets,
   create,
   userPlaylists,
   userQueue,

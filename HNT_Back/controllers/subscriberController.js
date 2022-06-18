@@ -4,7 +4,7 @@ const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
 
 //* Gets a single story
 const getListenerSubscription = async (req, res) => {
-  console.log('getListenerSubscription backend!')
+  console.log('getListenerSubscription backend! &&&&&&&&&&&&&&&&&&& ')
   const sub_id = req.params.sub_id;
   //we are recieving the story_id :)
   // console.log(sub_id);

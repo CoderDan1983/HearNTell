@@ -65,6 +65,9 @@ export default function ListenerSingleStory(){
                 { story ? (<div>
                     <div>Title: {story.title}, Runtime: { time }</div>
                     <div>Author: {story.author}, _id: {story._id}</div>
+                    <div>
+                        { story.description && <div>Description: { story.description } </div> } 
+                    </div>
                 </div>)
                 : (<div>No story here!</div>)}
 
