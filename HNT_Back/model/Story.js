@@ -13,6 +13,10 @@ const Story = new Schema({
   description: String,
   duration: Number,
   private: Boolean, //Only allow subscribers to listen to this audio.
+  violent: Boolean,
+  sexually_explicit: Boolean,
+  language_warning: Boolean,
+  not_for_kids: Boolean,
   popularity_rating: { // 
     type: Number,
     default: 0 

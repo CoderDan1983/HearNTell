@@ -71,9 +71,8 @@ const saveStory = async (req, res) => {
 
 //* Create a new story
 const create = async (req, res) => {
-
+  console.log(req);
   const new_story_info = {
-      id: req.body.story_id,
       account_id: req.body.account_id,
       audio_url: req.body.audio_url,
       name: req.body.name,
@@ -89,7 +88,7 @@ const create = async (req, res) => {
 
 //todo Get most popular stories for all tags
 const popular = async (req, res) => {
-  let stories = await Story.find({},) // sort by popularity_rating
+  let stories = await Story.find({}) // sort by popularity_rating
   res.json(stories);
 };
 

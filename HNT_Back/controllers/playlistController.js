@@ -112,7 +112,7 @@ const removeStory = async (req, res) => {
   let playlist = await Playlist.findOne({_id: playlist_id});
   let story_ids = playlist.story_ids;
 
-  let updated_story_ids = story_ids.filter(e => !== story_id)
+  let updated_story_ids = story_ids.filter(e => e !== story_id)
 
   playlist.story_ids = updated_story_ids;
   playlist.save()
@@ -127,7 +127,7 @@ module.exports = {
   userQueue,
   show,
   update,
-  remove,
+  // remove,
   addStory,
   removeStory
 }
