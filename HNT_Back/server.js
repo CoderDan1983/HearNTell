@@ -51,7 +51,7 @@ app.use('/', require('./routes/root'));
     // app.use('/api/playlist', require('./routes/api/playlist'));
     // app.use('/api/user_search', require('./routes/api/user_search'));
     // app.use('/api/story_rating', require('./routes/api/story_rating'));
-    // app.use('/api/story', require('./routes/api/story'));
+    app.use('/api/story', require('./routes/api/story'));
     // app.use('/api/substription', require('./routes/api/substription'));
     // app.use('/api/tag_fit', require('./routes/api/tag_fit'));
     // app.use('/api/tag', require('./routes/api/tag'));

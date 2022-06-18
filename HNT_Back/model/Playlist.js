@@ -9,6 +9,10 @@ const Playlist = new Schema({
   Name: String,
   description: String,
   is_queue: Boolean, //* Denotes a special queue playlist
+  is_creator_list: {
+    type: Boolean,
+    default: false
+  }
 });
 
 module.exports = mongoose.model('playlist', Playlist);

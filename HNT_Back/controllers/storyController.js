@@ -71,9 +71,8 @@ const saveStory = async (req, res) => {
 
 //* Create a new story
 const create = async (req, res) => {
-
+  console.log(req);
   const new_story_info = {
-      id: req.body.story_id,
       account_id: req.body.account_id,
       audio_url: req.body.audio_url,
       name: req.body.name,
@@ -89,7 +88,7 @@ const create = async (req, res) => {
 
 //todo Get most popular stories for all tags
 const popular = async (req, res) => {
-  let stories = await Story.find({},) // sort by popularity_rating
+  let stories = await Story.find({}) // sort by popularity_rating
   res.json(stories);
 };
 
@@ -129,12 +128,24 @@ const storiesForPlaylist = async (req, res) => {
   let playlist = await Playlist.findOne({_id: playlist_id});
   let playlist_story_ids = playlist.story_ids;
 
+
   playlist_story_ids.forEach(async (story_id) => {
     let story = await Story.findOne({_id: story_id});
     playlist_stories.push(story);
+    res.json(playlist_stories);
   });
+  //? Lonnie's Incoming 6/17
+  // playlist_story_ids.forEach((story_id) => {
+  //   // let story = await Story.findOne({_id: story_id});
+  //   Story.findOne({_id: story_id})
+  //   .then((story) => {
+  //     playlist_stories.push(story);
+  //   })
+  // })
+  // .then(() => {
+  //   res.json(playlist_stories);
+  // })
   
-  res.json(playlist_stories);
 };
 
 //0) playlist_id

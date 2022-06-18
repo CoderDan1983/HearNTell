@@ -129,7 +129,6 @@ const removeStory = async (req, res) => {
 
   let playlist = await Playlist.findOne({_id: playlist_id});
   let story_ids = playlist.story_ids;
-
   let updated_story_ids = story_ids.filter(id => id !== story_id);
 
   playlist.story_ids = updated_story_ids;

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const accountController = require('../../controllers/accountController.js');
 const ROLES_LIST = require('../../config/roles_list');
-const verifyRoles = require('../../middleware/verifyRoles');s
+const verifyRoles = require('../../middleware/verifyRoles');
 
 //* ACCOUNT Routes /api/account
 
