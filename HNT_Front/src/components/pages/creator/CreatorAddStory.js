@@ -66,9 +66,9 @@ export default function CreatorAddStory(){
     //     })
     // }
 
-    // console.log('on this render, the tags (tags set to state directly) are: ', tags);
+    console.log('on this render, the tags (tags set to state directly) are: ', tags);
     console.log('on this render (tag array from array) says: ', arrayWithTags);
-    // console.log('on this render (tag array from form object) says: ', formValue);
+    console.log('on this render (tag array from form object) says: ', formValue);
 
     // console.log('selectedTags is: ', selectedTags);
     return(<div>
@@ -94,8 +94,8 @@ export default function CreatorAddStory(){
             <div>Choose up to ten tags (separated by commas):</div>
             <div className="flexWrapper">
                 {/* <TagsInput state= { tags } setter ={ setTags }/> */}
-                <TagsInput state= { arrayWithTags } setter ={ setArrayWithTags } outerIndex = { 2 }/>
-                {/* <TagsInput state= { formValue } setter ={ setFormValue } property = "tags"/> */}
+                {/* <TagsInput state= { arrayWithTags } setter ={ setArrayWithTags } outerIndex = { 2 }/> */}
+                <TagsInput state= { formValue } setter ={ setFormValue } property = "tags"/>
             </div>
             <div>
                 <h2>Content Settings: </h2>

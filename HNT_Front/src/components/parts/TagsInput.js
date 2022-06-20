@@ -3,16 +3,39 @@
 import { Button, Icon } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
-//* prop is ONLY used if the setter will be setting an object
-const TagsInput = ({ state, setter, property, outerIndex }) => { 
-    // const [tags, setTags] = useState([]);
-    // const addTags = event => {
-    //     if(event.key === "Enter" && event.target.value !== ""){
-    //         setter([...state, event.target.value ])
-    //         event.target.value = "";
-    //     }
-    // };
-    let oldEntry; let newEntry; let newState;
+//* property is only used with objects.  outerIndex uses
+const TagsInput = ({ state, setter, property, index, outerIndex }) => { 
+    const { removeFromArray, addToArray, oldEntry, newEntry} = arrayProcessor(state, setter, { property, index, outerIndex })
+    return (
+        <div className="tags-input">
+            <ul className="flexWrapper">
+                { newEntry && newEntry.map((tag, index) => (
+                    <li key={index} className="tag" >
+                        <span>
+                            {tag}
+                        </span>
+                        <Close 
+                            fontSize='inherit'
+                            onClick={ ()=> removeFromArray(index) } 
+                        />
+                    </li>
+                ))}
+            </ul>
+            <input
+                type="text"
+                onKeyUp={ event => addToArray(event) }
+                placeholder="Press enter to add tags"
+            />
+        </div>
+    );
+};
+export default TagsInput;
+
+// //^ returns default "state" values on initialization.  also returns add and remove functions.
+// //^ add and remove functions can put the array into an object, another array, 
+// //^ or simple state variable and update state accordingly
+function arrayProcessor(state, setter, { property, outerIndex, index } = {}) {
+    let newState; let oldEntry; let newEntry;
     if(outerIndex !== undefined){ //* for an array
         newState = [...state ];
         oldEntry = newState[outerIndex];
@@ -29,7 +52,11 @@ const TagsInput = ({ state, setter, property, outerIndex }) => {
         newEntry = state;
     }
 
-    const addTags = event => {
+    const addToArray = event => {
+    // if(action === "add"){
+        // console.log('116 inside: ', newState, oldEntry, newEntry);
+        // console.log('and also: ', state, setter)
+        // console.log('not to tension: ', property, event, outerIndex);
         if(event.key === "Enter" && event.target.value !== ""){
             if(outerIndex !== undefined){ //* for an array
                 newEntry = [...newState[outerIndex], event.target.value ] //$ okay
@@ -50,7 +77,8 @@ const TagsInput = ({ state, setter, property, outerIndex }) => {
         }
     };
 
-    const removeTags = index => {      
+    const removeFromArray = index => {  
+    // if(action === "remove"){   
         if(outerIndex !== undefined){ //* for an array
             newEntry = [...oldEntry.filter(tag => oldEntry.indexOf(tag) !== index)]
             newState[outerIndex] = newEntry;
@@ -68,31 +96,23 @@ const TagsInput = ({ state, setter, property, outerIndex }) => {
         }
     };
 
-    // const displayArray = 
-    return (
-        <div className="tags-input">
-            <ul className="flexWrapper">
-                { newEntry && newEntry.map((tag, index) => (
-                    <li key={index} className="tag" >
-                        <span>
-                            {tag}
-                        </span>
-                        <Close 
-                            fontSize='inherit'
-                            onClick={ ()=> removeTags(index) } 
-                        />
-                    </li>
-                ))}
-            </ul>
-            <input
-                type="text"
-                onKeyUp={ event => addTags(event) }
-                placeholder="Press enter to add tags"
-            />
-        </div>
-    );
-};
-export default TagsInput;
+    return { removeFromArray, addToArray, newState, oldEntry, newEntry }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // const addTags = event => {
