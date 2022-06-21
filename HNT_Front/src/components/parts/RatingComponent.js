@@ -44,28 +44,26 @@ export default function RatingComponent({ readOnly, state, setter, property }) {
         size="small"
         name="hover-feedback"
         value={ rating }
-        precision={ 0.1 }
-        getLabelText={getLabelText}
+        precision={ 0.5 }
+        getLabelText={ getLabelText }
         readOnly = { readOnly }
         onChange={(event, newValue) => { //newVal is a Number
-          // const parsed = parseInt(newValue, 10);
-          // const numRating = isNaN(parsed) ? 0 : parsed;
-          const numRating = newValue; 
           if(property){
               let newState = state;
-              newState[property] = numRating;
+              newState[property] = newValue;
               setter && setter(newState);
           }else{
-            setter && setter(numRating);
+            setter && setter(newValue);
           }
         }}
         onChangeActive={(event, newHover) => {            
             setHover(newHover);            
         }}
+        icon={<StarIcon fontSize="inherit" />}
         emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
       />
 
-      { rating ?? (
+      { rating !== null && (
         <Box sx={{ ml: 2 }}>{label[hover !== -1 ? hover : rating]}</Box>
         // <div>{labels[hover !== -1 ? hover : rating ]}</div>
       )}
