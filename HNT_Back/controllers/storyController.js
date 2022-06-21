@@ -71,7 +71,8 @@ const saveStory = async (req, res) => {
 
 //* Create a new story
 const create = async (req, res) => {
-  console.log(req);
+  console.log('line 74, create of storyController!!! -------------------')
+  console.log(req.body);
   const new_story_info = {
       account_id: req.body.account_id,
       audio_url: req.body.audio_url,

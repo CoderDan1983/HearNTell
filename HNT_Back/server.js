@@ -42,21 +42,6 @@ app.use('/', express.static(path.join(__dirname, '/public')));
 // routes
 app.use('/', require('./routes/root'));
 
-
-//* API Routes  - Commented out until ready to use.
-    // app.use('/api/account', require('./routes/api/account'));
-    // app.use('/api/ad', require('./routes/api/ad'));
-    // app.use('/api/campaign', require('./routes/api/campaign'));
-    // app.use('/api/creator', require('./routes/api/creator'));
-    // app.use('/api/playlist', require('./routes/api/playlist'));
-    // app.use('/api/user_search', require('./routes/api/user_search'));
-    // app.use('/api/story_rating', require('./routes/api/story_rating'));
-    app.use('/api/story', require('./routes/api/story'));
-    // app.use('/api/substription', require('./routes/api/substription'));
-    // app.use('/api/tag_fit', require('./routes/api/tag_fit'));
-    // app.use('/api/tag', require('./routes/api/tag'));
-    // app.use('/api/users', require('./routes/api/users'));
-
 app.use('/register', require('./routes/register'));
 app.use('/auth', require('./routes/auth'));
 app.use('/refresh', require('./routes/refresh'));
@@ -65,6 +50,21 @@ app.use('/logout', require('./routes/logout'));
 app.use('/getpublic', require('./routes/api/getpublic')); //* see notes in getpublic :)
 
 app.use(verifyJWT); //* everything after this will use the jwt middleware!
+
+//* API Routes  - Commented out until ready to use.
+// app.use('/api/account', require('./routes/api/account'));
+// app.use('/api/ad', require('./routes/api/ad'));
+// app.use('/api/campaign', require('./routes/api/campaign'));
+// app.use('/api/creator', require('./routes/api/creator'));
+// app.use('/api/playlist', require('./routes/api/playlist'));
+// app.use('/api/user_search', require('./routes/api/user_search'));
+// app.use('/api/story_rating', require('./routes/api/story_rating'));
+app.use('/api/story', require('./routes/api/story'));
+
+// app.use('/api/substription', require('./routes/api/substription'));
+// app.use('/api/tag_fit', require('./routes/api/tag_fit'));
+// app.use('/api/tag', require('./routes/api/tag'));
+// app.use('/api/users', require('./routes/api/users'));
 
 app.use('/creator', require('./routes/api/creator'));
 app.use('/story', require('./routes/api/story'));

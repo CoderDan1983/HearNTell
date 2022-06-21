@@ -295,6 +295,12 @@ li {
 .fullWidth {
     width: 100%;
 }
+
+.twoblack {
+    display: grid;
+    grid-template-columns: auto auto;
+    background-color: #000;
+}
 /*
 
 @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');

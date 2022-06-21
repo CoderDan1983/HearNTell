@@ -72,7 +72,7 @@ export default function ListenerSingleStory(){
                 : (<div>No story here!</div>)}
 
             </div>
-            <RatingComponent readOnly={ true } rating={ story.rating }/>
+            <RatingComponent readOnly={ true } state={ story.rating }/>
             <div className="flexWrapper mainItems">
                 Tags:{' '}
                 { story?.tags && story.tags.map((tag, i)=>{
