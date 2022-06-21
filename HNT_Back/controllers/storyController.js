@@ -51,7 +51,7 @@ const saveStory = async (req, res) => {
       id: req.body.story_id,
       account_id: req.body.account_id,
       audio_url: req.body.audio_url,
-      name: req.body.name,
+      title: req.body.title,
       tag_names: req.body.tag_names, 
       description: req.body.description,
       duration: req.body.duration,
@@ -75,11 +75,11 @@ const create = async (req, res) => {
   const new_story_info = {
       account_id: req.body.account_id,
       audio_url: req.body.audio_url,
-      name: req.body.name,
+      title: req.body.title,
       tag_names: req.body.tag_names, 
       description: req.body.description,
       duration: req.body.duration,
-      private: req.body.private, 
+      private: req.body.privateSetting,
     };
 
   let story = await Story.create(new_story_info);
@@ -172,7 +172,7 @@ const update = async (req, res) => {
       id: req.body.story_id,
       account_id: req.body.account_id,
       audio_url: req.body.audio_url,
-      name: req.body.name,
+      title: req.body.title,
       tag_names: req.body.tag_names, 
       description: req.body.description,
       duration: req.body.duration,

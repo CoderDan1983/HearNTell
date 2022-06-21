@@ -37,6 +37,8 @@ TAG Routes /api/tag
 
     Delete a tag                                DELETE /api/tag/{tag_id}
 
+    Common tags for creator                     GET /api/tag/common_tags/{creator_id}
+
 
 PLAYLIST Routes /api/playlist
 

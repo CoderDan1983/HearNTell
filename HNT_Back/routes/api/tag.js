@@ -35,6 +35,7 @@ router.route('/:tag_id')
 router.route('/:tag_id')
     .delete(verifyRoles(ROLES_LIST.Member), tagController.remove);
 
-
+//    Common tags for creator                     GET /api/tag/common_tags/{creator_id}
+router.route('/common_tags/creator_id')
 
 module.exports = router;

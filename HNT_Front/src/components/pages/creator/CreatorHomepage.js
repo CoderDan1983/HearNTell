@@ -6,6 +6,7 @@ import './../../../index.css';
 
 import TagsInput from "../../parts/TagsInput";
 import { Autocomplete, TextField } from '@mui/material';
+import LinkListItem from "../../parts/LinkListItem";
 
 export default function CreatorHomepage({ name, imageUrl }){
     const auth = useAuth();
@@ -33,13 +34,15 @@ export default function CreatorHomepage({ name, imageUrl }){
 
     const top100Films = ["mitt", "romney", "style"]
 
-    function goToEditProfile(){
-        
-    }
+    // function goToEditProfile(){
+    //     console.log('gotToCreatorAddStory was clicked')
+    //     return(<Link to="/editCreatorProfile" />)        
+    // }
 
-    function goToCreatorAddStory(){
-        <Link to="CreatorAddStory" />
-    }
+    // function goToCreatorAddStory(){
+    //     console.log('gotToCreatorAddStory was clicked')
+    //     return(<Link to="/creatorAddStory" />)
+    // }
 
     
 
@@ -62,8 +65,11 @@ export default function CreatorHomepage({ name, imageUrl }){
                 renderInput={(params) => <TextField {...params} label="Free" />}
             />
             <TagsInput selectedTags={ selectedTags } />
-            <button onClick={ goToEditProfile() }>Edit Profile</button>
-            <button onClick={ goToCreatorAddStory() }>Add Story</button>
+            {/* <button onClick={ (e) => goToEditProfile }>Edit Profile</button>
+            <button><Link to="/creatorAddStory"> Add Story </Link></button> */}
+            <LinkListItem name="Edit Profile" to="/editCreatorProfile" />
+            <LinkListItem name="Add Story" to="/creatorAddStory" />
+
             <div>
                 <h2>My Stories</h2>
                 { exampleStories.map((story)=>{
