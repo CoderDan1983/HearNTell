@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const SubscriptionRequest = new Schema({
   listener_account_id: String,
   creator_account_id: String,
+  playlist_id: String,
   approved: {
     type: Boolean,
     default: false
