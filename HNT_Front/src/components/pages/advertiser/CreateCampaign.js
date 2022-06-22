@@ -25,31 +25,30 @@ export default function CreateCampaign(){
     const [maximumBid, setMaximumBid] = useState('');
     const [budget, setBudget] = useState('');
     const [targetAudienceAll, setTargetAudienceAll] = useState(true);
-    const [tags, setTags] = useState([]);
     const [campaignActive, setCampaignActive] = useState(false);
+    const [tags, setTags] = useState([]);
 
 
     function submitFormHandler(e){
         e.preventDefault();
 
         // const storyForm = document.getElementById("storyForm")
-        // let storyData = {
-        //     title: titleValue, description: descriptionValue, privateSetting: privateSetting,
-        //     violenceAppropriate: violenceAppropriate, sexuallyAppropriate: sexuallyAppropriate,
-        //     languageAppropriate: languageAppropriate, kidAppropriate: kidAppropriate,
-        //     audioLink: audioLink, selectedFile: selectedFile, tags: tags,
-        // }
+        let campaignData = {
+            name: name, 
+            ad: ad, 
+            maximumBid: maximumBid,
+            budget: budget, 
+            targetAudienceAll: targetAudienceAll,
+            campaignActive: campaignActive, 
+            tags: tags,
+        }
         // const formData = new FormData();
         // const options = { headers: { "Content-Type" : "x-www-form-urlencoded" } }
         const options = { headers: {
             'Content-Type': 'multipart/form-data'
           }
         }
-
-
-
-        // post_private(axP, nav, loc, 'api/story', { payload: storyData, options }); //options
-
+        post_private(axP, nav, loc, 'api/campaign', { payload: campaignData, options }); //options
     }
 
 
@@ -57,7 +56,7 @@ export default function CreateCampaign(){
     return(<div>
         <h1>Create a Campaign </h1>
         <form onSubmit={ submitFormHandler } id="campaignForm" ref= { formRef }>
-            <label htmlFor="Name">Name: </label>
+            <label htmlFor="Name">Name of Campaign: </label>
             <input 
                 id="name" 
                 name="name" 
@@ -66,6 +65,8 @@ export default function CreateCampaign(){
                 value = { name } 
                 onChange={ (e) => setName(e.target.value) }
             />
+
+            <label htmlFor="ad">Select Ad: </label>
             <select onChange={ (e) => setAd(e.target.value)}>
             {fake.fakeAds.map(ad => (
               <option key={ad._id} value={ad}>
@@ -83,6 +84,7 @@ export default function CreateCampaign(){
                 value = { maximumBid } 
                 onChange={ (e) => setMaximumBid(e.target.value) }
             />
+            <p>Set maximum bid here. You will only be charged for the price that wins the bid for that tag.</p>
             <label htmlFor="budget">Budget: </label>
             <input
                 id="budget" 
@@ -92,28 +94,25 @@ export default function CreateCampaign(){
                 value = { budget } 
                 onChange={ (e) => setBudget(e.target.value) }
             />
-
+            <br />
             <div>Choose up to ten tags (separated by commas):</div>
             <div className="flexWrapper">
                 <TagsInput state= { tags } setter ={ setTags }/>
-                {/* <TagsInput state= { arrayWithTags } setter ={ setArrayWithTags } outerIndex = { 2 }/> */}
-                {/* <TagsInput state= { formValue } setter ={ setFormValue } property = "tags"/> */}
             </div>
             <div>
-                <h2>Content Settings: </h2>
-                <div>
-                    <input 
-                        id="campaignActive" 
-                        name="campaignActive" 
-                        type="checkbox"
-                        value={ campaignActive }
-                        onChange = { (e) => setCampaignActive(e.target.checked) }
-                    />
-                    <label htmlFor="privateSetting">
-                        Private - Only for Subscribers that I approve
-                    </label> <br />
+            <br />
+              <input 
+                  id="campaignActive" 
+                  name="campaignActive" 
+                  type="checkbox"
+                  value={ campaignActive }
+                  onChange = { (e) => setCampaignActive(e.target.checked) }
+              />
+             
+              <label htmlFor="campaignActive">
+                  Activate Campaign
+              </label> <br />
 
-                </div>
             </div>
 
             <button>Submit</button>
