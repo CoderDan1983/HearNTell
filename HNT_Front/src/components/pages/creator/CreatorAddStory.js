@@ -83,7 +83,6 @@ export default function CreatorAddStory(){
     }
     const violenceSetter = createSetter(formValue, setFormValue, { property: "violenceAppropriate" });
 
-    
     function submitFormHandler(e){
         e.preventDefault();
 
@@ -105,6 +104,7 @@ export default function CreatorAddStory(){
         
         storyData.append("descriptionValue", "this is a test");
         // console.log('storyData title is: ', storyData.entries()); //get('title')
+
         console.log("lightning ---------------------")
         for(const pair of storyData.entries()) {
             console.log(`${pair[0]}, ${pair[1]}`);
