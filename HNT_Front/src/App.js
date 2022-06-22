@@ -5,6 +5,7 @@ import Ad from './components/pages/advertiser/Ad';
 import Campaign from './components/pages/advertiser/Campaign';
 import CampaignReport from './components/pages/advertiser/CampaignReport'; //new
 import EditCampaign from './components/pages/advertiser/EditCampaign'; //new
+import CreateCampaign from './components/pages/advertiser/CreateCampaign'; //new
 
 import CreatorProfile from './components/pages/creator/CreatorProfile';
 import CreatorHomepage from './components/pages/creator/CreatorHomepage';
@@ -90,10 +91,11 @@ function App() {
             <Route path="account" element = { <Account /> } /> {/* tutorial route */}
           </Route>
 
-          <Route element={ <RequiredAuth allowedRoles={[ ROLES.Advertiser ]}/> }>
+          <Route element={ <RequiredAuth allowedRoles={[ ROLES.Advertiser, ROLES.Member  ]}/> }> {/*todo Need to remove member role after testing. */}
             <Route path="ad" element = { <Ad /> } />
             <Route path="campaignReport/:campaign_id" element = { <CampaignReport /> } />
             <Route path="editCampaign/:campaign_id" element = { <EditCampaign /> } />
+            <Route path="createCampaign" element = { <CreateCampaign /> } />
             <Route path="campaign" element = { <Campaign /> } />
             <Route path="advertiser" element = { <Advertiser /> } />
           </Route>
