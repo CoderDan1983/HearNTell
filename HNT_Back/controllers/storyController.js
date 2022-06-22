@@ -86,16 +86,22 @@ const create = async (req, res) => {
   const tags = parsedTags.map((tag) => {
     return { name: tag }; //todo figure out tag formatting and deal this
   });
-  console.log('tags are: ', tags); //okay
+  // console.log('tags are: ', tags); //okay
 
   const new_story_info = { //@ b) create the story on the database
     user_id: user, title, description, isPrivate, tags, audioLink, duration, 
   }; //todo currently using user for user_id, as user_id is undefined!
   //* the last part should create the createdAt and updatedAt sections, so to speak :)
-  let story = await Story.create(new_story_info, { timestamps: true }); 
-  const story_id = story[0]._id;
-  console.log("story[0]._id is: ", story[0]._id); //.createdAt, story.updatedAt, story_id
-
+  let story = await Story.create(new_story_info); 
+  const story_id = story._id;
+  console.log("story._id is: ", story._id); 
+  //* When 'story' was changed to 'Story' in the Story.js's mongoose.modal('Story), 
+  //...createdAt suddenly displays,
+  //...and we can reference _id through story._id instead of story[0]._id! 
+  // console.log(story[0].createdAt, story[0].updatedAt);
+  console.log(story.createdAt, ", " + story.updatedAt);
+  console.log('story is: ', story);
+  
   const rating_info = {  //@ c) create the ratings object in the database
     user_id: user, story_id, violenceRating, sexRating, languageRating, generalRating 
   } //* NOTE: enjoymentRating not put in by creator :D

@@ -9,18 +9,23 @@ const tagSchema = new Schema({
 });
 
 const Story = new Schema({
-  user_id: String, 
-  title: String, 
-  description: String, 
-  isPrivate: Boolean, //if true, Only allow subscribers to listen to this audio.
-  tags: [tagSchema], 
-  audioLink: String, 
-  duration: Number,
-  popularity_rating: { //? still use?
-    type: Number,
-    default: 0 
-  }
-});
+    user_id: String, 
+    title: String, 
+    description: String, 
+    isPrivate: Boolean, //if true, Only allow subscribers to listen to this audio.
+    tags: [tagSchema], 
+    audioLink: String, 
+    duration: Number,
+    popularity_rating: { //? still use?
+      type: Number,
+      default: 0 
+    }
+  }, 
+  { 
+    timestamps: true 
+  }); //* this allows us to access createdAt and updatedAt :D
+
+
 // const Story = new Schema({
 //   account_id: String,
 //   audio_url: String,
@@ -66,4 +71,4 @@ const Story = new Schema({
 //   await this.save();
 // }
 
-module.exports = mongoose.model('story', Story);
+module.exports = mongoose.model('Story', Story);
