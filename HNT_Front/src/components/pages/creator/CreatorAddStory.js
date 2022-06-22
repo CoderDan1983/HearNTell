@@ -103,14 +103,15 @@ export default function CreatorAddStory(){
         // }
         const form = document.getElementById("storyForm");
         const storyData = form ? new FormData(form) : new FormData();
-        
-        // storyData.append("descriptionValue", "this is a test");
+        storyData.append("tags", tags);
+        storyData.append("file", selectedFile);
         // console.log('storyData title is: ', storyData.entries()); //get('title')
 
         console.log("lightning! ---------------------")
         for(const pair of storyData.entries()) {
             console.log(`${pair[0]}, ${pair[1]}`);
         }
+        console.log('storyData loop end. -----')
         // console.log('form is: ', form);
         // console.log('formRef.current is: ', formRef.current)
         // (axiosPrivate, navigate, location, path, { _id, payload } = {})=>{
@@ -265,7 +266,10 @@ export default function CreatorAddStory(){
 
             <div>
                 <label>Upload an Audio Story</label>
-                <input type="file" onChange ={ (e) => setSelectedFile(e.target.files[0]) }/><br />
+                <input type="file" onChange ={ (e) => {
+                    console.log('setting selectedFile to: ', e.target.files[0])
+                    setSelectedFile(e.target.files[0]); 
+                }}/><br />
 
                 <label htmlFor="audioLink">Link to Outside Audio</label>
                 <input 
