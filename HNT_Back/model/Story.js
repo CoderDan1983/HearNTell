@@ -4,19 +4,36 @@ const mongoose = require('mongoose');
 const TagFit = require('./TagFit');
 const Schema = mongoose.Schema;
 
+const tagSchema = new Schema({
+  name: String,
+});
+
 const Story = new Schema({
-  account_id: String,
-  audio_url: String,
-  title: String,
-  tag_names: [String], //* Tags are stored in their own model. This is just the tag names, which can be used for searches.
-  description: String,
+  user_id: String, 
+  title: String, 
+  description: String, 
+  isPrivate: Boolean, //if true, Only allow subscribers to listen to this audio.
+  tags: [tagSchema], 
+  audioLink: String, 
   duration: Number,
-  private: Boolean, //Only allow subscribers to listen to this audio.
-  popularity_rating: { // 
+  popularity_rating: { //? still use?
     type: Number,
     default: 0 
   }
 });
+// const Story = new Schema({
+//   account_id: String,
+//   audio_url: String,
+//   title: String,
+//   tag_names: [String], //* Tags are stored in their own model. This is just the tag names, which can be used for searches.
+//   description: String,
+//   duration: Number,
+//   private: Boolean, //Only allow subscribers to listen to this audio.
+//   popularity_rating: { // 
+//     type: Number,
+//     default: 0 
+//   }
+// });
 
 //* Checks to see if given tag fits this story. If the story has a hundred tag fit responses and more than 50% say it doesn't fit
 // Story.methods.checkTagFit(tag_name) = async function() {

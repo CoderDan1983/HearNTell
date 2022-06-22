@@ -96,6 +96,7 @@ function arrayProcessor(state, setter, { property, outerIndex } = {}) { //index
             }
             else{ //* if state is a "simple" variable that will hold only this array
                 newEntry = [...state, event.target.value ]; 
+                // console.log('problem 99: ', newEntry, typeof(newEntry));
                 newState = newEntry;
                 setter(newState);
             }

@@ -21,22 +21,22 @@ export default function CreatorAddStory(){
     const [formValue, setFormValue] = useState({ //* example #2: array into object.
         title: '',
         description: '',
-        privateSetting: false,
-        violenceAppropriate: 0,
-        sexuallyAppropriate: 0,
-        languageAppropriate: 0,
-        kidAppropriate: 0,
+        isPrivate: false,
+        violenceRating: 0,
+        sexRating: 0,
+        languageRating: 0,
+        generalRating: 0,
         audioLink: '',
         selectedFile: null,
         tags: [],
     });
-    const [titleValue, setTitleValue] = useState('')
-    const [descriptionValue, setDescriptionValue] = useState('');
-    const [privateSetting, setPrivateSetting] = useState(false);
-    const [violenceAppropriate, setViolenceAppropriate] = useState(0);
-    const [sexuallyAppropriate, setSexuallyAppropriate] = useState(0);
-    const [languageAppropriate, setLanguageAppropriate] = useState(0);
-    const [kidAppropriate, setKidAppropriate] = useState(0);
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('');
+    const [isPrivate, setIsPrivate] = useState(false);
+    const [violenceRating, setViolenceRating] = useState(0);
+    const [sexRating, setSexRating] = useState(0);
+    const [languageRating, setLanguageRating] = useState(0);
+    const [generalRating, setGeneralRating] = useState(0);
     const [audioLink, setAudioLink] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const [tags, setTags] = useState([]);
@@ -81,16 +81,16 @@ export default function CreatorAddStory(){
             return { newState, oldEntry, newEntry } 
         }
     }
-    const violenceSetter = createSetter(formValue, setFormValue, { property: "violenceAppropriate" });
+    // const violenceSetter = createSetter(formValue, setFormValue, { property: "violenceRating" });
 
     function submitFormHandler(e){
         e.preventDefault();
         
         // const storyForm = document.getElementById("storyForm")
         // let storyData = {
-        //     title: titleValue, description: descriptionValue, privateSetting: privateSetting,
-        //     violenceAppropriate: violenceAppropriate, sexuallyAppropriate: sexuallyAppropriate,
-        //     languageAppropriate: languageAppropriate, kidAppropriate: kidAppropriate,
+        //     title: title, description: description, isPrivate: isPrivate,
+        //     violenceRating: violenceRating, sexRating: sexRating,
+        //     languageRating: languageRating, generalRating: generalRating,
         //     audioLink: audioLink, selectedFile: selectedFile, tags: tags,
         // }
         // const formData = new FormData();
@@ -103,15 +103,21 @@ export default function CreatorAddStory(){
         // }
         const form = document.getElementById("storyForm");
         const storyData = form ? new FormData(form) : new FormData();
-        storyData.append("tags", tags);
+        storyData.append("tags", JSON.stringify(tags));
         storyData.append("file", selectedFile);
+        storyData.append("violenceRating", violenceRating);
+        storyData.append("sexRating", sexRating);
+        storyData.append("languageRating", languageRating);
+        storyData.append("generalRating", generalRating);
+        const grabbedTags = storyData.get('tags');
+        console.log('in storyData, tags are: ', grabbedTags, typeof(grabbedTags));
         // console.log('storyData title is: ', storyData.entries()); //get('title')
 
         console.log("lightning! ---------------------")
-        for(const pair of storyData.entries()) {
-            console.log(`${pair[0]}, ${pair[1]}`);
-        }
-        console.log('storyData loop end. -----')
+        // for(const pair of storyData.entries()) {
+        //     console.log(`${pair[0]}, ${pair[1]}`);
+        // }
+        // console.log('storyData loop end. -----')
         // console.log('form is: ', form);
         // console.log('formRef.current is: ', formRef.current)
         // (axiosPrivate, navigate, location, path, { _id, payload } = {})=>{
@@ -145,7 +151,7 @@ export default function CreatorAddStory(){
             selectedFile: e.target.files[0],
         })
     }
-    const [violence, setViolence] = useState(0);
+    // const [violence, setViolence] = useState(0);
     // function handleChanges(e, prop = "value"){
     //     ///e.preventDefault();
     //     console.log('handleChange', e.target[prop])
@@ -169,8 +175,8 @@ export default function CreatorAddStory(){
                 name="title" 
                 type="text"
                 className="formData" 
-                value = { titleValue } 
-                onChange={ (e) => setTitleValue(e.target.value) }
+                value = { title } 
+                onChange={ (e) => setTitle(e.target.value) }
             />
 
             <label htmlFor="description">Description: </label>
@@ -178,8 +184,8 @@ export default function CreatorAddStory(){
                 id="description" 
                 name="description" 
                 className="formData"
-                value = { descriptionValue } 
-                onChange={ (e) => setDescriptionValue(e.target.value) }
+                value = { description } 
+                onChange={ (e) => setDescription(e.target.value) }
             />
 
             <div>Choose up to ten tags (separated by commas):</div>
@@ -190,75 +196,33 @@ export default function CreatorAddStory(){
             </div>
             <div>
                 <h2>Content Settings: </h2>
-                <div>
+                <div className="twoblack">
                     <input 
-                        id="privateSetting" 
-                        name="privateSetting" 
+                        id="isPrivate" 
+                        name="isPrivate" 
                         type="checkbox"
-                        value={ privateSetting }
-                        onChange = { (e) => setPrivateSetting(e.target.checked) }
+                        value={ isPrivate }
+                        onChange = { (e) => setIsPrivate(e.target.checked) }
                     />
-                    <label htmlFor="privateSetting">
+                    <label htmlFor="isPrivate">
                         Private - Only for Subscribers that I approve
                     </label> <br />
-                    <div className="twoblack">
-                        <div htmlFor="violenceAppropriate">
-                            Violent Content
-                        </div>
-                        
-                        {/* <RatingComponent readOnly={ false } rating={ violence } setRating = { setViolence }/> */}
-                        <RatingComponent readOnly={ false } state={ formValue } setter = { setFormValue } property="violenceAppropriate" />
-                        {/* setDisRating({state, setter, property}, value) */}
-                        {/* <RatingComponent 
-                            readOnly={ false } 
-                            // rating={ violence } 
-                            // setRating = { setViolence } 
-                            rating={ formValue } 
-                            setRating = { setFormValue } 
-                            property = "violenceAppropriate"
-                        /> */}
-                    </div>
-                    <input 
-                        id="violenceAppropriate" 
-                        name="violenceAppropriate" 
-                        type="checkbox" 
-                        value={ violenceAppropriate }
-                        // onChange = { (e) => violenceSetter(e.target.checked) }
-                        onChange = { (e) => setViolenceAppropriate(e.target.checked) }
-                    />
-                    <label htmlFor="violenceAppropriate">
+
+                    <RatingComponent readOnly={ false } state={ violenceRating } setter = { setViolenceRating } />
+                    <label htmlFor="violenceRating">
                         Violent Content
                     </label><br />
 
-                    <input 
-                        id="sexuallyAppropriate" 
-                        name="sexuallyAppropriate" 
-                        type="checkbox" 
-                        value={ sexuallyAppropriate }
-                        onChange = { (e) => setSexuallyAppropriate(e.target.checked) }
-                    />
-                    <label htmlFor="sexuallyAppropriate">Sexually Explicit</label><br />
+                    <RatingComponent readOnly={ false } state={ sexRating } setter = { setSexRating } />
+                    <label htmlFor="sexRating">Sexually Explicit</label><br />
 
-                    <input 
-                        id="languageAppropriate" 
-                        name="languageAppropriate" 
-                        type="checkbox"
-                        value={ languageAppropriate }
-                        onChange = { (e) => setLanguageAppropriate(e.target.checked) }
-                    />
-                    <label htmlFor="languageAppropriate">
+                    <RatingComponent readOnly={ false } state={ languageRating } setter = { setLanguageRating } />
+                    <label htmlFor="languageRating">
                         Language Warning
                     </label><br />
 
-                    <input 
-                        id="kidAppropriate" 
-                        name="kidAppropriate" 
-                        type="checkbox" 
-                        value={ kidAppropriate }
-                        onChange = { (e) => setKidAppropriate(e.target.checked) }
-                    />
-
-                    <label htmlFor="kidAppropriate">
+                    <RatingComponent readOnly={ false } state={ generalRating } setter = { setGeneralRating } />
+                    <label htmlFor="generalRating">
                         Not suitable for Kids
                     </label>
                 </div>
@@ -285,3 +249,22 @@ export default function CreatorAddStory(){
         </form>
     </div>)
 }
+
+
+{/* <div className="twoblack">
+<div htmlFor="violenceRating">
+    Violent Content
+</div>
+<RatingComponent readOnly={ false } state={ formValue } setter = { setFormValue } />
+<RatingComponent readOnly={ false } rating={ violence } setRating = { setViolence }/>
+
+setDisRating({state, setter, property}, value)
+<RatingComponent 
+    readOnly={ false } 
+    // rating={ violence } 
+    // setRating = { setViolence } 
+    rating={ formValue } 
+    setRating = { setFormValue } 
+    property = "violenceRating"
+/>
+</div> */}

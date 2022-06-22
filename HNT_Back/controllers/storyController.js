@@ -1,4 +1,5 @@
 const Story = require('../model/Story');
+const StoryRating = require('../model/StoryRating');
 const Tag = require('../model/Tag');
 const Playlist = require('../model/Playlist');
 
@@ -71,22 +72,37 @@ const saveStory = async (req, res) => {
 
 //* Create a new story
 const create = async (req, res) => {
-  console.log('line 74, create of storyController!!! -------------------')
-  console.log('body: ', req.body);
-  console.log('file(s): ', req.files);
+  console.log('line 74, create of storyController!!! -------------------');
+  const user_id = req._id; //@ a) load the variables.
+  const user = req.user; //?  Should we be using user_id or user to "mark" the story /ratings?
+  const body = req.body;
+  const { violenceRating, sexRating, languageRating, generalRating, 
+    title, description, isPrivate, tags: rawTags, selectedFile, audioLink } = body;
+  const duration = 1000; //todo later we'll get this value from the file length or whatnot.
+  
+  // console.log('body: ', body, ', the user is: ', user, ", user_id is: ", user_id);
+  // console.log('the name of the file is: ', req.files.file.name); //okay
+  let parsedTags = JSON.parse(rawTags);
+  const tags = parsedTags.map((tag) => {
+    return { name: tag }; //todo figure out tag formatting and deal this
+  });
+  console.log('tags are: ', tags); //okay
 
-  const new_story_info = {
-      account_id: req.body.account_id,
-      audio_url: req.body.audio_url,
-      title: req.body.title,
-      tag_names: req.body.tag_names, 
-      description: req.body.description,
-      duration: req.body.duration,
-      private: req.body.privateSetting,
-    };
+  const new_story_info = { //@ b) create the story on the database
+    user_id: user, title, description, isPrivate, tags, audioLink, duration, 
+  }; //todo currently using user for user_id, as user_id is undefined!
+  //* the last part should create the createdAt and updatedAt sections, so to speak :)
+  let story = await Story.create(new_story_info, { timestamps: true }); 
+  const story_id = story[0]._id;
+  console.log("story[0]._id is: ", story[0]._id); //.createdAt, story.updatedAt, story_id
 
-  let story = await Story.create(new_story_info);
-  res.json(story);
+  const rating_info = {  //@ c) create the ratings object in the database
+    user_id: user, story_id, violenceRating, sexRating, languageRating, generalRating 
+  } //* NOTE: enjoymentRating not put in by creator :D
+  let ratings = await StoryRating.create(rating_info);
+  
+  console.log("we'll be returning: ", story, ratings); //? Why do tags appear twice in story!?!
+  res.json({ story, ratings }); //@ d) return values :)
 };
 
 //todo Get most popular stories for all tags
