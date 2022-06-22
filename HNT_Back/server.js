@@ -12,6 +12,7 @@ const credentials = require('./middleware/credentials');
 const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
 
+const fileupload = require("express-fileupload");
 const PORT = process.env.PORT || 3500;
 
 // Connect to MongoDB
@@ -28,7 +29,8 @@ app.use(credentials);
 app.use(cors(corsOptions));
 
 // built-in middleware to handle urlencoded form data
-app.use(express.urlencoded({ extended: false }));
+app.use(fileupload());
+app.use(express.urlencoded({ extended: true })); //originally --> false
 
 // built-in middleware for json 
 app.use(express.json());

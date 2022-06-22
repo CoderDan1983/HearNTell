@@ -74,6 +74,49 @@ export const postThenSet_private = (axiosPrivate, navigate, location, setValue, 
         controller.abort();
     }
 }
+
+// const res = await axios.post('https://httpbin.org/post', formData, {
+//   headers: formData.getHeaders()
+// });
+export const post_formData = (someAxiosPassedIn, navigate, location, path, { _id, payload, options } = {})=>{
+    const url = _id ? `/${path}/${_id}` : `/${path}/`
+    // let isMounted = true;
+    const controller = new AbortController();
+    // headers: { "Content-Type" : "multipart/for"}
+    // 
+    const postSomething = async () => {
+         const axiosOptions = //options ? { ...options, signal: controller.signal } : 
+        { signal: controller.signal }
+        //headers: payload.getHeaders()
+        console.log('running postThenSet_private.  axiosOptions are: ', axiosOptions)
+
+        try {
+            console.log('trying again...')
+            const response = await someAxiosPassedIn.post(url, 
+            payload,
+            axiosOptions);
+            // const userNames = response.data.map(user => user.username); //grab usernames only. :)
+            console.log(response.data);
+            // // console.log(userNames);
+            // isMounted && setValue(response.data) //if isMounted, then setUsers :D
+            // console.log('the stateVal is: ');
+            // console.log(stateVal); //why undefined???
+            //the parameter was response.data, but we didn't need to set/send all that :)
+        }
+        catch (err){
+            console.log("I'm gonna log an error!")
+            console.error(err);
+            navigate('/login', { state: { from: location }, replace: true })
+        }
+    }
+    postSomething();
+
+    return () =>{ //* cleanup function ^_^
+        // isMounted = false;
+        controller.abort();
+    }
+}
+
 export const post_private = (axiosPrivate, navigate, location, path, { _id, payload, options } = {})=>{
     const url = _id ? `/${path}/${_id}` : `/${path}/`
     // let isMounted = true;
@@ -81,7 +124,7 @@ export const post_private = (axiosPrivate, navigate, location, path, { _id, payl
     // headers: { "Content-Type" : "multipart/for"}
     // 
     const postSomething = async () => {
-        const axiosOptions = options ? { ...options, signal: controller.signal } : 
+         const axiosOptions = options ? { ...options, signal: controller.signal } : 
         { signal: controller.signal }
 
         console.log('running postThenSet_private.  axiosOptions are: ', axiosOptions)

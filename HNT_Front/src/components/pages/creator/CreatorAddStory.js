@@ -3,15 +3,15 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 
 import TagsInput from "../../parts/TagsInput";
 import '../../../index.css';
-import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
+import useAxiosFormPrivate from '../../../hooks/useAxiosPrivate';
 // import useAxios from '../../'
 import RatingComponent from "../../parts/RatingComponent";
 import '../../../index.css'
-import { post_private } from '../../../hooks/useBackendRequest';
+import { post_formData } from '../../../hooks/useBackendRequest';
 export default function CreatorAddStory(){
     const selectedTags = tags => { console.log(tags) };
     console.log('selectedTags is (10): ', selectedTags)
-    const axP = useAxiosPrivate();
+    const axFP = useAxiosFormPrivate();
     const nav = useNavigate();
     const loc = useLocation();
     const formRef = useRef();
@@ -85,7 +85,7 @@ export default function CreatorAddStory(){
 
     function submitFormHandler(e){
         e.preventDefault();
-
+        
         // const storyForm = document.getElementById("storyForm")
         // let storyData = {
         //     title: titleValue, description: descriptionValue, privateSetting: privateSetting,
@@ -94,30 +94,30 @@ export default function CreatorAddStory(){
         //     audioLink: audioLink, selectedFile: selectedFile, tags: tags,
         // }
         // const formData = new FormData();
-        // const options = { headers: { "Content-Type" : "x-www-form-urlencoded" } }
-        const options = { headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
+        // const options = { headers: { "Content-Type" : "application/x-www-form-urlencoded" } }
+
+        // const options = { 
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data'
+        //     }
+        // }
         const form = document.getElementById("storyForm");
         const storyData = form ? new FormData(form) : new FormData();
         
-        storyData.append("descriptionValue", "this is a test");
+        // storyData.append("descriptionValue", "this is a test");
         // console.log('storyData title is: ', storyData.entries()); //get('title')
 
-        console.log("lightning ---------------------")
+        console.log("lightning! ---------------------")
         for(const pair of storyData.entries()) {
             console.log(`${pair[0]}, ${pair[1]}`);
-          }
+        }
         // console.log('form is: ', form);
         // console.log('formRef.current is: ', formRef.current)
         // (axiosPrivate, navigate, location, path, { _id, payload } = {})=>{
 
         // const storyData { steve: "robbins" }
-        console.log('submitFormHandler selectedFile is', selectedFile, typeof(selectedFile));
-        post_private(axP, nav, loc, 'api/story', { payload: storyData, options }); //options
-        // 
-        // console.log('e was: ', e);
+        // console.log('submitFormHandler selectedFile is', selectedFile, typeof(selectedFile));
+        post_formData(axFP, nav, loc, 'api/story', { payload: storyData }); //options
     }
     // getThenSet_private(axP, nav, loc, setQueue, 'queue', { _id: user_id });
     function handleCheckboxChange(e){
@@ -161,7 +161,7 @@ export default function CreatorAddStory(){
     // console.log('selectedTags is: ', selectedTags);
     return(<div>
         <h1>Create / Edit a Story </h1>
-        <form onSubmit={ submitFormHandler } id="storyForm" ref= { formRef }>
+        <form id="storyForm" ref= { formRef }>
             <label htmlFor="title">Title: </label>
             <input 
                 id="title" 
@@ -183,7 +183,7 @@ export default function CreatorAddStory(){
 
             <div>Choose up to ten tags (separated by commas):</div>
             <div className="flexWrapper">
-                <TagsInput state= { tags } setter ={ setTags }/>
+                <TagsInput state= { tags } setter ={ setTags } />
                 {/* <TagsInput state= { arrayWithTags } setter ={ setArrayWithTags } outerIndex = { 2 }/> */}
                 {/* <TagsInput state= { formValue } setter ={ setFormValue } property = "tags"/> */}
             </div>
@@ -265,7 +265,6 @@ export default function CreatorAddStory(){
 
             <div>
                 <label>Upload an Audio Story</label>
-                {/* <input type="file" onChange ={ (e) => setSelectedFile(e.target.value) }/><br /> */}
                 <input type="file" onChange ={ (e) => setSelectedFile(e.target.files[0]) }/><br />
 
                 <label htmlFor="audioLink">Link to Outside Audio</label>
@@ -278,7 +277,7 @@ export default function CreatorAddStory(){
                 />
             </div>
 
-            <button>Submit</button>
+            <button type="button" onClick={ submitFormHandler } >Submit</button>
         </form>
     </div>)
 }

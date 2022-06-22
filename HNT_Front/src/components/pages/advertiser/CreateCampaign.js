@@ -9,7 +9,6 @@ import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 // import useAxios from '../../'
 import '../../../index.css'
 import { post_private } from '../../../hooks/useBackendRequest';
-import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const fake = require("../../fakeApi/fakeAds_Back") //todo Replae with real api feed after testing.
 export default function CreateCampaign(){

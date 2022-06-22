@@ -23,7 +23,10 @@ const TagsInput = ({ state, setter, property, outerIndex }) => { //index
             </ul>
             <input
                 type="text"
-                onKeyUp={ event => addToArray(event) }
+                onKeyUp = { event => { 
+                    //console.log('tagInput key up event runs first?: ', event.keyCode, event.key, event.code);
+                    addToArray(event);                 
+                }}
                 placeholder="Press enter to add tags"
             />
         </div>
