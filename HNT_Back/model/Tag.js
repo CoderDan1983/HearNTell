@@ -16,11 +16,16 @@ const Tag = new Schema({
   timestamps: true 
 });
 
-Tag.pre('save', function (next) {
-  this.name = properlyUppercased(this.name);
-  console.log('Tag.js, 18, this.name is: ', this.name)
-  next();
-});
+
+
+// Tag.pre('findOneAndUpdate', async function() { 
+// });
+
+// Tag.pre('save', function (next) {
+//   this.name = properlyUppercased(this.name);
+//   console.log('Tag.js, 18, this.name is: ', this.name)
+//   next();
+// });
 
 //* Gets all the tag_names from every story, then adds up how many times each tag is used and stores it in the Tag.
 Tag.statics.countStoriesForEachTag = async function() {

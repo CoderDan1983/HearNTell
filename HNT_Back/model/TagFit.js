@@ -14,13 +14,6 @@ const TagFit = new Schema({
   timestamps: true 
 });
 
-TagFit.pre('save', function (next) {
-  this.tag_name = properlyUppercased(this.tag_name);
-  next();
-});
-
-
-
 // const TagFit0 = new Schema({
 //   tag_name: String,
 //   fit: Boolean,

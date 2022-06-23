@@ -2,7 +2,7 @@ const Story = require('../model/Story');
 const StoryRating = require('../model/StoryRating');
 const Tag = require('../model/Tag');
 const Playlist = require('../model/Playlist');
-
+const { properlyUppercased } = require('../custom_modules/utilities') 
 const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back");
 
 // import { fakeStories, fakeStories1,  fakeTags, fakeSearches, fakeSubList, fakeBaskets, fakeQueue,
@@ -82,26 +82,12 @@ const create = async (req, res) => {
   
   // console.log('body: ', body, ', the user is: ', user, ", user_id is: ", user_id);
   // console.log('the name of the file is: ', req.files.file.name); //okay
-  let tags = JSON.parse(rawTags);
+  let jsonnedTags = JSON.parse(rawTags);
+  const tags = jsonnedTags.map((tag)=> properlyUppercased(tag));
 
-  // Story.pre('save', function (next) {
-  //   // capitalize
-  //   this.title.toLowerCase().charAt(0).toUpperCase() + this.title.slice(1);
-  //   next();
-  // });
-
-  // const tags = parsedTags.map((tag) => {
-  //   return { name: tag }; //todo figure out tag formatting and deal this
-  // });
   console.log('tags are: ', tags); //okay
-    // console.log('tags are: ', tags, typeof(tags));
-    // const testingTags = ["The Mann", "WOE MAN", "WOE", "hello", "JdJd", "iD hellow"];
-
-    //const formattedTag = tag.toLowerCase().charAt(0).toUpperCase()// + this.title.slice(1);
 
   tags.map(async (tag) => { //@ b) saving tags to tags collection (?)
-      
-      // console.log('formattedTag', formattedTag);
       await Tag.findOneAndUpdate({ name: tag }, { name: tag }, { upsert: true});
   });
 
@@ -117,14 +103,13 @@ const create = async (req, res) => {
   //...and we can reference _id through story._id instead of story[0]._id! 
   // console.log(story[0].createdAt, story[0].updatedAt);
   console.log(story.createdAt, ", " + story.updatedAt);
-  console.log('story is: ', story);
   
   const rating_info = {  //@ d) create the ratings object in the database
     user_id: user, story_id, violenceRating, sexRating, languageRating, generalRating 
   } //* NOTE: enjoymentRating not put in by creator :D
   let ratings = await StoryRating.create(rating_info);
   
-  console.log("we'll be returning: ", story, ratings); //? Why do tags appear twice in story!?!
+  // console.log("we'll be returning: ", story, ratings); //? Why do tags appear twice in story!?!
   res.json({ story, ratings }); //@ e) return values :)
 };
 

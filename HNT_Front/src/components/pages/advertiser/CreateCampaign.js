@@ -43,12 +43,13 @@ export default function CreateCampaign(){
         }
         // const formData = new FormData();
         // const options = { headers: { "Content-Type" : "x-www-form-urlencoded" } }
-        const options = { headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
+        // const options = { headers: {
+        //     'Content-Type': 'multipart/form-data'
+        //   }
+        // }
         console.log(campaignData);
-        post_private(axP, nav, loc, 'api/campaign', { payload: campaignData, options }); //options
+
+        post_private(axP, nav, loc, 'api/campaign', { payload: campaignData }); //options
     }
 
 

@@ -1,16 +1,25 @@
 const Campaign = require('../model/Campaign');
 const AdRun = require('../model/AdRun');
+const { properlyUppercased } = require('../custom_modules/utilities') 
 
 //* Create an campaign
 const create = async (req, res) => {
-
-  console.log(req.user)
-  console.log(req.body)
+  console.log('campaignController, line 7!')
+  console.log(req.user);
+  console.log(req.body);
   const request_data = req.body;
+
+  const { tags: jsonnedTags } = req.body;
+  
+  // console.log('jsonnedTags: ', jsonnedTags, typeof(jsonnedTags));
+  const tags = jsonnedTags.map((tag)=> properlyUppercased(tag));
+
+  // console.log('tags are: ', tags); //okay
+  
   let campaign_data = {
     account_id: request_data.account_id,
     name: request_data.name,
-    tags: request_data.tags, // Expects an array
+    tags: tags, // Expects an array
     ad_audio_url: request_data.ad_audio_url,
     ad_id: request_data.ad_id,
     max_bid: request_data.max_bid,

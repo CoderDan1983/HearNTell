@@ -26,12 +26,12 @@ const Story = new Schema({
     timestamps: true 
 }); //* this allows us to access createdAt and updatedAt :D
 
-Story.pre('save', function (next) {
-  this.tags = this.tags.map((tag)=>{
-    return properlyUppercased(tag);
-  })
-  next();
-});
+// Story.pre('save', function (next) {
+//   this.tags = this.tags.map((tag)=>{
+//     return properlyUppercased(tag);
+//   })
+//   next();
+// });
 
 // const Story = new Schema({
 //   account_id: String,

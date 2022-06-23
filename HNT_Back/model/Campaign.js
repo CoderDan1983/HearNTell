@@ -19,11 +19,4 @@ const Campaign = new Schema({
   timestamps: true 
 });
 
-Campaign.pre('save', function (next) {
-  this.tags = this.tags.map((tag)=>{
-    return properlyUppercased(tag);
-  })
-  next();
-});
-
 module.exports = mongoose.model('campaign', Campaign);
