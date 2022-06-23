@@ -243,7 +243,6 @@ li {
     justify-content: center;
     justify-items: center;
     width: 100%;
-    /* column-gap: 25px; */
     color: black;
     background-color: yellow;
 }
@@ -308,7 +307,15 @@ li {
 }
 
 .modal {
-    
+    display: block;
+    background-color: blue;
+    color: green;
+    width: 600px;
+    height: 600px;
+    position: absolute;
+    top: calc(50% - 300px);
+    left: calc(50% - 300px);
+    opacity: 0.3;
 }
 /*
 

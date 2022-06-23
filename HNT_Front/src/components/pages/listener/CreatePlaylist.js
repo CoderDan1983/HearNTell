@@ -8,7 +8,7 @@ export default function CreatePlaylist(){
     const axP = useAxiosPrivate();
     const nav = useNavigate();
     const loc = useLocation();
-    const setOpen = useContext(ModalContext);
+    const { setOpen } = useContext(ModalContext);
     console.log('setOpen is: ', setOpen);
     const [ name, setName ] = useState('')
     const [ description, setDescription ] = useState('')
@@ -22,7 +22,7 @@ export default function CreatePlaylist(){
 
         //post_formData(axP, nav, loc, 'api/campaign', { payload: formData }); //options
     }
-    return (<div>
+    return (<div className="modal">
         <div>Create Playlist</div>
         <form id="playlistForm">
             <div className="two">

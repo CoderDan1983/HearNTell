@@ -74,7 +74,6 @@ export default function Listener(){
                 })}
             </div>
             <button>Add Playlist</button>
-            {/* <CreatePlaylist /> */}
             <ModalWrapper>
                 <CreatePlaylist />
             </ModalWrapper>

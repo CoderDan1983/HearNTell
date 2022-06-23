@@ -1,9 +1,10 @@
 import { useRef, useState, createContext } from "react"
 import useClickOutside from "../../hooks/useClickOutside";
+import '../../index.css';
 
 export const ModalContext = createContext();
 
-export default function ModalWrapper({ children }) {
+export default function ModalWrapper({ children, className }) {
     const [open, setOpen] = useState(false);
     const openClicked = useRef(false); //* I ended up adding the openClicked variable to make the code work! 
     const modalRef = useRef();
@@ -21,21 +22,12 @@ export default function ModalWrapper({ children }) {
     };
 
     return (
-        <ModalContext.Provider value={ setOpen }>
+        <ModalContext.Provider value={{ setOpen }}>
             <button onClick={ handleOpen }>Open</button>
             <div
                 ref={modalRef}
-                style={{
-                    display: open ? "block" : "none",
-                    backgroundColor: "blue",
-                    color: "white",
-                    width: "300px",
-                    height: "300px",
-                    position: "absolute",
-                    top: "calc(50% - 150px)",
-                    left: "calc(50% - 150px)",
-                    // opacity: "0.3",
-                }}
+                // className = { open ? "modal" : "hide" }
+                className = { open ? (className ? className : "modal") : "hide" }
             >
                 { open && children }
             </div>
