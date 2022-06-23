@@ -77,7 +77,7 @@ function App() {
             <Route path="creatorAccessRequests" element = { <CreatorAccessRequests /> } />
           </Route>
 
-          <Route element={ <RequiredAuth allowedRoles={[ ROLES.Admin ]}/> }>
+          <Route element={ <RequiredAuth allowedRoles={[ ROLES.Admin, ROLES.Member ]}/> }> //todo Remove ROLES.Member after testing
             <Route path="admin" element = { <Admin /> } />
             <Route path="adminReports" element = { <AdminReports /> } />
             <Route path="adminManageUsers" element = { <AdminManageUsers /> } />

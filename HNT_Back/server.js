@@ -65,7 +65,7 @@ app.use('/api/story', require('./routes/api/story'));
 
 // app.use('/api/substription', require('./routes/api/substription'));
 // app.use('/api/tag_fit', require('./routes/api/tag_fit'));
-// app.use('/api/tag', require('./routes/api/tag'));
+app.use('/api/tag', require('./routes/api/tag'));
 // app.use('/api/users', require('./routes/api/users'));
 
 app.use('/creator', require('./routes/api/creator'));

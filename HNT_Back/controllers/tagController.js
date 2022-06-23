@@ -39,6 +39,7 @@ const create = async (req, res) => {
 
 //* Get a list of all tags
 const index = async (req, res) => {
+  console.log("Got to tag index");
   let tags = await Tag.find({});
   res.json(tags);
 };
@@ -49,7 +50,7 @@ const tagsForStory = async (req, res) => {
   const story_id = req.params.story_id;
   let story = await Story.findOne({_id: story_id});
   let tag_names = story.tag_names;
-  tag_names.forEach(tag_name => {
+  tag_names.forEach(async tag_name => {
       let tag = await Tag.findOne({name: tag_name});
       story_tags.push(tag);
   });
