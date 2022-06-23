@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 
 import TagsInput from "../../parts/TagsInput";
 import '../../../index.css';
-import useAxiosFormPrivate from '../../../hooks/useAxiosPrivate';
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 // import useAxios from '../../'
 import RatingComponent from "../../parts/RatingComponent";
 import '../../../index.css'
@@ -11,7 +11,7 @@ import { post_formData } from '../../../hooks/useBackendRequest';
 export default function CreatorAddStory(){
     const selectedTags = tags => { console.log(tags) };
     console.log('selectedTags is (10): ', selectedTags)
-    const axFP = useAxiosFormPrivate();
+    const axP = useAxiosPrivate();
     const nav = useNavigate();
     const loc = useLocation();
     const formRef = useRef();
@@ -114,9 +114,7 @@ export default function CreatorAddStory(){
         // console.log('storyData title is: ', storyData.entries()); //get('title')
 
         console.log("lightning! ---------------------")
-        // for(const pair of storyData.entries()) {
-        //     console.log(`${pair[0]}, ${pair[1]}`);
-        // }
+
         // console.log('storyData loop end. -----')
         // console.log('form is: ', form);
         // console.log('formRef.current is: ', formRef.current)
@@ -124,7 +122,7 @@ export default function CreatorAddStory(){
 
         // const storyData { steve: "robbins" }
         // console.log('submitFormHandler selectedFile is', selectedFile, typeof(selectedFile));
-        post_formData(axFP, nav, loc, 'api/story', { payload: storyData }); //options
+        post_formData(axP, nav, loc, 'api/story', { payload: storyData }); //options
     }
     // getThenSet_private(axP, nav, loc, setQueue, 'queue', { _id: user_id });
     function handleCheckboxChange(e){
