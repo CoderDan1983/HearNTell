@@ -14,6 +14,9 @@ const Campaign = new Schema({
   budget: Number,
   spent_so_far: Number,
   active: Boolean,
+}, 
+{ 
+  timestamps: true 
 });
 
 Campaign.pre('save', function (next) {

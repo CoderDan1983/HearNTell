@@ -6,6 +6,9 @@ const Schema = mongoose.Schema;
 const Subscription = new Schema({
   listener_id: String,
   creator_id: String,
+}, 
+{ 
+  timestamps: true 
 });
 
 module.exports = mongoose.model('subscription', Subscription);

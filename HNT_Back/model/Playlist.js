@@ -13,6 +13,9 @@ const Playlist = new Schema({
     type: Boolean,
     default: false
   }
+}, 
+{ 
+  timestamps: true 
 });
 
 module.exports = mongoose.model('playlist', Playlist);

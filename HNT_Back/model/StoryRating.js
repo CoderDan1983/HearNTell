@@ -11,6 +11,9 @@ const StoryRating = new Schema({
   languageRating: Number,
   generalRating: Number,
   enjoymentRating: Number,
+}, 
+{ 
+  timestamps: true 
 });
 // const StoryRating = new Schema({
 //   story_id: String,

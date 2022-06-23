@@ -10,6 +10,9 @@ const AdRun = new Schema({
   tag_used_id: String,
   time_ran: Date,
   account_id: String, //* If there is one. Non-logged in listeners won't have one.
+}, 
+{ 
+  timestamps: true 
 });
 
 module.exports = mongoose.model('ad_run', AdRun);

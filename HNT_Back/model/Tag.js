@@ -11,6 +11,9 @@ const Tag = new Schema({
   highest_bid: Number,
   highest_bidder_id: String,
   number_of_stories_with_tag: Number //* filled in with the static method of this model.
+}, 
+{ 
+  timestamps: true 
 });
 
 Tag.pre('save', function (next) {

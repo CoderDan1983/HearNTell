@@ -8,6 +8,9 @@ const Account = new Schema({
   next_billing_date: Date,
   advertiser: Boolean,
   stripe_id: String,
+}, 
+{ 
+  timestamps: true 
 });
 
 module.exports = mongoose.model('account', Account);

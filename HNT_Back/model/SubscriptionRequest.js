@@ -12,6 +12,9 @@ const SubscriptionRequest = new Schema({
     default: false
   }
 
+}, 
+{ 
+  timestamps: true 
 });
 
 module.exports = mongoose.model('subscription_request', SubscriptionRequest);
