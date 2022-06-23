@@ -13,6 +13,9 @@ const Campaign = new Schema({
   budget: Number,
   spent_so_far: Number,
   active: Boolean,
+}, 
+{ 
+  timestamps: true 
 });
 
 module.exports = mongoose.model('campaign', Campaign);

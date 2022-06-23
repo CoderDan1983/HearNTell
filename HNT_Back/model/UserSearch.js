@@ -6,6 +6,9 @@ const Schema = mongoose.Schema;
 const UserSearch = new Schema({
   user_id: String,
   search_string: String
+}, 
+{ 
+  timestamps: true 
 });
 
 module.exports = mongoose.model('user_search', UserSearch);

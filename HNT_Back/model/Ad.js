@@ -8,6 +8,9 @@ const Ad = new Schema({
   audio_url: String,
   duration: Number,
   file_size: Number // In kilobytes
+}, 
+{ 
+  timestamps: true 
 });
 
 

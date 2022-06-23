@@ -8,6 +8,9 @@ const TagFit = new Schema({
   story_id: String,
   tag_name: String,
   fit: Boolean,
+}, 
+{ 
+  timestamps: true 
 });
 
 

@@ -9,6 +9,9 @@ const Profile = new Schema({
   image_url: String,
   about_me: String,
   
+}, 
+{ 
+  timestamps: true 
 });
 
 module.exports = mongoose.model('profile', Profile);

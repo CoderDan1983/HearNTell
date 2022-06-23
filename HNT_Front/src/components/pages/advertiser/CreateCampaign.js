@@ -47,6 +47,7 @@ export default function CreateCampaign(){
             'Content-Type': 'multipart/form-data'
           }
         }
+        console.log(campaignData);
         post_private(axP, nav, loc, 'api/campaign', { payload: campaignData, options }); //options
     }
 
@@ -54,7 +55,7 @@ export default function CreateCampaign(){
 
     return(<div>
         <h1>Create a Campaign </h1>
-        <form onSubmit={ submitFormHandler } id="campaignForm" ref= { formRef }>
+        <form id="campaignForm" ref= { formRef }>
             <label htmlFor="Name">Name of Campaign: </label>
             <input 
                 id="name" 
@@ -114,7 +115,7 @@ export default function CreateCampaign(){
 
             </div>
 
-            <button>Submit</button>
+            <button type="button" onClick={submitFormHandler}>Submit</button>
         </form>
     </div>)
 }

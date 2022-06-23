@@ -3,6 +3,9 @@ const AdRun = require('../model/AdRun');
 
 //* Create an campaign
 const create = async (req, res) => {
+
+  console.log(req.user)
+  console.log(req.body)
   const request_data = req.body;
   let campaign_data = {
     account_id: request_data.account_id,
