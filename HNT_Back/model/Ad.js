@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const Ad = new Schema({
+  user_id: String,
   name: String,
   audio_url: String,
   duration: Number,

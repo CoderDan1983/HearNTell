@@ -1,11 +1,15 @@
 const Ad = require('../model/Ad');
-
+const User = require('../model/User');
 
 //* Create an ad
 const create = async (req, res) => {
   const request_data = req.body;
+ 
+  let user = await User.findOne({username: req.user});
 
+  console.log(user._id);
   let ad_data = {
+    user_id: user._id,
     name: request_data.name,
     audio_url: request_data.audio_url,
     duration: request_data.duration,
@@ -13,6 +17,7 @@ const create = async (req, res) => {
   }
 
   let ad = await Ad.create(ad_data);
+  console.log(ad);
     res.json(ad);
 };
 

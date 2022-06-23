@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const Playlist = new Schema({
-  account_id: String,
+  user_id: String,
   story_ids: [String], //* Use the arraymove function reorder the ids when story order is changed by the user
   Name: String,
   description: String,

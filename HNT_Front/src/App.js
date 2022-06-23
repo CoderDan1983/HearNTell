@@ -1,8 +1,9 @@
 import Account from './components/pages/account/Account';
 
 import Advertiser from './components/pages/advertiser/Advertiser';
-import Ad from './components/pages/advertiser/Ad';
-import Campaign from './components/pages/advertiser/Campaign';
+import Ads from './components/pages/advertiser/Ads';
+import CreateAd from './components/pages/advertiser/CreateAd'; //new
+import Campaigns from './components/pages/advertiser/Campaigns';
 import CampaignReport from './components/pages/advertiser/CampaignReport'; //new
 import EditCampaign from './components/pages/advertiser/EditCampaign'; //new
 import CreateCampaign from './components/pages/advertiser/CreateCampaign'; //new
@@ -92,11 +93,12 @@ function App() {
           </Route>
 
           <Route element={ <RequiredAuth allowedRoles={[ ROLES.Advertiser, ROLES.Member  ]}/> }> {/*todo Need to remove member role after testing. */}
-            <Route path="ad" element = { <Ad /> } />
+            <Route path="ads" element = { <Ads /> } />
             <Route path="campaignReport/:campaign_id" element = { <CampaignReport /> } />
             <Route path="editCampaign/:campaign_id" element = { <EditCampaign /> } />
             <Route path="createCampaign" element = { <CreateCampaign /> } />
-            <Route path="campaign" element = { <Campaign /> } />
+            <Route path="createAd" element = { <CreateAd /> } />
+            <Route path="campaigns" element = { <Campaigns /> } />
             <Route path="advertiser" element = { <Advertiser /> } />
           </Route>
         </Route>
