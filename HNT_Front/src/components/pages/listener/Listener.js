@@ -8,6 +8,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 // import { Link } from 'react-router-dom';
 import SearchComponent from '../../parts/SearchComponent';
 import LinkListItem from '../../parts/LinkListItem';
+import ModalWrapper from '../../parts/ModalWrapper';
+import CreatePlaylist from './CreatePlaylist';
 // import ListenerPlaylist from './ListenerPlaylist';
 // import { fakeStories, fakeStories1, fakeTags, fakeSearches, fakeSubList, fakeBaskets, 
 //     fakeQueue } from '../../fakeApi/fakeStories';
@@ -72,6 +74,10 @@ export default function Listener(){
                 })}
             </div>
             <button>Add Playlist</button>
+            {/* <CreatePlaylist /> */}
+            <ModalWrapper>
+                <CreatePlaylist />
+            </ModalWrapper>
         </div>
         <div className="mainItems">
             <div>
