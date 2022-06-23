@@ -4,6 +4,7 @@ const Campaign = require('./Campaign');
 const mongoose = require('mongoose'); 
 const StoryRating = require('./StoryRating');
 const Schema = mongoose.Schema;
+const { properlyUppercased } = require("../custom_modules/utilities");
 
 const Tag = new Schema({
   name: String,
@@ -12,6 +13,11 @@ const Tag = new Schema({
   number_of_stories_with_tag: Number //* filled in with the static method of this model.
 });
 
+Tag.pre('save', function (next) {
+  this.name = properlyUppercased(this.name);
+  console.log('Tag.js, 18, this.name is: ', this.name)
+  next();
+});
 
 //* Gets all the tag_names from every story, then adds up how many times each tag is used and stores it in the Tag.
 Tag.statics.countStoriesForEachTag = async function() {
@@ -82,4 +88,4 @@ Tag.methods.updateTagPrice = async function() {
 
 
 
-module.exports = mongoose.model('tags', Tag);
+module.exports = mongoose.model('Tags', Tag);

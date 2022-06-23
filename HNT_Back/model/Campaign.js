@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose'); 
 const Schema = mongoose.Schema;
+const { properlyUppercased } = require("../custom_modules/utilities");
 
 const Campaign = new Schema({
   account_id: String,
@@ -13,6 +14,13 @@ const Campaign = new Schema({
   budget: Number,
   spent_so_far: Number,
   active: Boolean,
+});
+
+Campaign.pre('save', function (next) {
+  this.tags = this.tags.map((tag)=>{
+    return properlyUppercased(tag);
+  })
+  next();
 });
 
 module.exports = mongoose.model('campaign', Campaign);

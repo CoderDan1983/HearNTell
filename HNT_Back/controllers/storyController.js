@@ -82,13 +82,30 @@ const create = async (req, res) => {
   
   // console.log('body: ', body, ', the user is: ', user, ", user_id is: ", user_id);
   // console.log('the name of the file is: ', req.files.file.name); //okay
-  let parsedTags = JSON.parse(rawTags);
-  const tags = parsedTags.map((tag) => {
-    return { name: tag }; //todo figure out tag formatting and deal this
-  });
-  // console.log('tags are: ', tags); //okay
+  let tags = JSON.parse(rawTags);
 
-  const new_story_info = { //@ b) create the story on the database
+  // Story.pre('save', function (next) {
+  //   // capitalize
+  //   this.title.toLowerCase().charAt(0).toUpperCase() + this.title.slice(1);
+  //   next();
+  // });
+
+  // const tags = parsedTags.map((tag) => {
+  //   return { name: tag }; //todo figure out tag formatting and deal this
+  // });
+  console.log('tags are: ', tags); //okay
+    // console.log('tags are: ', tags, typeof(tags));
+    // const testingTags = ["The Mann", "WOE MAN", "WOE", "hello", "JdJd", "iD hellow"];
+
+    //const formattedTag = tag.toLowerCase().charAt(0).toUpperCase()// + this.title.slice(1);
+
+  tags.map(async (tag) => { //@ b) saving tags to tags collection (?)
+      
+      // console.log('formattedTag', formattedTag);
+      await Tag.findOneAndUpdate({ name: tag }, { name: tag }, { upsert: true});
+  });
+
+  const new_story_info = { //@ c) create the story on the database
     user_id: user, title, description, isPrivate, tags, audioLink, duration, 
   }; //todo currently using user for user_id, as user_id is undefined!
   //* the last part should create the createdAt and updatedAt sections, so to speak :)
@@ -102,13 +119,13 @@ const create = async (req, res) => {
   console.log(story.createdAt, ", " + story.updatedAt);
   console.log('story is: ', story);
   
-  const rating_info = {  //@ c) create the ratings object in the database
+  const rating_info = {  //@ d) create the ratings object in the database
     user_id: user, story_id, violenceRating, sexRating, languageRating, generalRating 
   } //* NOTE: enjoymentRating not put in by creator :D
   let ratings = await StoryRating.create(rating_info);
   
   console.log("we'll be returning: ", story, ratings); //? Why do tags appear twice in story!?!
-  res.json({ story, ratings }); //@ d) return values :)
+  res.json({ story, ratings }); //@ e) return values :)
 };
 
 //todo Get most popular stories for all tags

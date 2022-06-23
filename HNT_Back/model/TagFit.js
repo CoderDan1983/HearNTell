@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose'); 
 const Schema = mongoose.Schema;
+const { properlyUppercased } = require("../custom_modules/utilities");
 
 const TagFit = new Schema({
   account_id: String,
@@ -9,6 +10,12 @@ const TagFit = new Schema({
   tag_name: String,
   fit: Boolean,
 });
+
+TagFit.pre('save', function (next) {
+  this.tag_name = properlyUppercased(this.tag_name);
+  next();
+});
+
 
 
 // const TagFit0 = new Schema({

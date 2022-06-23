@@ -3,17 +3,18 @@
 const mongoose = require('mongoose'); 
 const TagFit = require('./TagFit');
 const Schema = mongoose.Schema;
+const { properlyUppercased } = require("../custom_modules/utilities");
 
-const tagSchema = new Schema({
-  name: String,
-});
+// const tagSchema = new Schema({
+//   name: String,
+// });
 
 const Story = new Schema({
     user_id: String, 
     title: String, 
     description: String, 
     isPrivate: Boolean, //if true, Only allow subscribers to listen to this audio.
-    tags: [tagSchema], 
+    tags: [String], 
     audioLink: String, 
     duration: Number,
     popularity_rating: { //? still use?
@@ -23,8 +24,14 @@ const Story = new Schema({
   }, 
   { 
     timestamps: true 
-  }); //* this allows us to access createdAt and updatedAt :D
+}); //* this allows us to access createdAt and updatedAt :D
 
+Story.pre('save', function (next) {
+  this.tags = this.tags.map((tag)=>{
+    return properlyUppercased(tag);
+  })
+  next();
+});
 
 // const Story = new Schema({
 //   account_id: String,
