@@ -28,6 +28,13 @@ const index = async (req, res) => {
   res.json(ads);
 };
 
+//* Get list of all ads for user
+const user_ads = async (req, res) => {
+  let user = User.findOne({username: req.user});
+  let ads = await Ad.find({user_id: user._id});
+  res.json(ads);
+};
+
 //* Get single ad
 const show = async (req, res) => {
   const ad_id = req.params.ad_id;
@@ -63,5 +70,6 @@ module.exports = {
   index,
   show,
   update,
-  remove
+  remove,
+  user_ads
 }

@@ -40,6 +40,7 @@ export default function CreateCampaign(){
             targetAudienceAll: targetAudienceAll,
             campaignActive: campaignActive, 
             tags: tags,
+
         }
         // const formData = new FormData();
         // const options = { headers: { "Content-Type" : "x-www-form-urlencoded" } }
@@ -96,7 +97,7 @@ export default function CreateCampaign(){
                 onChange={ (e) => setBudget(e.target.value) }
             />
             <br />
-            <div>Choose up to ten tags (separated by commas):</div>
+            <div>Choose up to ten tags:</div>
             <div className="flexWrapper">
                 <TagsInput state= { tags } setter ={ setTags }/>
             </div>

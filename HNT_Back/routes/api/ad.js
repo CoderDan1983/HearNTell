@@ -15,6 +15,10 @@ router.route('/')
 router.route('/')
   .get(verifyRoles(ROLES_LIST.Member), adController.index);
 
+  // Get list of all ads for user                        GET /api/ad
+router.route('/user')
+.get(verifyRoles(ROLES_LIST.Member), adController.user_ads);
+
 // Get single ad                        GET /api/ad/{ad_id}
 router.route('/:ad_id')
   .get(verifyRoles(ROLES_LIST.Member), adController.show);
