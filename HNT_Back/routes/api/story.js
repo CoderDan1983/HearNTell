@@ -37,8 +37,8 @@ router.route('/search/:search_string')
 router.route('/playlist/:playlist_id')
     .get(verifyRoles(ROLES_LIST.Member), storyController.storiesForPlaylist);
 
-//     Get stories by creator                      GET /api/story/creator/{creator_id}
-router.route('/creator/:creator_id')
+//     Get stories by creator                      GET /api/story/creator/
+router.route('/creator')
     .get(verifyRoles(ROLES_LIST.Member), storyController.storiesByCreator);
 
 //     Get single story                            GET /api/story/{story_id}

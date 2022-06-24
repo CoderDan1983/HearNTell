@@ -1,4 +1,5 @@
 const Story = require('../model/Story');
+const User = require('../model/User');
 const StoryRating = require('../model/StoryRating');
 const Tag = require('../model/Tag');
 const Playlist = require('../model/Playlist');
@@ -181,7 +182,8 @@ const storiesForPlaylist = async (req, res) => {
 //* Get stories by creator
 const storiesByCreator = async (req, res) => {
   const creator_id = req.params.creator_id;
-  let stories = await Story.find({account_id: creator_id});
+  let user = await User.findOne({ username: req.user });
+  let stories = await Story.find({user_id: user._id});
   res.json(stories);
 };
 
