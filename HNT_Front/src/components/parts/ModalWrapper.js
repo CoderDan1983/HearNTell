@@ -4,14 +4,14 @@ import '../../index.css';
 
 export const ModalContext = createContext();
 
-export default function ModalWrapper({ children, className }) {
+export default function ModalWrapper({ children, className, buttonTitle }) {
     const [open, setOpen] = useState(false);
     const openClicked = useRef(false); //* I ended up adding the openClicked variable to make the code work! 
     const modalRef = useRef();
     
-    console.log('PlaylistModal loaded!')
+    // console.log('PlaylistModal loaded!')
     useClickOutside(modalRef, () => {
-        console.log('useClickOutside!')
+        // console.log('useClickOutside!');
         if (open && openClicked.current !== true) setOpen(false)    
         openClicked.current = false;
     })
@@ -23,7 +23,7 @@ export default function ModalWrapper({ children, className }) {
 
     return (
         <ModalContext.Provider value={{ setOpen }}>
-            <button onClick={ handleOpen }>Open</button>
+            <button onClick={ handleOpen }>{ buttonTitle ? buttonTitle : "Open" }</button>
             <div
                 ref={modalRef}
                 // className = { open ? "modal" : "hide" }

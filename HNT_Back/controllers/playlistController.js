@@ -1,4 +1,5 @@
 const Playlist = require('../model/Playlist');
+const User = require('../model/User');
 const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
 
 //* Gets a single story
@@ -55,15 +56,21 @@ const getPlaylist = async (req, res) => {
 
 //* Create a new playlist
 const create = async (req, res) => {
+  console.log('playlistController, create function!')
   const request_data = req.body;
+  // console.log('body is: ', request_data);
+  const user = await User.findOne({ username: req.user });
+  console.log('user._id is: ', user._id);
+
   let playlist_data = {
-    account_id: request_data.account_id,
+    user_id: user._id,
     story_ids: request_data.story_ids, // expects an array
-    Name: request_data.name,
+    name: request_data.name,
     description: request_data.description,
     is_queue: request_data.is_queue,
   };
   let playlist = await Playlist.create(playlist_data);
+  console.log('playlist is : ', playlist)
   res.json(playlist);
 };
 

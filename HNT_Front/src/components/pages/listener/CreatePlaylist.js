@@ -1,17 +1,18 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
-import { post_formData } from '../../../hooks/useBackendRequest';
+import { post_formData, logFormData } from '../../../hooks/useBackendRequest';
+
 import '../../../index.css'
 import { ModalContext } from '../../parts/ModalWrapper';
-export default function CreatePlaylist(){
+export default function CreatePlaylist({ setter }){
     const axP = useAxiosPrivate();
     const nav = useNavigate();
     const loc = useLocation();
     const { setOpen } = useContext(ModalContext);
     console.log('setOpen is: ', setOpen);
-    const [ name, setName ] = useState('')
-    const [ description, setDescription ] = useState('')
+    // const [ name, setName ] = useState('')
+    // const [ description, setDescription ] = useState('')
     function submitFormHandler(e){
         e.preventDefault();
 
@@ -20,7 +21,7 @@ export default function CreatePlaylist(){
 
         console.log('formData is: ', logFormData(formData));
 
-        //post_formData(axP, nav, loc, 'api/campaign', { payload: formData }); //options
+        post_formData(axP, nav, loc, 'api/playlist', { payload: formData, setter: setter }); //options
     }
     return (<div className="modal">
         <div>Create Playlist</div>
@@ -42,15 +43,5 @@ export default function CreatePlaylist(){
             </div>
         </form>
     </div>)
-}
-
-
-function logFormData(formData){
-    let returnArray = [];
-    for(const pair of formData.entries()) {
-        console.log(`${pair[0]}, ${pair[1]}`);
-        returnArray.push({ key: pair[0], value: pair[1] })
-    }
-    return returnArray;
 }
 

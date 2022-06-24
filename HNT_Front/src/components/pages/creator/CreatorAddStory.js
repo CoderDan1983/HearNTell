@@ -56,31 +56,7 @@ export default function CreatorAddStory(){
     //     }
     // }
 
-    //* this totally works :D
-    function createSetter(state, setter, { property, outerIndex } = {}){
-        let newState; let oldEntry; let newEntry;
-    
-        return function(newValue){
-            if(outerIndex !== undefined){ //* for an array
-                newState = [...state ];
-                oldEntry = newState[outerIndex];
-                newState[outerIndex] = newValue;
-            }
-            else if(property !== undefined){ //* for an object 
-                newState = { ...state }
-                oldEntry = newState[property];
-                newState[property] = newValue;
-            }
-            else{ //* if state is a "simple" variable that will hold only this array
-                newState = newValue;
-                oldEntry = state;
-                newEntry = newValue;
-            }
-            setter(newState);
-    
-            return { newState, oldEntry, newEntry } 
-        }
-    }
+
     // const violenceSetter = createSetter(formValue, setFormValue, { property: "violenceRating" });
 
     function submitFormHandler(e){

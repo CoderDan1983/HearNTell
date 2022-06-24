@@ -15,7 +15,7 @@ import CreatePlaylist from './CreatePlaylist';
 //     fakeQueue } from '../../fakeApi/fakeStories';
 import { getThenSet_private } from '../../../hooks/useBackendRequest';
 import { DeleteForever } from '@mui/icons-material';
-
+import { createSetter } from '../../../custom_modules_front/utility_front';
 
 export default function Listener(){
     const axP = useAxiosPrivate();
@@ -27,6 +27,8 @@ export default function Listener(){
     const [subscriptions, setSubscriptions] = useState([]);
     const [playlists, setPlaylists] = useState([]);
     const [queue, setQueue] = useState([]);
+    const addPlaylistSetter = createSetter(playlists, setPlaylists, { push: true });
+    // console.log('addPlaylistSetter: ', addPlaylistSetter);
     // const [loading, setLoading] = useState(false);
     console.log('render!', user_id)
     useEffect(() => {
@@ -73,9 +75,9 @@ export default function Listener(){
                     />)
                 })}
             </div>
-            <button>Add Playlist</button>
-            <ModalWrapper>
-                <CreatePlaylist />
+            {/* <button>Add Playlist</button> */}
+            <ModalWrapper buttonTitle="Create Playlist">
+                <CreatePlaylist setter = { addPlaylistSetter } />
             </ModalWrapper>
         </div>
         <div className="mainItems">

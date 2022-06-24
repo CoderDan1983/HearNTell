@@ -6,8 +6,8 @@ const { properlyUppercased } = require('../custom_modules/utilities')
 //* Create an campaign
 const create = async (req, res) => {
   console.log('campaignController, line 7!')
-  console.log(req.user);
-  console.log(req.body);
+  // console.log(req.user);
+  // console.log(req.body);
   const request_data = req.body;
 
   const { tags: jsonnedTags } = req.body;
@@ -29,6 +29,7 @@ const create = async (req, res) => {
     active: request_data.campaignActive
   }
   let campaign = await Campaign.create(campaign_data);
+  console.log('campaign returned is: ', campaign);
     res.json(campaign);
 };
 
