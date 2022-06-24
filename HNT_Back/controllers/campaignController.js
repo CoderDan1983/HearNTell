@@ -21,11 +21,11 @@ const create = async (req, res) => {
     name: request_data.name,
     tags: tags, // Expects an array
     ad_audio_url: request_data.ad_audio_url,
-    ad_id: request_data.ad_id,
-    max_bid: request_data.max_bid,
+    ad_id: request_data.ad._id,
+    max_bid: request_data.maximumBid,
     budget: request_data.budget,
     spent_so_far: request_data.spent_so_far,
-    active: request_data.active
+    active: request_data.campaignActive
   }
   let campaign = await Campaign.create(campaign_data);
   console.log('campaign returned is: ', campaign);
@@ -35,6 +35,13 @@ const create = async (req, res) => {
 //* Get list of all campaigns
 const index = async (req, res) => {
   let campaigns = await Campaign.find({});
+  res.json(campaigns);
+};
+
+//* Get list of all campaigns by user
+const userCampaigns = async (req, res) => {
+  const user = User.findOne({ username: req.user });
+  let campaigns = await Campaign.find({user_id: user._id});
   res.json(campaigns);
 };
 
@@ -94,5 +101,6 @@ module.exports = {
   show,
   update,
   remove,
-  adRunsPerCampaign
+  adRunsPerCampaign,
+  userCampaigns
 }
