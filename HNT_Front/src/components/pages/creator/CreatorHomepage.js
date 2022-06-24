@@ -15,10 +15,13 @@ export default function CreatorHomepage({ name, imageUrl }){
     const nav = useNavigate();
     const loc = useLocation();
     const axP = useAxiosPrivate();
+    const [ stories, setStories ] = useState([]);
 
     useEffect(()=>{
-        getThenSet_private(axP, nav, loc, 'api/story/creator', { _id: "..." });
-    });
+        getThenSet_private(axP, nav, loc, setStories, 'story/creator'); //, { _id: "..." }
+    },[nav, loc, axP]);
+
+    console.log('stories are: ', stories);
     const auth = useAuth();
     const accessToken = auth?.accessToken;
     console.log('accessToken is: ');

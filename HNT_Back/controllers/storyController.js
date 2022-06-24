@@ -73,8 +73,8 @@ const saveStory = async (req, res) => {
 
 //* Create a new story
 const create = async (req, res) => {
-
   const user = await User.findOne({ username: req.user});
+  const user_id = user._id;
 
   const body = req.body;
   const { violenceRating, sexRating, languageRating, generalRating, 
@@ -93,7 +93,7 @@ const create = async (req, res) => {
   });
 
   const new_story_info = { //@ c) create the story on the database
-    user_id: user._id, title, description, isPrivate, tags, audioLink, duration, 
+    user_id: user_id, title, description, isPrivate, tags, audioLink, duration, 
   }; //todo currently using user for user_id, as user_id is undefined!
   //* the last part should create the createdAt and updatedAt sections, so to speak :)
   let story = await Story.create(new_story_info); 
@@ -106,7 +106,7 @@ const create = async (req, res) => {
   console.log(story.createdAt, ", " + story.updatedAt);
   
   const rating_info = {  //@ d) create the ratings object in the database
-    user_id: user._id, story_id, violenceRating, sexRating, languageRating, generalRating 
+    user_id: user_id, story_id, violenceRating, sexRating, languageRating, generalRating 
   } //* NOTE: enjoymentRating not put in by creator :D
   let ratings = await StoryRating.create(rating_info);
   
@@ -181,9 +181,12 @@ const storiesForPlaylist = async (req, res) => {
 
 //* Get stories by creator
 const storiesByCreator = async (req, res) => {
-  const creator_id = req.params.creator_id;
   let user = await User.findOne({ username: req.user });
-  let stories = await Story.find({user_id: user._id});
+  const user_id = user._id;
+  console.log('storiesByCreator 184!')
+  
+  let stories = await Story.find({user_id: user_id});
+  console.log('user: ', user, ', stories: ', stories)
   res.json(stories);
 };
 
