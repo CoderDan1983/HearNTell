@@ -1,5 +1,6 @@
 const Campaign = require('../model/Campaign');
 const AdRun = require('../model/AdRun');
+const User = require('../model/User');
 const { properlyUppercased } = require('../custom_modules/utilities') 
 
 //* Create an campaign
@@ -14,10 +15,10 @@ const create = async (req, res) => {
   // console.log('jsonnedTags: ', jsonnedTags, typeof(jsonnedTags));
   const tags = jsonnedTags.map((tag)=> properlyUppercased(tag));
 
-  console.log('tags are: ', tags); //okay
+  let user = User.findOne({ username: req.user});
   
   let campaign_data = {
-    account_id: request_data.account_id,
+    user_id: user._id,
     name: request_data.name,
     tags: tags, // Expects an array
     ad_audio_url: request_data.ad_audio_url,
@@ -45,12 +46,12 @@ const userCampaigns = async (req, res) => {
   res.json(campaigns);
 };
 
-//* Get list of all an advertiser's campaigns
-const advertiserIndex = async (req, res) => {
-  const account_id = req.params.account_id;
-  let campaigns = await Campaign.find({account_id: account_id});
-  res.json(campaigns);
-};
+// //* Get list of all an advertiser's campaigns
+// const advertiserIndex = async (req, res) => {
+//   const user_id = req.params.account_id;
+//   let campaigns = await Campaign.find({account_id: account_id});
+//   res.json(campaigns);
+// };
 
 //* Get single campaign
 const show = async (req, res) => {
@@ -64,7 +65,7 @@ const update = async (req, res) => {
   const campaign_id = req.params.campaign_id;
   const request_data = req.body;
   let campaign_data = {
-    account_id: request_data.account_id,
+    user_id: request_data.user_id,
     name: request_data.name,
     tags: request_data.tags, // Expects an array
     ad_audio_url: request_data.ad_audio_url,
@@ -97,7 +98,6 @@ const adRunsPerCampaign = async (req, res) => {
 module.exports = {
   create,
   index,
-  advertiserIndex,
   show,
   update,
   remove,
