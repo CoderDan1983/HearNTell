@@ -3,6 +3,15 @@ import axios from '../api/axios';
 // import { useState, useEffect } from "react";
 // import { useNavigate, useLocation } from "react-router-dom";
 
+export function logFormData(formData){
+    let returnArray = [];
+    for(const pair of formData.entries()) {
+        // console.log(`${pair[0]}, ${pair[1]}`);
+        returnArray.push({ key: pair[0], value: pair[1] })
+    }
+    return returnArray;
+}
+
 //* for "private" routes
 export const getThenSet_private = (axiosPrivate, navigate, location, setter, path, { _id } = {})=>{
     const url = _id ? `/${path}/${_id}` : `/${path}/`
@@ -117,9 +126,9 @@ export const post_private = (axiosPrivate, navigate, location, path, { _id, payl
 // const res = await axios.post('https://httpbin.org/post', formData, {
 //   headers: formData.getHeaders()
 // });
-export const post_formData = (someAxiosPassedIn, navigate, location, path, { _id, payload, options } = {})=>{
+export const post_formData = (someAxiosPassedIn, navigate, location, path, { _id, payload, options, setter } = {})=>{
     const url = _id ? `/${path}/${_id}` : `/${path}/`
-    // let isMounted = true;
+    let isMounted = true;
     const controller = new AbortController();
     // headers: { "Content-Type" : "multipart/for"}
     // 
@@ -135,9 +144,10 @@ export const post_formData = (someAxiosPassedIn, navigate, location, path, { _id
             payload,
             axiosOptions);
             // const userNames = response.data.map(user => user.username); //grab usernames only. :)
-            console.log(response.data);
+            console.log('response data is: ', response.data, typeof(response.data));
             // // console.log(userNames);
-            // isMounted && setValue(response.data) //if isMounted, then setUsers :D
+            console.log('the setter is: ', setter);
+            isMounted && setter && setter(response.data) //if isMounted, then setUsers :D
             // console.log('the stateVal is: ');
             // console.log(stateVal); //why undefined???
             //the parameter was response.data, but we didn't need to set/send all that :)
@@ -151,7 +161,7 @@ export const post_formData = (someAxiosPassedIn, navigate, location, path, { _id
     postSomething();
 
     return () =>{ //* cleanup function ^_^
-        // isMounted = false;
+        isMounted = false;
         controller.abort();
     }
 }

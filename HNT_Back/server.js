@@ -58,7 +58,7 @@ app.use(verifyJWT); //* everything after this will use the jwt middleware!
 app.use('/api/ad', require('./routes/api/ad'));
 app.use('/api/campaign', require('./routes/api/campaign'));
 // app.use('/api/creator', require('./routes/api/creator'));
-// app.use('/api/playlist', require('./routes/api/playlist'));
+app.use('/api/playlist', require('./routes/api/playlist'));
 // app.use('/api/user_search', require('./routes/api/user_search'));
 // app.use('/api/story_rating', require('./routes/api/story_rating'));
 app.use('/api/story', require('./routes/api/story'));
