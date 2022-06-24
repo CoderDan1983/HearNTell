@@ -22,6 +22,7 @@ export default function CreatePlaylist({ setter }){
         console.log('formData is: ', logFormData(formData));
 
         post_formData(axP, nav, loc, 'api/playlist', { payload: formData, setter: setter }); //options
+        setOpen(false); //close this "modal" :D
     }
     return (<div className="modal">
         <div>Create Playlist</div>
