@@ -24,14 +24,14 @@ const index = async (req, res) => {
 
 //* Get single account
 const show = async (req, res) => {
-  const account_id = req.params.account_id
-  let account = await Account.findOne({_id: account_id})
+  const user_id = req.params.user_id
+  let account = await Account.findOne({_id: user_id})
   res.json(account);
 };
 
 //* Update an account
 const update = async (req, res) => {
-  const account_id = req.params.account_id;
+  const user_id = req.params.user_id;
   const request_data = req.body;
 
   let account_data = {
@@ -41,14 +41,14 @@ const update = async (req, res) => {
     advertiser: request_data.advertiser
   }
 
-  let account = await Account.findOneAndUpdate({_id: account_id}, account_data);
+  let account = await Account.findOneAndUpdate({_id: user_id}, account_data);
   res.json(account);
 };
 
 //* Remove an account
 const remove = async (req, res) => {
-  const account_id = req.params.account_id;
-  let account = await Account.findOneAndDelete({_id: account_id});
+  const user_id = req.params.user_id;
+  let account = await Account.findOneAndDelete({_id: user_id});
   res.json(account);
 };
 

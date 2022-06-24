@@ -4,7 +4,7 @@ const StoryRating = require('../model/StoryRating');
 const create = async (req, res) => {
   const rating_data = {
     story_id: req.body.story_id,
-    account_id: req.body.account_id,
+    user_id: req.body.user_id,
     time_stamp: req.body.time_stamp, //?
     enjoyment_rating: req.body.enjoyment_rating, 
     violence_rating: req.body.violence_rating,
@@ -18,9 +18,9 @@ const create = async (req, res) => {
 
 //* Get a single rating by story and user
 const byAccountAndStory = async (req, res) => {
-  const account_id = req.params.account_id;
+  const user_id = req.params.user_id;
   const story_id = req.params.story_id;
-  let rating = await StoryRating.findOne({account_id: account_id, story_id: story_id});
+  let rating = await StoryRating.findOne({user_id: user_id, story_id: story_id});
   res.json(rating);
 };
 
@@ -44,7 +44,7 @@ const update = async (req, res) => {
 
   const rating_data = {
     story_id: req.body.story_id,
-    account_id: req.body.account_id,
+    user_id: req.body.user_id,
     time_stamp: req.body.time_stamp, //?
     enjoyment_rating: req.body.enjoyment_rating, 
     violence_rating: req.body.violence_rating,

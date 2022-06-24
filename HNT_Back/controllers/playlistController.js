@@ -76,15 +76,15 @@ const create = async (req, res) => {
 
 //* Get playlists for user
 const userPlaylists = async (req, res) => {
-  const account_id = req.params.account_id;
-  let playlists = await Playlist.find({account_id: account_id});
+  const user_id = req.params.user_id;
+  let playlists = await Playlist.find({user_id: user_id});
   res.json(playlists);
 };
 
 //* Get user's queue
 const userQueue = async (req, res) => {
-  const account_id = req.params.account_id;
-  let queue = Playlist.findOne({account_id: account_id, is_queue: true})
+  const user_id = req.params.user_id;
+  let queue = Playlist.findOne({user_id: user_id, is_queue: true})
   res.json(queue);
 };
 
@@ -99,7 +99,7 @@ const show = async (req, res) => {
 const update = async (req, res) => {
   const playlist_id = req.params.playlist_id;
   let playlist_data = {
-    account_id: request_data.account_id,
+    user_id: request_data.user_id,
     story_ids: request_data.story_ids, // expects an array
     Name: request_data.name,
     description: request_data.description,

@@ -12,8 +12,16 @@ export function logFormData(formData){
     return returnArray;
 }
 
+function lumpDig(lump, keys) {
+    return keys.reduce((obj, key) => { //* inital value/previous value of function, current value
+        //* this is returning undefined or a value. I guess it's undefined + value = value (?)
+        console.log(key, obj?.[key]);
+        return obj?.[key] 
+    }, lump);
+}
+
 //* for "private" routes
-export const getThenSet_private = (axiosPrivate, navigate, location, setter, path, { _id } = {})=>{
+export const getThenSet_private = (axiosPrivate, navigate, location, setter, path, { _id, dig } = {})=>{
     const url = _id ? `/${path}/${_id}` : `/${path}/`
     console.log('url is: ', url);
     let isMounted = true;
@@ -29,7 +37,8 @@ export const getThenSet_private = (axiosPrivate, navigate, location, setter, pat
             // const userNames = response.data.map(user => user.username); //grab usernames only. :)
             // console.log(response.data);
             // // console.log(userNames);
-            isMounted && setter(response.data) //if isMounted, then setUsers :D
+            const returnVal = dig ? lumpDig(response.data, dig) : response.data;
+            isMounted && setter(returnVal) //if isMounted, then setUsers :D
             // console.log('stateVal is: ');
             // console.log(stateVal); //why undefined???
             //the parameter was response.data, but we didn't need to set/send all that :)

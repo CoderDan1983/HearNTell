@@ -48,8 +48,8 @@ const userCampaigns = async (req, res) => {
 
 // //* Get list of all an advertiser's campaigns
 // const advertiserIndex = async (req, res) => {
-//   const user_id = req.params.account_id;
-//   let campaigns = await Campaign.find({account_id: account_id});
+//   const user_id = req.params.user_id;
+//   let campaigns = await Campaign.find({user_id: user_id});
 //   res.json(campaigns);
 // };
 

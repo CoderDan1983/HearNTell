@@ -8,10 +8,9 @@ const Profile = new Schema({
   account_id: String,
   image_url: String,
   about_me: String,
-  
 }, 
 { 
   timestamps: true 
 });
 
-module.exports = mongoose.model('profile', Profile);
+module.exports = mongoose.model('Profile', Profile); //profile, Profile

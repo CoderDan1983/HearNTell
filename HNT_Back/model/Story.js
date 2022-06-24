@@ -26,6 +26,22 @@ const Story = new Schema({
     timestamps: true 
 }); //* this allows us to access createdAt and updatedAt :D
 
+// Story.query.InTags = function(value) {
+//   const allTags = this.find({ tags: value })
+//   return ;
+// };
+
+// Story.statics.searchForTagMatch = function (callback) {
+//   Story.find({ hasAward: true }, callback);
+// };
+
+// Story.methods.searchForTagMatch = function (callback) {
+//   const allTags = this.model('Story').find({ type: this.type }, callback);
+//   return 
+// };
+
+
+
 // Story.pre('save', function (next) {
 //   this.tags = this.tags.map((tag)=>{
 //     return properlyUppercased(tag);

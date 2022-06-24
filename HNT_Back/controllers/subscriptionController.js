@@ -4,8 +4,8 @@ const SubscriptionRequest = require('../model/SubscriptionRequest');
 
 //* Get list of subscriptions for user account
 const index = async (req, res) => {
-  const account_id = req.params.account_id;
-  let subscriptions = await Subscription.find({listener_id: account_id});
+  const user_id = req.params.user_id;
+  let subscriptions = await Subscription.find({listener_id: user_id});
   res.json(subscriptions);
 };
 
