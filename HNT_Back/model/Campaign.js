@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const { properlyUppercased } = require("../custom_modules/utilities");
 
 const Campaign = new Schema({
-  account_id: String,
+  user_id: String,
   name: String,
   tags: [String], //* If "play on all audio" is selected, a 'general' tag should be here and be bid on like the rest of the tags."
   ad_audio_url: String,

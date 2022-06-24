@@ -15,13 +15,13 @@ router.route('/')
     .get(verifyRoles(ROLES_LIST.Advertiser), campaignController.index);
 
     // Get list of all campaigns for user                  GET /api/campaign/user
-router.route('/')
+router.route('/user')
 .get(verifyRoles(ROLES_LIST.Advertiser), campaignController.userCampaigns);
 
 
-// Get all an advertiser's Campaigns           GET /api/campaign/advertiser/{user_id}
-router.route('/advertiser/:account_id')
-    .get(verifyRoles(ROLES_LIST.Advertiser), campaignController.advertiserIndex);
+// // Get all an advertiser's Campaigns           GET /api/campaign/advertiser/{user_id}
+// router.route('/advertiser/:account_id')
+//     .get(verifyRoles(ROLES_LIST.Advertiser), campaignController.advertiserIndex);
 
 // Get single campaign                         GET /api/campaign/{campaign_id}
 router.route('/:campaign_id')
