@@ -1,14 +1,24 @@
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
+import { useEffect, useState } from 'react';
 import AudioItem from "./AudioItem";
 import useAuth from "../../../hooks/useAuth";
 import './../../../index.css';
 
 import TagsInput from "../../parts/TagsInput";
-import { Autocomplete, TextField } from '@mui/material';
+// import { Autocomplete, TextField } from '@mui/material';
 import LinkListItem from "../../parts/LinkListItem";
 
+import { getThenSet_private } from '../../../hooks/useBackendRequest';
+
 export default function CreatorHomepage({ name, imageUrl }){
+    const nav = useNavigate();
+    const loc = useLocation();
+    const axP = useAxiosPrivate();
+
+    useEffect(()=>{
+        getThenSet_private(axP, nav, loc, 'api/story/creator', { _id: "..." });
+    });
     const auth = useAuth();
     const accessToken = auth?.accessToken;
     console.log('accessToken is: ');
@@ -49,21 +59,7 @@ export default function CreatorHomepage({ name, imageUrl }){
     return(
         <>
             <h1>Welcome, { name }</h1>
-            <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={top100Films}
-                sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Forced" />}
-            />
-            <Autocomplete
-                freeSolo={ true }
-                disablePortal
-                id="combo-box-demo1"
-                options={top100Films}
-                sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Free" />}
-            />
+
             <TagsInput selectedTags={ selectedTags } />
             {/* <button onClick={ (e) => goToEditProfile }>Edit Profile</button>
             <button><Link to="/creatorAddStory"> Add Story </Link></button> */}
@@ -82,3 +78,21 @@ export default function CreatorHomepage({ name, imageUrl }){
         </>
     )
 }
+
+
+
+{/* <Autocomplete
+disablePortal
+id="combo-box-demo"
+options={top100Films}
+sx={{ width: 300 }}
+renderInput={(params) => <TextField {...params} label="Forced" />}
+/>
+<Autocomplete
+freeSolo={ true }
+disablePortal
+id="combo-box-demo1"
+options={top100Films}
+sx={{ width: 300 }}
+renderInput={(params) => <TextField {...params} label="Free" />}
+/> */}
