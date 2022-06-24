@@ -73,9 +73,9 @@ const saveStory = async (req, res) => {
 
 //* Create a new story
 const create = async (req, res) => {
-  console.log('line 74, create of storyController!!! -------------------');
-  const user_id = req._id; //@ a) load the variables.
-  const user = req.user; //?  Should we be using user_id or user to "mark" the story /ratings?
+
+  const user = await User.findOne({ username: req.user});
+
   const body = req.body;
   const { violenceRating, sexRating, languageRating, generalRating, 
     title, description, isPrivate, tags: rawTags, selectedFile, audioLink } = body;
@@ -93,7 +93,7 @@ const create = async (req, res) => {
   });
 
   const new_story_info = { //@ c) create the story on the database
-    user_id: user, title, description, isPrivate, tags, audioLink, duration, 
+    user_id: user._id, title, description, isPrivate, tags, audioLink, duration, 
   }; //todo currently using user for user_id, as user_id is undefined!
   //* the last part should create the createdAt and updatedAt sections, so to speak :)
   let story = await Story.create(new_story_info); 
@@ -106,7 +106,7 @@ const create = async (req, res) => {
   console.log(story.createdAt, ", " + story.updatedAt);
   
   const rating_info = {  //@ d) create the ratings object in the database
-    user_id: user, story_id, violenceRating, sexRating, languageRating, generalRating 
+    user_id: user._id, story_id, violenceRating, sexRating, languageRating, generalRating 
   } //* NOTE: enjoymentRating not put in by creator :D
   let ratings = await StoryRating.create(rating_info);
   
