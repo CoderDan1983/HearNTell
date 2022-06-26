@@ -11,8 +11,8 @@ export function logFormData(formData){
     }
     return returnArray;
 }
-
-function lumpDig(lump, keys) {
+//^ used in conjuction w/ a "dig" array to dig through object/arrays to return the info we seek :)
+function lumpDig(lump, keys) { 
     return keys.reduce((obj, key) => { //* inital value/previous value of function, current value
         //* this is returning undefined or a value. I guess it's undefined + value = value (?)
         console.log(key, obj?.[key]);
@@ -35,7 +35,7 @@ export const getThenSet_private = (axiosPrivate, navigate, location, setter, pat
                 signal: controller.signal
             });
             // const userNames = response.data.map(user => user.username); //grab usernames only. :)
-            // console.log(response.data);
+            console.log('response.data to the url ' + url + ' is ', response.data);
             // // console.log(userNames);
             const returnVal = dig ? lumpDig(response.data, dig) : response.data;
             isMounted && setter(returnVal) //if isMounted, then setUsers :D
@@ -44,7 +44,7 @@ export const getThenSet_private = (axiosPrivate, navigate, location, setter, pat
             //the parameter was response.data, but we didn't need to set/send all that :)
         }
         catch (err){
-            console.log("I'm gonna log an error!")
+            console.log("we got an error with the request to : ", url)
             console.error(err);
             navigate('/login', { state: { from: location }, replace: true })
         }
@@ -72,12 +72,7 @@ export const postThenSet_private = (axiosPrivate, navigate, location, setValue, 
                 signal: controller.signal
             });
             // const userNames = response.data.map(user => user.username); //grab usernames only. :)
-            // console.log(response.data);
-            // // console.log(userNames);
             isMounted && setValue(response.data) //if isMounted, then setUsers :D
-            // console.log('the stateVal is: ');
-            // console.log(stateVal); //why undefined???
-            //the parameter was response.data, but we didn't need to set/send all that :)
         }
         catch (err){
             console.log("I'm gonna log an error!")

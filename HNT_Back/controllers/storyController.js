@@ -33,7 +33,7 @@ const getStory = async (req, res) => {
   }
 }
 const getStories = async (req, res) => {
-  // console.log('getStories backend!')
+  console.log('getStories backend!')
   
   // const story_id = req.body.story_id;
   // const story = await Story.findOne({_id: story_id});
@@ -41,8 +41,8 @@ const getStories = async (req, res) => {
   // // res.json(story);
   const stories = fake.fakeStories;
 
-  // console.log('stories are: ');
-  // console.log(stories)
+  console.log('stories are: ');
+  console.log(stories)
   res.json(stories);
 }
 

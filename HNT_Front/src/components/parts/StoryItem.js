@@ -28,7 +28,7 @@ export default function StoryItem({ story, to, Ico }){
                 <div className='storyItemTop' >
                     <span className="storyItemTitle">{title}</span> {/* no grid */}
                     <span className="storyItemAuthor"> {/* no grid */}
-                        <RatingComponent readOnly={ true } rating={ rating} />
+                        <RatingComponent readOnly={ true } state ={ rating } />
                     </span>
                     <span className="storyItemAuthor">{author}</span> {/* no grid */}
                     <span className="storyItemAuthor">{ displayTime(length) }</span> {/* no grid */}

@@ -1,5 +1,5 @@
 // import { Link, useParams } from "react-router-dom";
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { getThenSet_public } from '../../hooks/useBackendRequest';
 
 import StoryItem from '../parts/StoryItem';
@@ -14,11 +14,14 @@ export default function HomePublic(){
     // const loc = useLocation();
 
     const [stories, setStories] = useState([]);
+    const [searches, setSearches] = useState([]);
 
     // const { story_id } = useParams();
 
     //* this fetches the story with story_id, and sets the story to the returned value :)
-    useMemo(() => getThenSet_public(setStories, 'getpublic/story'),[]);
+    useEffect(() => getThenSet_public(setStories, 'getpublic/story'),[]); //useMemo
+    //useEffect(() => getThenSet_public(setStories, 'getpublic/search'),[]); //? return popular searches!?!
+
 
     // console.log('fakeSearches is: ');
     // console.log(fakeSearches);
@@ -30,7 +33,7 @@ export default function HomePublic(){
         <div>
             <div className="flexWrapper mainItems center">
                 <h2>Top Stories this Week:</h2>
-                <SearchComponent options={ fakeSearches }/>
+                <SearchComponent options={ searches }/>
             </div>
             {/* <div className="flexWrapper mainItems">
                 { stories && stories.map((story, i)=>{

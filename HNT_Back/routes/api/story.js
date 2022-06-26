@@ -7,8 +7,8 @@ const verifyRoles = require('../../middleware/verifyRoles');
 
 
 //* get stories :)
-// router.route('/')
-//     .get(verifyRoles(ROLES_LIST.Member), storyController.getStories);
+router.route('/')
+    .get(verifyRoles(ROLES_LIST.Member), storyController.getStories);
 
 
 //* Get a single story
