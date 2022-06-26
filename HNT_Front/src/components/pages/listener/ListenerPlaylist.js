@@ -5,7 +5,7 @@ import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import StoryItem from '../../parts/StoryItem';
 import { DeleteForever } from '@mui/icons-material';
 import '../../../index.css';
-import { getThenSet_private } from '../../../hooks/useBackendRequest'
+import { get_private } from '../../../hooks/useBackendRequest'
 
 export default function ListenerPlaylist({ playlistName }){
     const axP = useAxiosPrivate();
@@ -17,10 +17,10 @@ export default function ListenerPlaylist({ playlistName }){
 
     //* this fetches the story with story_id, and sets the story to the returned value :)
     // useMemo(() => { 
-    //     getThenSet_private(axP, nav, loc, setPlaylist, 'playlist', { _id: story_id }) },
+    //     get_private(axP, nav, loc, setPlaylist, 'playlist', { _id: story_id }) },
     // [axP, nav, loc, story_id]);
     useEffect(() => { 
-        getThenSet_private(axP, nav, loc, setPlaylist, 'playlist', { _id: story_id }) },
+        get_private(axP, nav, loc, 'playlist', { _id: story_id, setter: setPlaylist }) },
     [axP, nav, loc, story_id]);
 
     return(

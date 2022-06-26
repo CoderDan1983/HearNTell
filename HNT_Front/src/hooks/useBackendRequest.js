@@ -3,6 +3,7 @@ import axios from '../api/axios';
 // import { useState, useEffect } from "react";
 // import { useNavigate, useLocation } from "react-router-dom";
 
+//@ Part A) HELPER FUNCTIONS
 export function logFormData(formData){
     let returnArray = [];
     for(const pair of formData.entries()) {
@@ -11,6 +12,31 @@ export function logFormData(formData){
     }
     return returnArray;
 }
+
+function queryParamString(obj){
+    let returnString = '?'
+    const objLength = Object.keys(obj).length;
+    let count = 0;
+    for(let key in obj){
+        returnString += (`${key}=${obj[key]}`);
+        if(count + 1 < objLength) returnString += "&";
+        count++;
+    }
+    return returnString;
+}
+
+function createFullURL(path, { _id, queries }){
+    let url = `/${path}/`;
+    let queryString = "";
+
+    if(_id) url += `${_id}`;
+    if(queries) queryString = queryParamString(queries)
+    
+    url += queryString;
+
+    return url;
+}
+
 //^ used in conjuction w/ a "dig" array to dig through object/arrays to return the info we seek :)
 function lumpDig(lump, keys) { 
     return keys.reduce((obj, key) => { //* inital value/previous value of function, current value
@@ -20,28 +46,29 @@ function lumpDig(lump, keys) {
     }, lump);
 }
 
+//@ Part B: Route Control: get_private, post_private, post_formData, get_public
 //* for "private" routes
-export const getThenSet_private = (axiosPrivate, navigate, location, setter, path, { _id, dig } = {})=>{
-    const url = _id ? `/${path}/${_id}` : `/${path}/`
+export const get_private = (axiosPrivate, navigate, location, path, { _id, queries, dig, options, setter } = {})=>{
+    const url = createFullURL(path, { _id, queries });
+
     console.log('url is: ', url);
     let isMounted = true;
     const controller = new AbortController();
 
     const getSomething = async () => {
-        console.log('running getThenSet_private: ')
+        console.log('running get_private: ')
         try {
             console.log('trying again...')
-            const response = await axiosPrivate.get(url, { // ./users
-                signal: controller.signal
-            });
+            const axiosOptions = options ? 
+            { signal: controller.signal, ...options } : 
+            { signal: controller.signal }
+
+            const response = await axiosPrivate.get(url, axiosOptions);
             // const userNames = response.data.map(user => user.username); //grab usernames only. :)
             console.log('response.data to the url ' + url + ' is ', response.data);
-            // // console.log(userNames);
+
             const returnVal = dig ? lumpDig(response.data, dig) : response.data;
-            isMounted && setter(returnVal) //if isMounted, then setUsers :D
-            // console.log('stateVal is: ');
-            // console.log(stateVal); //why undefined???
-            //the parameter was response.data, but we didn't need to set/send all that :)
+            isMounted && setter && setter(returnVal) //if isMounted, then setUsers :D
         }
         catch (err){
             console.log("we got an error with the request to : ", url)
@@ -57,60 +84,29 @@ export const getThenSet_private = (axiosPrivate, navigate, location, setter, pat
     }
 }
 
-export const postThenSet_private = (axiosPrivate, navigate, location, setValue, path, { _id, payload } = {})=>{
-    const url = _id ? `/${path}/${_id}` : `/${path}/`
-    let isMounted = true;
-    const controller = new AbortController();
-
-    const postSomething = async () => {
-        console.log('running postThenSet_private: ')
-        try {
-            console.log('trying again...')
-            const response = await axiosPrivate.post(url, 
-            JSON.stringify(payload),
-            {
-                signal: controller.signal
-            });
-            // const userNames = response.data.map(user => user.username); //grab usernames only. :)
-            isMounted && setValue(response.data) //if isMounted, then setUsers :D
-        }
-        catch (err){
-            console.log("I'm gonna log an error!")
-            console.error(err);
-            navigate('/login', { state: { from: location }, replace: true })
-        }
-    }
-    postSomething();
-
-    return () =>{ //* cleanup function ^_^
-        isMounted = false;
-        controller.abort();
-    }
-}
-
-
-export const post_private = (axiosPrivate, navigate, location, path, { _id, payload, options } = {})=>{
-    const url = _id ? `/${path}/${_id}` : `/${path}/`
+export const post_private = (axiosPrivate, navigate, location, path, 
+    { _id, payload, queries, dig, options, setter } = {})=>{
+    const url = createFullURL(path, { _id, queries });
     let isMounted = true;
     const controller = new AbortController();
     // headers: { "Content-Type" : "multipart/for"}
     // 
     const postSomething = async () => {
-         const axiosOptions = options ? { ...options, signal: controller.signal } : 
-        { signal: controller.signal }
-        console.log('running postThenSet_private.  axiosOptions are: ', axiosOptions)
         try {
+            const axiosOptions = options ? { signal: controller.signal, ...options } : 
+            { signal: controller.signal }
+            console.log('running postThenSet_private.  axiosOptions are: ', axiosOptions)
+
             console.log('trying again...')
-            const response = await axiosPrivate.post(url, 
-            JSON.stringify(payload),
-            axiosOptions);
-            // const userNames = response.data.map(user => user.username); //grab usernames only. :)
+            const response = await axiosPrivate.post( url, 
+                JSON.stringify(payload),
+                axiosOptions
+            );
+
+            const returnVal = dig ? lumpDig(response.data, dig) : response.data;
+            isMounted && setter && setter(returnVal) //if isMounted, then setUsers :D
+
             console.log(response.data);
-            // // console.log(userNames);
-            // isMounted && setValue(response.data) //if isMounted, then setUsers :D
-            // console.log('the stateVal is: ');
-            // console.log(stateVal); //why undefined???
-            //the parameter was response.data, but we didn't need to set/send all that :)
         }
         catch (err){
             console.log("I'm gonna log an error!")
@@ -130,31 +126,26 @@ export const post_private = (axiosPrivate, navigate, location, path, { _id, payl
 // const res = await axios.post('https://httpbin.org/post', formData, {
 //   headers: formData.getHeaders()
 // });
-export const post_formData = (someAxiosPassedIn, navigate, location, path, { _id, payload, options, setter } = {})=>{
-    const url = _id ? `/${path}/${_id}` : `/${path}/`
+export const post_formData = (someAxiosPassedIn, navigate, location, path, 
+    { _id, payload, queries, dig, options, setter } = {})=>{
+    const url = createFullURL(path, { _id, queries });
     let isMounted = true;
     const controller = new AbortController();
-    // headers: { "Content-Type" : "multipart/for"}
-    // 
+    // headers: { "Content-Type" : "multipart/form"}
+    // headers: payload.getHeaders()
     const postSomething = async () => {
-         const axiosOptions = //options ? { ...options, signal: controller.signal } : 
-        { signal: controller.signal }
-        //headers: payload.getHeaders()
-        console.log('running postThenSet_private.  axiosOptions are: ', axiosOptions)
-
         try {
+            const axiosOptions = options ? { signal: controller.signal, ...options } : 
+            { signal: controller.signal }
+
             console.log('trying again...')
-            const response = await someAxiosPassedIn.post(url, 
-            payload,
-            axiosOptions);
+            const response = await someAxiosPassedIn.post(url, payload, axiosOptions);
             // const userNames = response.data.map(user => user.username); //grab usernames only. :)
             console.log('response data is: ', response.data, typeof(response.data));
-            // // console.log(userNames);
+
             console.log('the setter is: ', setter);
-            isMounted && setter && setter(response.data) //if isMounted, then setUsers :D
-            // console.log('the stateVal is: ');
-            // console.log(stateVal); //why undefined???
-            //the parameter was response.data, but we didn't need to set/send all that :)
+            const returnVal = dig ? lumpDig(response.data, dig) : response.data;
+            isMounted && setter && setter(returnVal) //if isMounted, then setUsers :D
         }
         catch (err){
             console.log("I'm gonna log an error!")
@@ -172,33 +163,24 @@ export const post_formData = (someAxiosPassedIn, navigate, location, path, { _id
 
 //* for "public" routes. (well, it can be used for that ^_^ )
 //^ for setter: pass in a single setter, or an array of { setter: setSomething, key: "something" }
-export const getThenSet_public = (setter, path, { _id } = {}) => {
-    const url = _id ? `/${path}/${_id}` : `/${path}/`
+export const get_public = (path, { _id, queries, dig, options, setter } = {}) => {
+    const url = createFullURL(path, { _id, queries });
     let isMounted = true;
     const controller = new AbortController();
 
     const getSomething = async () => {
-        console.log('running getThenSet_public: ')
+        console.log('running get_public: ')
         try{
-            const response = await axios.get(url ,{ //`/api/story/${story_id}`
+            let axiosOptions = {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true,
                 signal: controller.signal,
-            });
-            console.log(typeof(response?.data));
-            console.log(response?.data);
-            isMounted && setter(response.data);
-            // if(story?.data){
-            //     const data = story.data;
-            //     if(Array.isArray(setter)){
-            //         for(let s=0; s < setter.length; s++){
-            //             setter[s].setter(data[setter[s].key]);
-            //         }
-            //     }
-            //     else{
-            //         setter(data);
-            //     }
-            // }
+            }
+            if(options) axiosOptions = { ...axiosOptions, ...options}
+            
+            const response = await axios.get(url, axiosOptions);
+            const returnVal = dig ? lumpDig(response.data, dig) : response.data;
+            isMounted && setter && setter(returnVal);
         }
         catch(err){
             console.log(err);
@@ -213,33 +195,7 @@ export const getThenSet_public = (setter, path, { _id } = {}) => {
     }
 }
 
-//^ for setter: pass in a single setter, or an array of { setter: setSomething, key: "something" }
-export async function postByIdThenSet(setter, path, { _id, payload } = {} ){
-    const url = _id ? `/${path}/${_id}` : `/${path}/`
-    try{
-        const story = await axios.post(url , 
-        JSON.stringify(payload),
-        {
-            headers: { 'Content-Type': 'application/json' },
-            withCredentials: true
-        });
-        console.log(story?.data);
-        if(story?.data){
-            const data = story.data;
-            if(Array.isArray(setter)){
-                for(let s=0; s < setter.length; s++){
-                    setter[s].setter(data[setter[s].key]);
-                }
-            }
-            else{
-                setter(data);
-            }
-        }
-    }
-    catch(err){
-        console.log(err);
-    }
-}
+
 
 // export async function getThenSet_public(setter, path, { _id } = {}){
 //     const url = _id ? `/${path}/${_id}` : `/${path}/`
@@ -273,9 +229,11 @@ export async function postByIdThenSet(setter, path, { _id, payload } = {} ){
 //         controller.abort();
 //     }
 // }
+
+//* the function below was built to query an array of stuff :D
 // //^ for setter: pass in a single setter, or an array of { setter: setSomething, key: "something" }
-// export async function postByIdThenSet(setter, path, { _id, payload } = {} ){
-//     const url = _id ? `/${path}/${_id}` : `/${path}/`
+// export async function postByIdThenSet(setter, path, { _id, queries, dig, options, payload } = {} ){
+//     const url = createFullURL(path, { _id, queries });
 //     try{
 //         const story = await axios.post(url , 
 //         JSON.stringify(payload),
@@ -298,5 +256,42 @@ export async function postByIdThenSet(setter, path, { _id, payload } = {} ){
 //     }
 //     catch(err){
 //         console.log(err);
+//     }
+// }
+
+// export const postThenSet_private = (axiosPrivate, navigate, location, setValue, path, { _id, queries, dig, options, payload } = {})=>{
+//     // const url = _id ? `/${path}/${_id}` : `/${path}/`
+//     const url = createFullURL(path, { _id, queries });
+//     let isMounted = true;
+//     const controller = new AbortController();
+
+//     const postSomething = async () => {
+//         console.log('running postThenSet_private: ')
+//         try {
+//             console.log('trying again...')
+//             const axiosOptions = options ? 
+//             { signal: controller.signal, ...options } : 
+//             { signal: controller.signal }
+
+//             const response = await axiosPrivate.post(
+//                 url, 
+//                 JSON.stringify(payload),
+//                 axiosOptions
+//             );
+//             // const userNames = response.data.map(user => user.username); //grab usernames only. :)
+//             const returnVal = dig ? lumpDig(response.data, dig) : response.data;
+//             isMounted && setValue(returnVal) //if isMounted, then setUsers :D
+//         }
+//         catch (err){
+//             console.log("I'm gonna log an error!")
+//             console.error(err);
+//             navigate('/login', { state: { from: location }, replace: true })
+//         }
+//     }
+//     postSomething();
+
+//     return () =>{ //* cleanup function ^_^
+//         isMounted = false;
+//         controller.abort();
 //     }
 // }

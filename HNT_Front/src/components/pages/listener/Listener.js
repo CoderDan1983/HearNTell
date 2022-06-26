@@ -13,7 +13,7 @@ import CreatePlaylist from './CreatePlaylist';
 // import ListenerPlaylist from './ListenerPlaylist';
 // import { fakeStories, fakeStories1, fakeTags, fakeSearches, fakeSubList, fakeBaskets, 
 //     fakeQueue } from '../../fakeApi/fakeStories';
-import { getThenSet_private } from '../../../hooks/useBackendRequest';
+import { get_private } from '../../../hooks/useBackendRequest';
 import { DeleteForever } from '@mui/icons-material';
 import { createSetter } from '../../../custom_modules_front/utility_front';
 
@@ -32,14 +32,21 @@ export default function Listener(){
     // const [loading, setLoading] = useState(false);
     console.log('render!', user_id)
     useEffect(() => {
-        getThenSet_private(axP, nav, loc, setSearches, 'search', { _id: user_id });
-        getThenSet_private(axP, nav, loc, setSubscriptions, 'subscription/listener', { _id: user_id });
-        getThenSet_private(axP, nav, loc, setPlaylists, 'playlist/myBaskets', { _id: user_id });
-        getThenSet_private(axP, nav, loc, setQueue, 'queue', { _id: user_id });
+        get_private(axP, nav, loc, 'search', { _id: user_id, setter: setSearches });
+        get_private(axP, nav, loc, 'subscription/listener', { _id: user_id, setter: setSubscriptions });
+        get_private(axP, nav, loc, 'playlist/myBaskets', { _id: user_id, setter: setPlaylists });
+        get_private(axP, nav, loc, 'queue', { _id: user_id, setter: setQueue });
         
         console.log('listener should be loaded this render :) ');
     },[axP, nav, loc, user_id]);
 
+    // const query = {
+    //     sortBy: "age",
+    //     desc: true,
+    //     limit: 10,
+    // }
+
+    // console.log(queryParamString(query))
     return(<div className='main'>
         <div className="hearAStory">
         <h1 className="consulting">Hear a Story</h1>

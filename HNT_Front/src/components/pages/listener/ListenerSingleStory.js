@@ -7,7 +7,7 @@ import RatingComponent from "../../parts/RatingComponent";
 import LinkListItem from "../../parts/LinkListItem";
 import ShareThisStory from "../../parts/ShareThisStory";
 // import { fakeStories, loadStoriesByTag } from '../../fakeApi/fakeStories';
-import { getThenSet_public } from '../../../hooks/useBackendRequest';
+import { get_public } from '../../../hooks/useBackendRequest';
 
 // import axios from '../../api/axios';
 
@@ -52,7 +52,7 @@ export default function ListenerSingleStory(){
         console.log(value);
     }
     useEffect(() => {
-        getThenSet_public(setStory, 'getpublic/story', { _id: story_id });
+        get_public('getpublic/story', { _id: story_id, setter: setStory });
     },[story_id]);
     console.log('rendering!', story_id)
     console.log(story);

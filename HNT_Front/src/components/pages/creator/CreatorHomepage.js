@@ -9,7 +9,7 @@ import TagsInput from "../../parts/TagsInput";
 // import { Autocomplete, TextField } from '@mui/material';
 import LinkListItem from "../../parts/LinkListItem";
 
-import { getThenSet_private } from '../../../hooks/useBackendRequest';
+import { get_private } from '../../../hooks/useBackendRequest';
 
 export default function CreatorHomepage({ name, imageUrl }){
     const nav = useNavigate();
@@ -18,7 +18,7 @@ export default function CreatorHomepage({ name, imageUrl }){
     const [ stories, setStories ] = useState([]);
 
     useEffect(()=>{
-        getThenSet_private(axP, nav, loc, setStories, 'story/creator'); //, { _id: "..." }
+        get_private(axP, nav, loc, 'story/creator', { setter: setStories }); //, { _id: "..." }
     },[nav, loc, axP]);
 
     console.log('stories are: ', stories);

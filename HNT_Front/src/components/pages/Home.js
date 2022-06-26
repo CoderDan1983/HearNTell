@@ -12,7 +12,7 @@ import { Button, Icon } from '@mui/material';
 import StoryItem from '../parts/StoryItem';
 // import { DeleteForever } from '@mui/icons-material';
 import '../../index.css';
-import { getThenSet_private } from '../../hooks/useBackendRequest'
+import { get_private } from '../../hooks/useBackendRequest'
 
 // import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import { AccessAlarm, ThreeDRotation, Forest as ForestIcon } from '@mui/icons-material';
@@ -30,7 +30,7 @@ const Home = () => {
     // const { story_id } = useParams();
 
     //* this should fetch all the stories ^_^
-    useEffect(() => getThenSet_private(axP, navigate, loc, setStories, 'story'),[axP, loc, navigate]);
+    useEffect(() => get_private(axP, navigate, loc, 'story', { setter: setStories }),[axP, loc, navigate]);
 
     const signOut = async () => {
         // if used in more components, this should be in context 

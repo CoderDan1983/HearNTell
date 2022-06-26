@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { getThenSet_private } from '../../../hooks/useBackendRequest';
+import { get_private } from '../../../hooks/useBackendRequest';
 
 import RatingComponent from "../../parts/RatingComponent";
 import ThumbTag from '../../parts/ThumbTag';
@@ -24,10 +24,10 @@ export default function RatingModal(){ //* we should get access token for "user"
 
     console.log('ratingModal render! story_id is: ', story_id)
     useEffect(() => {
-        getThenSet_private(axP, nav, loc, setStory, 'story', { _id: story_id });
-        //getThenSet_private(axP, nav, loc, setLikes, 'rating/likes', { _id: story_id });
-        //getThenSet_private(axP, nav, loc, setPlaylists, 'playlist', { _id: user_id });
-        // getThenSet_private(axP, nav, loc, setQueue, 'queue', { _id: user_id });
+        get_private(axP, nav, loc, 'story', { _id: story_id, setter: setStory });
+        //get_private(axP, nav, loc, 'rating/likes', { _id: story_id, setter: setLikes });
+        //get_private(axP, nav, loc, 'playlist', { _id: user_id, setter: setPlaylists });
+        // get_private(axP, nav, loc, 'queue', { _id: user_id, setter: setQueue });
         console.log('listener should be loaded this render :) ');
     },[axP, nav, loc, story_id]);
 

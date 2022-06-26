@@ -1,6 +1,6 @@
 // import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { getThenSet_public } from '../../hooks/useBackendRequest';
+import { get_public } from '../../hooks/useBackendRequest';
 
 import StoryItem from '../parts/StoryItem';
 import SearchComponent from '../parts/SearchComponent';
@@ -9,9 +9,6 @@ import { fakeStories, fakeStories1, fakeTags, fakeSearches, loadStoriesByTag } f
 // import { Grid, Item } from '@mui/material';
 import '../../index.css';
 export default function HomePublic(){
-    // const axP = useAxiosPrivate();
-    // const nav = useNavigate();
-    // const loc = useLocation();
 
     const [stories, setStories] = useState([]);
     const [searches, setSearches] = useState([]);
@@ -19,9 +16,7 @@ export default function HomePublic(){
     // const { story_id } = useParams();
 
     //* this fetches the story with story_id, and sets the story to the returned value :)
-    useEffect(() => getThenSet_public(setStories, 'getpublic/story'),[]); //useMemo
-    //useEffect(() => getThenSet_public(setStories, 'getpublic/search'),[]); //? return popular searches!?!
-
+    useEffect(() => get_public('getpublic/story', { setter: setStories }),[]); //useMemo
 
     // console.log('fakeSearches is: ');
     // console.log(fakeSearches);
