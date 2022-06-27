@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const Playlist = new Schema({
   user_id: String,
   story_ids: [String], //* Use the arraymove function reorder the ids when story order is changed by the user
-  Name: String,
+  title: String,
   description: String,
   is_queue: Boolean, //* Denotes a special queue playlist
   is_creator_list: {

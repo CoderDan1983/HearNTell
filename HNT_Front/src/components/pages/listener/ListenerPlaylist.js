@@ -13,14 +13,20 @@ export default function ListenerPlaylist({ playlistName }){
     const loc = useLocation();
 
     const [playlist, setPlaylist] = useState([]); //fakeStories
-    const { story_id } = useParams();
+    const [stories, setStories] = useState([]);
 
+    const { story_id } = useParams(); //isn't this the playist_id instead!?!
+    console.log('stories: ', stories, ', playlist: ', playlist)
+    function setStoriesAndPlaylist(obj){
+        obj["playlist"] && setPlaylist(obj["playlist"]);
+        obj["stories"] && setStories(obj["stories"]);
+    }
     //* this fetches the story with story_id, and sets the story to the returned value :)
     // useMemo(() => { 
     //     get_private(axP, nav, loc, setPlaylist, 'playlist', { _id: story_id }) },
     // [axP, nav, loc, story_id]);
     useEffect(() => { 
-        get_private(axP, nav, loc, 'playlist', { _id: story_id, setter: setPlaylist }) },
+        get_private(axP, nav, loc, 'playlist', { _id: story_id, setter: setStoriesAndPlaylist }) },
     [axP, nav, loc, story_id]);
 
     return(
@@ -31,7 +37,7 @@ export default function ListenerPlaylist({ playlistName }){
             </div> */}
 
             <div className="center">           
-                { playlist.map((story, index)=>{
+                { stories.length && stories.map((story, index)=>{
                     return ( !story.private && 
                     (<div key = { index }>
                         <StoryItem 

@@ -34,8 +34,10 @@ export default function Listener(){
     useEffect(() => {
         get_private(axP, nav, loc, 'search', { _id: user_id, setter: setSearches });
         get_private(axP, nav, loc, 'subscription/listener', { _id: user_id, setter: setSubscriptions });
-        get_private(axP, nav, loc, 'playlist/myBaskets', { _id: user_id, setter: setPlaylists });
-        get_private(axP, nav, loc, 'queue', { _id: user_id, setter: setQueue });
+        get_private(axP, nav, loc, 'playlist/user', { setter: setPlaylists });
+        get_private(axP, nav, loc, 'playlist/queue', { setter: setQueue });
+        // get_private(axP, nav, loc, 'playlist/myBaskets', { _id: user_id, setter: setPlaylists });
+        // get_private(axP, nav, loc, 'queue', { _id: user_id, setter: setQueue });
         
         console.log('listener should be loaded this render :) ');
     },[axP, nav, loc, user_id]);

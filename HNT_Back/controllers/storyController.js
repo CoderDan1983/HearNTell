@@ -107,12 +107,11 @@ const saveStory = async (req, res) => {
 }
 //* Create a new story
 const create = async (req, res) => {
-  const user = await User.findOne({ username: req.user});
-  const user_id = user._id;
+  const { _id: user_id } = await User.findOne({ username: req.user});
 
   const body = req.body;
   const { violenceRating, sexRating, languageRating, generalRating, 
-    title, description, isPrivate, tags: rawTags, selectedFile, audioLink } = body;
+    title, description, isPrivate, tags: rawTags, selectedFile, audioLink, playlist_id } = body;
   const duration = 1000; //todo later we'll get this value from the file length or whatnot.
   
   // console.log('body: ', body, ', the user is: ', user, ", user_id is: ", user_id);
@@ -132,20 +131,19 @@ const create = async (req, res) => {
   
   let story = await Story.create(new_story_info); 
   const story_id = story._id;
-  console.log("story._id is: ", story._id); 
-  //* When 'story' was changed to 'Story' in the Story.js's mongoose.modal('Story), 
-  //...createdAt suddenly displays,
-  //...and we can reference _id through story._id instead of story[0]._id! 
-  // console.log(story[0].createdAt, story[0].updatedAt);
-  console.log(story.createdAt, ", " + story.updatedAt);
-  
+  console.log("story._id is: ", story._id, ', playlist_id is: ', playlist_id); 
+
+  let { story_ids } = await Playlist.findOne({ playlist_id });
+  story_ids.push(story_id);
+  const playlist = await Playlist.updateOne( { playlist_id }, { $set: { story_ids } } );
+
   const rating_info = {  //@ d) create the ratings object in the database
     user_id, story_id, violenceRating, sexRating, languageRating, generalRating 
   } //* NOTE: enjoymentRating not put in by creator :D
   let ratings = await StoryRating.create(rating_info);
   
   // console.log("we'll be returning: ", story, ratings); //? Why do tags appear twice in story!?!
-  res.json({ story, ratings }); //@ e) return values :)
+  res.json({ story, ratings, playlist }); //@ e) return values :)
 };
 
 //todo Get most popular stories for all tags

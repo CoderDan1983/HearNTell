@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import TagsInput from "../../parts/TagsInput";
 import '../../../index.css';
@@ -7,7 +7,7 @@ import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 // import useAxios from '../../'
 import RatingComponent from "../../parts/RatingComponent";
 import '../../../index.css'
-import { post_formData } from '../../../hooks/useBackendRequest';
+import { post_formData, get_private } from '../../../hooks/useBackendRequest';
 export default function CreatorAddStory(){
     const selectedTags = tags => { console.log(tags) };
     console.log('selectedTags is (10): ', selectedTags)
@@ -18,6 +18,7 @@ export default function CreatorAddStory(){
     //let selectedTags = []; 
     // const [tags, setTags] = useState([]); //* example #0: array as regular state.
     // const [arrayWithTags, setArrayWithTags] = useState([23, "susan", [], false]); //* example #1: array into array.
+
     const [formValue, setFormValue] = useState({ //* example #2: array into object.
         title: '',
         description: '',
@@ -41,8 +42,17 @@ export default function CreatorAddStory(){
     const [selectedFile, setSelectedFile] = useState(null);
     const [tags, setTags] = useState([]);
 
+    const [ playlists, setPlaylists ] = useState([]);
+    const [ playlist, setPlaylist ] = useState("");
+    
     // const [violence, setViolence] = useState(0);
-    console.log("selectedFile is: ", selectedFile);
+    // console.log("selectedFile is: ", selectedFile);
+    console.log("playlist is: ", playlist);
+    console.log("playlists is: ", playlists);
+
+    useEffect(()=>{
+        get_private(axP, nav, loc, 'playlist/user', { setter: setPlaylists });
+    },[axP, nav, loc]);
     // // function setDisRating(state, setter, property, value){
     // //     let newState = state;
     // //     newState[property] = value;
@@ -62,13 +72,6 @@ export default function CreatorAddStory(){
     function submitFormHandler(e){
         e.preventDefault();
         
-        // const storyForm = document.getElementById("storyForm")
-        // let storyData = {
-        //     title: title, description: description, isPrivate: isPrivate,
-        //     violenceRating: violenceRating, sexRating: sexRating,
-        //     languageRating: languageRating, generalRating: generalRating,
-        //     audioLink: audioLink, selectedFile: selectedFile, tags: tags,
-        // }
         // const formData = new FormData();
         // const options = { headers: { "Content-Type" : "application/x-www-form-urlencoded" } }
 
@@ -77,28 +80,38 @@ export default function CreatorAddStory(){
         //         'Content-Type': 'multipart/form-data'
         //     }
         // }
-        const form = document.getElementById("storyForm");
-        const storyData = form ? new FormData(form) : new FormData();
-        storyData.append("tags", JSON.stringify(tags));
-        storyData.append("file", selectedFile);
-        storyData.append("violenceRating", violenceRating);
-        storyData.append("sexRating", sexRating);
-        storyData.append("languageRating", languageRating);
-        storyData.append("generalRating", generalRating);
-        const grabbedTags = storyData.get('tags');
-        console.log('in storyData, tags are: ', grabbedTags, typeof(grabbedTags));
-        // console.log('storyData title is: ', storyData.entries()); //get('title')
+        let problem = "";
+        if ((title === "") && (problem === "")) problem = "title";
+        if (((audioLink === "")&&(selectedFile === null)) && (problem === "")) problem = "selectedFile";
+        if ((playlist === "") && (problem === "")) problem = "playlist";
+        
+        if(problem){
+            alert(`${problem} has been left blank.  Please fill out before submission!`)
+        }
+        else{
+            const form = document.getElementById("storyForm");
+            const storyData = form ? new FormData(form) : new FormData();
+            storyData.append("tags", JSON.stringify(tags));
+            storyData.append("file", selectedFile);
+            storyData.append("violenceRating", violenceRating);
+            storyData.append("sexRating", sexRating);
+            storyData.append("languageRating", languageRating);
+            storyData.append("generalRating", generalRating);
+            const grabbedTags = storyData.get('tags');
+            console.log('in storyData, tags are: ', grabbedTags, typeof(grabbedTags));
+            // console.log('storyData title is: ', storyData.entries()); //get('title')
 
-        console.log("lightning! ---------------------")
+            console.log("lightning! ---------------------")
 
-        // console.log('storyData loop end. -----')
-        // console.log('form is: ', form);
-        // console.log('formRef.current is: ', formRef.current)
-        // (axiosPrivate, navigate, location, path, { _id, payload } = {})=>{
+            // console.log('storyData loop end. -----')
+            // console.log('form is: ', form);
+            // console.log('formRef.current is: ', formRef.current)
+            // (axiosPrivate, navigate, location, path, { _id, payload } = {})=>{
 
-        // const storyData { steve: "robbins" }
-        // console.log('submitFormHandler selectedFile is', selectedFile, typeof(selectedFile));
-        post_formData(axP, nav, loc, 'api/story', { payload: storyData }); //options
+            // const storyData { steve: "robbins" }
+            // console.log('submitFormHandler selectedFile is', selectedFile, typeof(selectedFile));
+            post_formData(axP, nav, loc, 'api/story', { payload: storyData }); //options
+        }
     }
     // getThenSet_private(axP, nav, loc, setQueue, 'queue', { _id: user_id });
     function handleCheckboxChange(e){
@@ -217,6 +230,21 @@ export default function CreatorAddStory(){
                     value={ audioLink }
                     onChange ={ (e) => setAudioLink(e.target.value) }
                 />
+            </div>
+
+            <div>
+                <label htmlFor="playlist_id">Story Goes In: </label>
+                <select 
+                    id="playlist_id" 
+                    name="playlist_id"
+                    value={ playlist } 
+                    onChange={ (e) => setPlaylist(e.target.value) }
+                >
+                    <option value="" disabled hidden> ---------- </option>
+                    { playlists.length && playlists.map((playlist, i)=>{
+                        return <option value= { playlist._id } key={i}>{ playlist.title }</option>
+                    })}
+                </select>
             </div>
 
             <button type="button" onClick={ submitFormHandler } >Submit</button>

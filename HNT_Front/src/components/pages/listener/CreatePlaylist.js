@@ -28,10 +28,10 @@ export default function CreatePlaylist({ setter }){
         <div>Create Playlist</div>
         <form id="playlistForm">
             <div className="two">
-                <label htmlFor="name">Name: </label>
+                <label htmlFor="title">Title: </label>
                 <input 
-                    id="name" 
-                    name="name" 
+                    id="title" 
+                    name="title" 
                 />
             </div>
             <div className="two">

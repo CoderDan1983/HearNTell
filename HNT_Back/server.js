@@ -76,7 +76,8 @@ app.use('/playlist', require('./routes/api/playlist'));
 app.use('/queue', require('./routes/api/queue'));
 
 app.use('/employees', require('./routes/api/employees'));
-app.use('/users', require('./routes/api/users')); //
+app.use('/users', require('./routes/api/users'));
+
 // searches, subscriptions, playlists, queue. 
 // We want to be able to add, edit, delete each of these.
 app.all('*', (req, res) => {
