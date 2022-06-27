@@ -12,7 +12,7 @@ import { Button, Icon } from '@mui/material';
 import StoryItem from '../parts/StoryItem';
 // import { DeleteForever } from '@mui/icons-material';
 import '../../index.css';
-import { get_private } from '../../hooks/useBackendRequest'
+import { get_private, lumpDig } from '../../hooks/useBackendRequest'
 
 // import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import { AccessAlarm, ThreeDRotation, Forest as ForestIcon } from '@mui/icons-material';
@@ -27,10 +27,64 @@ const Home = () => {
     const logout = useLogout();
     const [stories, setStories] = useState([]);
 
+    // let obj1 = { //$ success.  burrows correctly into obj1!
+    //     little: {
+    //         house: { 
+    //             on: {
+    //                 the: {
+    //                     praire: "yep."
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    // console.log('testing digLump: ', lumpDig(obj1, ["little", "house", "on"]));
+
+    // let arry0 = ["a", "hit", "without", "missing"];
+    // let arry1 = ["miss", arry0, "miss", "miss"];
+    // let arry2 = [arry1, "miss", "miss", "miss"];
+    // let arry3 = ["miss", "miss", "miss", arry2];
+    // let arry4 = ["miss", arry3, "miss", "miss"];
+    // console.log('testing digLump: ', lumpDig(arry4, [1, 3, 0, 1]));
+
+    // let mixedObj = [
+    //     {
+    //         john: "stewart",
+    //         chipmunks: [
+    //             {
+    //                 name: "alvin",
+    //                 age: 13,
+    //                 studies: false,
+    //             },
+    //             {
+    //                 name: "simon",
+    //                 age: 9,
+    //                 studies: true,
+    //             },
+    //             {
+    //                 name: "theodore",
+    //                 age: 89382384282,
+    //                 studies: false,
+    //             },
+    //         ]
+    //     },
+    //     {
+    //         john: "conner"
+    //     }
+    // ];
+
+
+// console.log('testing digLump: ', lumpDig(mixedObj, [0, "chipmunks", 0, "name"]));
+
     // const { story_id } = useParams();
 
     //* this should fetch all the stories ^_^
-    useEffect(() => get_private(axP, navigate, loc, 'story', { setter: setStories }),[axP, loc, navigate]);
+
+    useEffect(() => {
+        const queries = { sortBy: "age", desc: true, limit: 10 }
+        get_private(axP, navigate, loc, 'story', { setter: setStories, queries })
+    },
+    [axP, loc, navigate]);
 
     const signOut = async () => {
         // if used in more components, this should be in context 

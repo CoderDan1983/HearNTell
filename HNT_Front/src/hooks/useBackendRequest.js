@@ -38,7 +38,8 @@ function createFullURL(path, { _id, queries }){
 }
 
 //^ used in conjuction w/ a "dig" array to dig through object/arrays to return the info we seek :)
-function lumpDig(lump, keys) { 
+//* NOTE:  Will return undefined if not found :)
+export function lumpDig(lump, keys) { 
     return keys.reduce((obj, key) => { //* inital value/previous value of function, current value
         //* this is returning undefined or a value. I guess it's undefined + value = value (?)
         console.log(key, obj?.[key]);
