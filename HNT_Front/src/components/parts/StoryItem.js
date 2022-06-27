@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import RatingComponent from './RatingComponent';
 
 export default function StoryItem({ story, to, Ico }){
-    const { title, rating, author, length, account_id, audio_url, description } = story; //private
-    const tags = story.tags.map((tag) => tag.tag);
-    function displayTime(sec){
+    const { title, tags, popularity_rating, author, duration, account_id, audio_url, description } = story; //private
+    // const tags = story.tags.map((tag) => tag.tag);
+    function showTime(sec){
         let time = sec;
         const hours = Math.floor(sec / 3600);
         time -= (hours * 3600);
@@ -28,14 +28,15 @@ export default function StoryItem({ story, to, Ico }){
                 <div className='storyItemTop' >
                     <span className="storyItemTitle">{title}</span> {/* no grid */}
                     <span className="storyItemAuthor"> {/* no grid */}
-                        <RatingComponent readOnly={ true } state ={ rating } />
+                        <RatingComponent readOnly={ true } state ={ popularity_rating } />
                     </span>
                     <span className="storyItemAuthor">{author}</span> {/* no grid */}
-                    <span className="storyItemAuthor">{ displayTime(length) }</span> {/* no grid */}
+                    <span className="storyItemAuthor">{ showTime(duration) }</span> {/* no grid */}
                 </div>
                 <div className="storyItemTags"> {/* no grid */}
                     {tags.map((tag, i)=>{
-                        return <span key={ i } >{tag}</span>
+                        const displayVal = (i < tags.length - 1) ? `${tag}, ` : tag;
+                        return <span key={ i } >{ displayVal }</span>
                     })}
                 </div>
             </div>

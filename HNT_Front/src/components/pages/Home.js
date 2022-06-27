@@ -27,7 +27,7 @@ const Home = () => {
     const logout = useLogout();
     const [stories, setStories] = useState([]);
 
-    // let obj1 = { //$ success.  burrows correctly into obj1!
+    // let obj1 = {
     //     little: {
     //         house: { 
     //             on: {

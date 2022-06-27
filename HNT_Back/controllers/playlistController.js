@@ -26,12 +26,6 @@ const getMyBaskets = async (req, res) => {
 //* Gets a single story
 const getPlaylist = async (req, res) => {
   console.log('getPlaylist backend!')  //thus far :)
-  console.log('wooooo!')
-  console.log('wooooo!')
-  console.log('wooooo!')
-  console.log('wooooo!')
-  console.log('wooooo!')
-  console.log('wooooo!')
   const playlist_id = req.params.playlist_id;
   //we are recieving the story_id :)
   // console.log(playlist_id);

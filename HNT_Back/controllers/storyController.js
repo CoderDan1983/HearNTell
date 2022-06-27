@@ -12,19 +12,18 @@ const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back");
 
 //* Gets a single story
 const getStory = async (req, res) => {
-  console.log('getStory backend!')
   const story_id = req.params.story_id;
-  //we are recieving the story_id :)
-  // console.log(story_id);
+  console.log('getStory backend!  story_id is: ', story_id)
+
   // const story_id = req.body.story_id;
-  // const story = await Story.findOne({_id: story_id});
-  // if (!story) return res.status(204).json({ 'message': 'No story found' });
+  const story = await Story.findOne({_id: story_id}).populate('creator');
+  if (!story) return res.status(204).json({ 'message': 'No story found' });
   // // res.json(story);
-  const story = fake.fakeStories.filter((story)=>{
-    return story._id === story_id;
-  });
-  // console.log('story matching _id of ' + story_id + " are: ");
-  // console.log(story)
+  // const story = fake.fakeStories.filter((story)=>{
+  //   return story._id === story_id;
+  // });
+  console.log('story is : ', story);
+
   if(Array.isArray(story)){
     res.json(story[0]);
   }
@@ -33,17 +32,39 @@ const getStory = async (req, res) => {
   }
 }
 const getStories = async (req, res) => {
-  const queryObj = req.query;
-  console.log('getStories backend!', queryObj);
-  
-  // const story_id = req.body.story_id;
-  // const story = await Story.findOne({_id: story_id});
-  // if (!story) return res.status(204).json({ 'message': 'No story found' });
-  // // res.json(story);
-  const stories = fake.fakeStories;
+  // const queryObj = req.query;
+  // console.log('getStories backend!', queryObj);
 
-  // console.log('stories are: ');
-  // console.log(stories)
+  let stories = await Story.find({}).populate('creator');
+
+  // if (!stories) return res.status(204).json({ 'message': 'No story found' });
+  // // res.json(story);
+  // const stories = fake.fakeStories;
+
+  console.log('stories are: ');
+  console.log(stories)
+  res.json(stories);
+}
+
+let queryObj = {
+  find: { name: "steve" },
+  sort: { popularity: 1 }
+}
+const getStoriesBy = async (req, res) => {
+  const query = req.query;
+  const findBy = query.find? query.find : {};
+  const limitBy = query.limit ? query.limit : 0;
+  const sortBy = query.sort ? query.sort : {}; //* unsure about this ^_^
+  console.log('backend for getStoriesBy !', query);
+
+  let stories = await Story.find(findBy).populate('creator').sort(sortBy).limit(limitBy);
+
+  // if (!stories) return res.status(204).json({ 'message': 'No story found' });
+  // // res.json(story);
+  // const stories = fake.fakeStories;
+
+  console.log('stories are: ');
+  console.log(stories)
   res.json(stories);
 }
 
@@ -67,7 +88,7 @@ const saveStory = async (req, res) => {
   });
 
   const new_story_info = { //@ c) create the story on the database
-    user_id, title, description, isPrivate, tags, audioLink, duration, 
+    creator: user_id, title, description, isPrivate, tags, audioLink, duration, 
   };
 
   const options = { upsert: true, new: true, setDefaultsOnInsert: true };
@@ -76,7 +97,7 @@ const saveStory = async (req, res) => {
   //     // do something with the document
   //     res.status(200);
   // });
-  const story = await Story.findOneAndUpdate({ _id: story_id}, new_story_info, options);
+  const story = await Story.findOneAndUpdate({ _id: story_id}, new_story_info, options).populate('creator');
 
   const rating_info = { user_id, story_id, violenceRating, sexRating, languageRating, generalRating }
   //?  They're only updating the rating they themselves are responsible for, right?
@@ -106,7 +127,7 @@ const create = async (req, res) => {
   });
 
   const new_story_info = { //@ c) create the story on the database
-    user_id, title, description, isPrivate, tags, audioLink, duration, 
+    creator: user_id, title, description, isPrivate, tags, audioLink, duration, 
   };
   
   let story = await Story.create(new_story_info); 
@@ -129,7 +150,7 @@ const create = async (req, res) => {
 
 //todo Get most popular stories for all tags
 const popular = async (req, res) => {
-  let stories = await Story.find({}) // sort by popularity_rating
+  let stories = await Story.find({}).populate('creator') // sort by popularity_rating
   res.json(stories);
   //? calculate by popularity somewhere (?)
 }; 
@@ -140,7 +161,7 @@ const popularByTag = async (req, res) => {
   let jsonnedTags = JSON.parse(rawTags);
   const tags = jsonnedTags.map((tag)=> properlyUppercased(tag));
   //? calculate by popularity somewhere (?)
-  let stories = await Story.find({ tags }) // sort by popularity_rating
+  let stories = await Story.find({ tags }).populate('creator') // sort by popularity_rating
   res.json(stories);
 };
 
@@ -149,17 +170,17 @@ const search = async (req, res) => {
   const search_string = req.params.search_string;
 
   //? Get tags that match
-  const search_tags = search_string.split(",").trim();
+  const search_tags = [search_string]; //# search_string.split(",").trim();
   console.log('search_tags are: ', search_tags);
-  let tag_stories = await Story.find({ tags: { $in: search_tags } });
+  let tag_stories = await Story.find({ tags: { $in: search_tags } }).populate('creator');
   console.log('tag_stories are: ', tag_stories);
   // .findOne( { topics : {$in: ['voyage', 'nautical']} }, { title: 1 } )
   //? Get creator accounts that match name
   //? there is no Creator model.  Did you mean User or Profile?
-  let creator_accounts = await Profile.find({ name: search_string }); //Creator
+  let creator_accounts = await User.find({ name: search_string }); //Creator
 
   //? get titles that match
-  let title_stories = await Story.find({ title: search_string });
+  let title_stories = await Story.find({ title: search_string }).populate('creator');
 
   let search_results = {
     tag_matched_stories: tag_stories,
@@ -180,7 +201,7 @@ const storiesForPlaylist = async (req, res) => {
   let playlist_story_ids = playlist.story_ids;
 
   playlist_story_ids.forEach(async (story_id) => {
-    let story = await Story.findOne({ _id: story_id });
+    let story = await Story.findOne({ _id: story_id }).populate('creator');
     playlist_stories.push(story);
   });
 
@@ -196,7 +217,7 @@ const storiesByCreator = async (req, res) => {
   const user_id = user._id;
   console.log('storiesByCreator 184!')
 
-  let stories = await Story.find({ user_id: user_id });
+  let stories = await Story.find({ creator: user_id }).populate('creator');
   console.log('user: ', user, ', stories: ', stories)
   res.json(stories);
 };
@@ -204,7 +225,7 @@ const storiesByCreator = async (req, res) => {
 //* Get single story
 const show = async (req, res) => {
   const story_id = req.params.story_id;
-  let story = await Story.findOne({_id: story_id});
+  let story = await Story.findOne({_id: story_id}).populate('creator');
 
   res.json(story);
 };
@@ -227,10 +248,11 @@ const update = async (req, res) => {
   });
 
   const story_data = { //@ c) create the story on the database
-    user_id, title, description, isPrivate, tags, audioLink, duration, 
+    creator: user_id, title, description, isPrivate, tags, audioLink, duration, 
   };
 
-  const story = await Story.findOneAndUpdate({ _id: story_id, user_id }, story_data, {upsert: true});
+  const story = await Story.findOneAndUpdate({ _id: story_id }, story_data, {upsert: true})
+    .populate('creator');
   res.json(story);
 };
 
@@ -243,7 +265,7 @@ const remove = async (req, res) => {
 
   //? Do we want to make sure it's the right user who is deleting the story?  If not, 
   //... remove the user_id requirement!
-  let story = await Story.findOneAndDelete({ _id: story_id, user_id: user_id });
+  let story = await Story.findOneAndDelete({ _id: story_id }).populate('creator');
   res.json(story);
 };
 

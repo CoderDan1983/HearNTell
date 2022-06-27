@@ -10,7 +10,7 @@ const { properlyUppercased } = require("../custom_modules/utilities");
 // });
 
 const Story = new Schema({
-    user_id: String, 
+    creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     title: String, 
     description: String, 
     isPrivate: Boolean, //if true, Only allow subscribers to listen to this audio.
