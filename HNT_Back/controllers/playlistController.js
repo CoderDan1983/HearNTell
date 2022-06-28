@@ -72,7 +72,7 @@ const create = async (req, res) => {
 //* Get playlists for user
 const userPlaylists = async (req, res) => {
   const { _id: user_id } = await User.findOne({ username: req.user });
-  let playlists = await Playlist.find({ user_id });
+  let playlists = await Playlist.find({ user_id, is_queue: false });
   console.log('73.  userPlaylists.  playlists is: ', playlists, ", user_id is: ", user_id)
 
   res.json(playlists);
