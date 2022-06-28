@@ -49,6 +49,7 @@ export default function Listener(){
     // }
 
     // console.log(queryParamString(query))
+    console.log('queue is: ', queue);
     return(<div className='main'>
         <div className="hearAStory">
         <h1 className="consulting">Hear a Story</h1>
@@ -94,7 +95,7 @@ export default function Listener(){
                 MyQueue <br />
                 (Where does this go?)
             </div>
-            { queue && queue.map((item)=>{
+            { queue && queue.story_ids && queue.story_ids.map((item)=>{
                 return (<LinkListItem 
                     key={item._id} 
                     to= "/listenerSingleStory" 

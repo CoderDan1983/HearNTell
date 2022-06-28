@@ -306,6 +306,18 @@ li {
     grid-template-columns: auto auto;
 }
 
+.leftTwoGether {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: start;
+    /* align-content: center; */
+    justify-items: start;
+    align-items: end;
+    background-color: gray;
+    column-gap: 16px;
+    padding: 0px 16px;
+    /* text-align: end; */
+}
 .modal {
     display: block;
     background-color: blue;

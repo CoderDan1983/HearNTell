@@ -1,18 +1,23 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 
 import StoryItem from '../../parts/StoryItem';
 import { DeleteForever } from '@mui/icons-material';
 import '../../../index.css';
-import { get_private } from '../../../hooks/useBackendRequest'
+import { get_private } from '../../../hooks/useBackendRequest';
+
+import ObjFormComponent from '../../parts/ObjFormComponent';
+import DisplayObjComponent from '../../parts/DisplayObjComponent';
 
 export default function ListenerPlaylist({ playlistName }){
     const axP = useAxiosPrivate();
     const nav = useNavigate();
     const loc = useLocation();
 
-    const [playlist, setPlaylist] = useState([]); //fakeStories
+    const formRef = useRef();
+
+    const [playlist, setPlaylist] = useState({}); //fakeStories
     const [stories, setStories] = useState([]);
 
     const { story_id } = useParams(); //isn't this the playist_id instead!?!
@@ -35,7 +40,20 @@ export default function ListenerPlaylist({ playlistName }){
             {/* <div className="playListTop">
                 <button>Add Story</button>
             </div> */}
-
+            { playlist && <DisplayObjComponent 
+                obj = { playlist }
+                includeL={["title", "description"]}
+                added="dis"
+                wrapClass='leftTwoGether'
+            /> }
+            { playlist && (<form ref={ formRef }>
+                <ObjFormComponent 
+                    obj={ playlist } 
+                    includeL={["title", "description"]}
+                    formy = { formRef.current }
+                    wrapClass='leftTwoGether'
+                />
+            </form>)}
             <div className="center">           
                 { stories.length && stories.map((story, index)=>{
                     return ( !story.private && 
