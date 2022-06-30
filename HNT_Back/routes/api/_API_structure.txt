@@ -44,9 +44,11 @@ PLAYLIST Routes /api/playlist
 
     Create a new playlist                       POST /api/playlist
 
-    Get playlists for user                      GET /api/playlist/user/{account_id}
+    Get playlists for user                      GET /api/playlist/user/
 
-    Get users queue                             GET /api/playlist/queue/{account_id}
+    Get playlists for creator                   GET /api/playlist/user/:is_creator
+
+    Get users queue                             GET /api/playlist/queue/
 
     Get single playlist                         GET /api/playlist/{playlist_id}
 
