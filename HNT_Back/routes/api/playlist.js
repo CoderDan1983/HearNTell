@@ -13,7 +13,7 @@ const verifyRoles = require('../../middleware/verifyRoles'); //6/10/2022
 
 
 
-
+//playlist/user/
 //* PLAYLIST Routes /api/playlist
 
 //     Create a new playlist                       POST /api/playlist
@@ -22,6 +22,9 @@ router.route('/')
 
 //     Get playlists for user                      GET /api/playlist/user/{account_id}
 router.route('/user') //# '/user/:account_id'
+    .get(verifyRoles(ROLES_LIST.Member), playlistController.userPlaylists);
+
+router.route('/user/:grab_type') //# '/user/:account_id'
     .get(verifyRoles(ROLES_LIST.Member), playlistController.userPlaylists);
 
 //     Get users queue                             GET /api/playlist/queue/{account_id}

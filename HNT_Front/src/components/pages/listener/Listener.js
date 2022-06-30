@@ -3,7 +3,7 @@ import '../../../index.css';
 import { useState, useMemo, useEffect } from 'react';
 
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 
 // import { Link } from 'react-router-dom';
 import SearchComponent from '../../parts/SearchComponent';
@@ -22,7 +22,8 @@ export default function Listener(){
     const nav = useNavigate();
     const loc = useLocation();
     
-    const user_id = "0a"; //* later this will be passed in/found :D
+    const params = useParams()
+    const user_id = params.user_id || "0a"; //* default testing value :)
     const [searches, setSearches] = useState([]);
     const [subscriptions, setSubscriptions] = useState([]);
     const [playlists, setPlaylists] = useState([]);
@@ -49,7 +50,7 @@ export default function Listener(){
     // }
 
     // console.log(queryParamString(query))
-    console.log('queue is: ', queue);
+    console.log('queue is: ', queue, queue.story_ids);
     return(<div className='main'>
         <div className="hearAStory">
         <h1 className="consulting">Hear a Story</h1>
@@ -75,8 +76,6 @@ export default function Listener(){
                 My Playlists
                 { console.log('playlists is: ', playlists)}
                 { playlists && playlists.map((playlist)=>{
-                    console.log('playlist is: ')
-                    console.log(playlist)
                     return (<LinkListItem 
                         key={ playlist._id } 
                         to= "/listenerPlaylist"

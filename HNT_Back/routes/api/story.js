@@ -42,7 +42,8 @@ router.route('/creator')
     .get(verifyRoles(ROLES_LIST.Member), storyController.storiesByCreator);
 
 //     Get single story                            GET /api/story/{story_id}
-// router.get('/:story_id', storyController.show);  //todo change it to this later!
+router.route('/:story_id')
+    .get(verifyRoles(ROLES_LIST.Member), storyController.show);  //todo change it to this later!
 
 //     Update an existing story                    POST /api/story/{story_id}
 router.route('/:story_id')

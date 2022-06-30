@@ -11,7 +11,7 @@ import CreateCampaign from './components/pages/advertiser/CreateCampaign'; //new
 import CreatorProfile from './components/pages/creator/CreatorProfile';
 import CreatorHomepage from './components/pages/creator/CreatorHomepage';
 import EditCreatorProfile from './components/pages/creator/EditCreatorProfile';
-import CreatorAddStory from './components/pages/creator/CreatorAddStory'; //new
+import AddEditStory from './components/pages/creator/AddEditStory'; //new
 import CreatorAccessRequests from './components/pages/creator/CreatorAccessRequests'; //new
 
 import Listener from './components/pages/listener/Listener';
@@ -73,7 +73,8 @@ function App() {
             <Route path="editor" element = { <Editor /> } /> {/* tutorial route */}
             <Route path="creatorHomepage" element = { <CreatorHomepage /> } />
             <Route path="editCreatorProfile" element = { <EditCreatorProfile /> } />
-            <Route path="creatorAddStory" element = { <CreatorAddStory /> } />
+            <Route path="creatorAddStory" element = { <AddEditStory /> } />
+            <Route path="creatorEditStory/:story_id" element = { <AddEditStory /> } />
             <Route path="creatorAccessRequests" element = { <CreatorAccessRequests /> } />
           </Route>
 

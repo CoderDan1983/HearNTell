@@ -47,7 +47,7 @@ export function lumpDig(lump, keys) {
     }, lump);
 }
 
-//@ Part B: Route Control: get_private, post_private, post_formData, get_public
+//@ Part B: Route Control: get_private, post_private, post_formData, delete_private, get_public
 //* for "private" routes
 export const get_private = (axiosPrivate, navigate, location, path, { _id, queries, dig, options, setter } = {})=>{
     const url = createFullURL(path, { _id, queries });
@@ -96,11 +96,48 @@ export const post_private = (axiosPrivate, navigate, location, path,
         try {
             const axiosOptions = options ? { signal: controller.signal, ...options } : 
             { signal: controller.signal }
-            console.log('running postThenSet_private.  axiosOptions are: ', axiosOptions)
+            console.log('running post_private.  axiosOptions are: ', axiosOptions)
 
             console.log('trying again...')
             const response = await axiosPrivate.post( url, 
                 JSON.stringify(payload),
+                axiosOptions
+            );
+
+            const returnVal = dig ? lumpDig(response.data, dig) : response.data;
+            isMounted && setter && setter(returnVal) //if isMounted, then setUsers :D
+
+            console.log(response.data);
+        }
+        catch (err){
+            console.log("I'm gonna log an error!")
+            console.error(err);
+            navigate('/login', { state: { from: location }, replace: true })
+        }
+    }
+    postSomething();
+
+    return () =>{ //* cleanup function ^_^
+        isMounted = false;
+        controller.abort();
+    }
+}
+
+export const delete_private = (axiosPrivate, navigate, location, path, 
+    { _id, queries, dig, options, setter } = {})=>{
+    const url = createFullURL(path, { _id, queries });
+    let isMounted = true;
+    const controller = new AbortController();
+    // headers: { "Content-Type" : "multipart/for"}
+    // 
+    const postSomething = async () => {
+        try {
+            const axiosOptions = options ? { signal: controller.signal, ...options } : 
+            { signal: controller.signal }
+            console.log('running delete_private.  axiosOptions are: ', axiosOptions)
+
+            console.log('trying again...')
+            const response = await axiosPrivate.delete( url, 
                 axiosOptions
             );
 

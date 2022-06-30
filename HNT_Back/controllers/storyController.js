@@ -109,9 +109,10 @@ const saveStory = async (req, res) => {
 const create = async (req, res) => {
   const { _id: user_id } = await User.findOne({ username: req.user});
 
+  //# const { playlist_id } = req.params;
   const body = req.body;
   const { violenceRating, sexRating, languageRating, generalRating, 
-    title, description, isPrivate, tags: rawTags, selectedFile, audioLink, playlist_id } = body;
+    title, description, isPrivate, tags: rawTags, selectedFile, audioLink } = body;
   const duration = 1000; //todo later we'll get this value from the file length or whatnot.
   
   // console.log('body: ', body, ', the user is: ', user, ", user_id is: ", user_id);
@@ -131,11 +132,13 @@ const create = async (req, res) => {
   
   let story = await Story.create(new_story_info); 
   const story_id = story._id;
-  console.log("story._id is: ", story._id, ', playlist_id is: ', playlist_id); 
+  console.log("story._id is: ", story._id); //, ', playlist_id is: ', playlist_id
 
-  let { story_ids } = await Playlist.findOne({ playlist_id });
-  story_ids.push(story_id);
-  const playlist = await Playlist.updateOne( { playlist_id }, { $set: { story_ids } } );
+  // if(playlist_id){
+  //   let { story_ids } = await Playlist.findOne({ playlist_id });
+  //   story_ids.push(story_id);
+  //   const playlist = await Playlist.updateOne( { playlist_id }, { $set: { story_ids } } );
+  // }  
 
   const rating_info = {  //@ d) create the ratings object in the database
     user_id, story_id, violenceRating, sexRating, languageRating, generalRating 
@@ -143,7 +146,7 @@ const create = async (req, res) => {
   let ratings = await StoryRating.create(rating_info);
   
   // console.log("we'll be returning: ", story, ratings); //? Why do tags appear twice in story!?!
-  res.json({ story, ratings, playlist }); //@ e) return values :)
+  res.json({ story, ratings }); //@ e) return values :)
 };
 
 //todo Get most popular stories for all tags
@@ -230,14 +233,13 @@ const show = async (req, res) => {
 
 //* Update an existing story
 const update = async (req, res) => {
-  const user = await User.findOne({ username: req.user });
-  const user_id = user._id;
+  const { _id: user_id } = await User.findOne({ username: req.user });
   const story_id = req.params.story_id;
 
   const body = req.body;
   const { title, description, isPrivate, tags: rawTags, selectedFile, audioLink } = body;
   const duration = 1000; //todo later we'll get this value from the file length or whatnot.
-  
+  //* MAKE SURE YOU DON"T REPLACE A SELECTED FILE with Null by accident!!!
   let jsonnedTags = JSON.parse(rawTags);
   const tags = jsonnedTags.map((tag)=> properlyUppercased(tag));
 
@@ -249,7 +251,7 @@ const update = async (req, res) => {
     creator: user_id, title, description, isPrivate, tags, audioLink, duration, 
   };
 
-  const story = await Story.findOneAndUpdate({ _id: story_id }, story_data, {upsert: true})
+  const story = await Story.findOneAndUpdate({ _id: story_id }, { $set: story_data }, {upsert: true})
     .populate('creator');
   res.json(story);
 };
@@ -259,12 +261,23 @@ const remove = async (req, res) => {
   const user = await User.findOne({ username: req.user});
   const user_id = user._id;
 
-  const story_id = req.params.story_id;
+  const { story_id, playlist_id } = req.params;
 
-  //? Do we want to make sure it's the right user who is deleting the story?  If not, 
-  //... remove the user_id requirement!
-  let story = await Story.findOneAndDelete({ _id: story_id }).populate('creator');
-  res.json(story);
+  //* delete story from all playlists that contain it :)
+  let releventPlaylists = await Playlist.find({ story_ids: { $in: story_id } });
+  console.log('storyController, remove function. the story with story_id ', story_id,
+  ' was found in the following playlists: ', releventPlaylists);
+
+  // for(let r=0; r < releventPlaylists.length; r++){
+  //   const story_ids = releventPlaylists[r]["story_ids"].filter((item)=>{
+  //     item !== story_id;
+  //   });
+  //   await Playlist.findOneAndUpdate({ playlist_id }, { story_ids });
+  // };
+
+  // let story = await Story.findOneAndDelete({ _id: story_id }).populate('creator');
+  // res.json(story);
+  res.json({ testing: true });
 };
 
 module.exports = {

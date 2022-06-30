@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from 'react';
 
 import TagsInput from "../../parts/TagsInput";
@@ -8,51 +8,47 @@ import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import RatingComponent from "../../parts/RatingComponent";
 import '../../../index.css'
 import { post_formData, get_private } from '../../../hooks/useBackendRequest';
-export default function CreatorAddStory(){
+export default function AddEditStory(){ //* if story passed in, treat it as an edit!
     const selectedTags = tags => { console.log(tags) };
     console.log('selectedTags is (10): ', selectedTags)
     const axP = useAxiosPrivate();
     const nav = useNavigate();
     const loc = useLocation();
     const formRef = useRef();
+
+    const { story_id } = useParams();
+    const [story, setStory] = useState();
+
+    useEffect(()=>{ 
+        get_private(axP, nav, loc, 'playlist/user', { setter: setPlaylists });
+        
+        //* if we have a story id, we'll get the matching matching story :)
+        story_id && get_private(axP, nav, loc, 'story', { _id: story_id, setter: setStory });
+    },[axP, nav, loc, story_id]);
     //let selectedTags = []; 
     // const [tags, setTags] = useState([]); //* example #0: array as regular state.
     // const [arrayWithTags, setArrayWithTags] = useState([23, "susan", [], false]); //* example #1: array into array.
 
-    const [formValue, setFormValue] = useState({ //* example #2: array into object.
-        title: '',
-        description: '',
-        isPrivate: false,
-        violenceRating: 0,
-        sexRating: 0,
-        languageRating: 0,
-        generalRating: 0,
-        audioLink: '',
-        selectedFile: null,
-        tags: [],
-    });
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('');
-    const [isPrivate, setIsPrivate] = useState(false);
-    const [violenceRating, setViolenceRating] = useState(0);
-    const [sexRating, setSexRating] = useState(0);
-    const [languageRating, setLanguageRating] = useState(0);
-    const [generalRating, setGeneralRating] = useState(0);
-    const [audioLink, setAudioLink] = useState('');
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [tags, setTags] = useState([]);
+    const [title, setTitle] = useState(story ? story.title : '')
+    const [description, setDescription] = useState(story ? story.description : '');
+    const [isPrivate, setIsPrivate] = useState(story ? story.isPrivate : false);
+    const [violenceRating, setViolenceRating] = useState(story ? story.violenceRating : 0);
+    const [sexRating, setSexRating] = useState(story ? story.violenceRating : 0);
+    const [languageRating, setLanguageRating] = useState(story ? story.languageRating : 0);
+    const [generalRating, setGeneralRating] = useState(story ? story.generalRating : 0);
+    const [audioLink, setAudioLink] = useState(story ? story.audioLink : '');
+    //setting file allowed?  //todo on server only update if not null!  story ? story.selectedFile : null
+    const [selectedFile, setSelectedFile] = useState(null); 
+    const [tags, setTags] = useState(story ? story.tags : []);
 
     const [ playlists, setPlaylists ] = useState([]);
-    const [ playlist, setPlaylist ] = useState("");
+    // const [ playlist, setPlaylist ] = useState("");
     
     // const [violence, setViolence] = useState(0);
     // console.log("selectedFile is: ", selectedFile);
-    console.log("playlist is: ", playlist);
+    // console.log("playlist is: ", playlist);
     console.log("playlists is: ", playlists);
 
-    useEffect(()=>{
-        get_private(axP, nav, loc, 'playlist/user', { setter: setPlaylists });
-    },[axP, nav, loc]);
     // // function setDisRating(state, setter, property, value){
     // //     let newState = state;
     // //     newState[property] = value;
@@ -83,7 +79,7 @@ export default function CreatorAddStory(){
         let problem = "";
         if ((title === "") && (problem === "")) problem = "title";
         if (((audioLink === "")&&(selectedFile === null)) && (problem === "")) problem = "selectedFile";
-        if ((playlist === "") && (problem === "")) problem = "playlist";
+        // if ((playlist === "") && (problem === "")) problem = "playlist";
         
         if(problem){
             alert(`${problem} has been left blank.  Please fill out before submission!`)
@@ -110,51 +106,23 @@ export default function CreatorAddStory(){
 
             // const storyData { steve: "robbins" }
             // console.log('submitFormHandler selectedFile is', selectedFile, typeof(selectedFile));
-            post_formData(axP, nav, loc, 'api/story', { payload: storyData }); //options
+            if(story){ //todo test this version!
+                post_formData(axP, nav, loc, 'api/story', { _id: story._id, payload: storyData });
+            }
+            else{
+                post_formData(axP, nav, loc, 'api/story', { payload: storyData }); //options
+            }
         }
     }
     // getThenSet_private(axP, nav, loc, setQueue, 'queue', { _id: user_id });
-    function handleCheckboxChange(e){
-        ///e.preventDefault();
-        // console.log('handleCheckboxChange', e.target.checked)
-        setFormValue({
-            ...formValue,
-            [e.target.name]: e.target.checked,
-        })
-    }
 
-    function handleChange(e){
-        ///e.preventDefault();
-        // console.log('handleChange', e.target.value)
-        setFormValue({
-            ...formValue,
-            [e.target.name]: e.target.value,
-        })
-    }
-
-    function handleFileChange(e) {
-        setFormValue({
-            ...formValue,
-            selectedFile: e.target.files[0],
-        })
-    }
-    // const [violence, setViolence] = useState(0);
-    // function handleChanges(e, prop = "value"){
-    //     ///e.preventDefault();
-    //     console.log('handleChange', e.target[prop])
-    //     setFormValue({
-    //         ...formValue,
-    //         [e.target.name]: e.target[prop],
-    //     })
-    // }
 
     // console.log('on this render, the tags (tags set to state directly) are: ', tags);
     // console.log('on this render (tag array from array) says: ', arrayWithTags);
-    console.log('on this render (tag array from form object) says: ', formValue);
 
     // console.log('selectedTags is: ', selectedTags);
     return(<div>
-        <h1>Create / Edit a Story </h1>
+        <h1>{ story ? "Edit" : "Create" } a Story </h1>
         <form id="storyForm" ref= { formRef }>
             <label htmlFor="title">Title: </label>
             <input 
@@ -232,7 +200,7 @@ export default function CreatorAddStory(){
                 />
             </div>
 
-            <div>
+            {/* <div>
                 <label htmlFor="playlist_id">Story Goes In: </label>
                 <select 
                     id="playlist_id" 
@@ -245,13 +213,62 @@ export default function CreatorAddStory(){
                         return <option value= { playlist._id } key={i}>{ playlist.title }</option>
                     })}
                 </select>
-            </div>
+            </div> */}
 
             <button type="button" onClick={ submitFormHandler } >Submit</button>
         </form>
     </div>)
 }
 
+
+    //# when we used the formValue system :)
+    // const [formValue, setFormValue] = useState({ //* example #2: array into object.
+    //     title: '',
+    //     description: '',
+    //     isPrivate: false,
+    //     violenceRating: 0,
+    //     sexRating: 0,
+    //     languageRating: 0,
+    //     generalRating: 0,
+    //     audioLink: '',
+    //     selectedFile: null,
+    //     tags: [],
+    // });
+
+        // function handleCheckboxChange(e){
+    //     ///e.preventDefault();
+    //     // console.log('handleCheckboxChange', e.target.checked)
+    //     setFormValue({
+    //         ...formValue,
+    //         [e.target.name]: e.target.checked,
+    //     })
+    // }
+
+    // function handleChange(e){
+    //     ///e.preventDefault();
+    //     // console.log('handleChange', e.target.value)
+    //     setFormValue({
+    //         ...formValue,
+    //         [e.target.name]: e.target.value,
+    //     })
+    // }
+
+    // function handleFileChange(e) {
+    //     setFormValue({
+    //         ...formValue,
+    //         selectedFile: e.target.files[0],
+    //     })
+    // }
+    // const [violence, setViolence] = useState(0);
+    // function handleChanges(e, prop = "value"){
+    //     ///e.preventDefault();
+    //     console.log('handleChange', e.target[prop])
+    //     setFormValue({
+    //         ...formValue,
+    //         [e.target.name]: e.target[prop],
+    //     })
+    // }
+    // console.log('on this render (tag array from form object) says: ', formValue);
 
 {/* <div className="twoblack">
 <div htmlFor="violenceRating">

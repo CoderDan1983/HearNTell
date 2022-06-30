@@ -69,11 +69,18 @@ const create = async (req, res) => {
   res.json(playlist);
 };
 
-//* Get playlists for user
+//* Get playlists for user NOTE: (can now grab queue!)
 const userPlaylists = async (req, res) => {
   const { _id: user_id } = await User.findOne({ username: req.user });
-  let playlists = await Playlist.find({ user_id, is_queue: false });
-  console.log('73.  userPlaylists.  playlists is: ', playlists, ", user_id is: ", user_id)
+  const grab_type = req.params.grab_type || "named_playlists";
+  
+  let findObj = {};
+  if (grab_type === "queue") { findObj = { user_id, is_queue: true } }
+  else if (grab_type === "named_playlists") { findObj = { user_id, is_queue: false } }
+  else if (grab_type === "all") { findObj = { user_id } }
+
+  let playlists = await Playlist.find(findObj);
+  console.log('73.  userPlaylists.  playlists is: ', playlists, ", user_id is: ", user_id, ', and grab_type is: ', grab_type);
 
   res.json(playlists);
 };
@@ -83,8 +90,19 @@ const userQueue = async (req, res) => {
   // const user_id = req.params.user_id;
   // console.log('user is: ', req.user);
   const { _id: user_id } = await User.findOne({ username: req.user });
-  
-  const queue = await Playlist.findOne({ user_id: user_id, is_queue: true })
+
+  let queue = await Playlist.findOne({ user_id: user_id, is_queue: true });
+  console.log('userQueue!  queue and user_id are: ', queue, user_id)
+  if((!queue)&&(user_id)){ //* creates the queue if it doesn't exists!!!
+    console.log('creating queue!')
+    queue = await Playlist.create({
+      user_id,
+      story_ids: [],
+      title: 'Queue',
+      description: 'Queue',
+      is_queue: true,
+    });
+  }
   console.log('85.  userQueue.  queue is: ', queue)
   queue && res.json(queue);
   !queue && res.status(204).json({ 'message': 'No queue found' });
@@ -129,10 +147,19 @@ const remove = async (req, res) => {
 
 //* Add story to playlist
 const addStory = async (req, res) => {
-  const playlist_id = req.params.playlist_id;
-  const story_id = req.params.story_id;
+  const { playlist_id, story_id } = req.params;
+  const request_data = req.body;
+
+  const playlist_data = {
+    user_id: user._id,
+    story_ids: request_data.story_ids, // expects an array
+    title: request_data.title,
+    description: request_data.description,
+    is_queue: request_data.is_queue,
+  }
 
   let playlist = await Playlist.findOne({_id: playlist_id});
+  (!playlist) && await Playlist.create(playlist_data); //* create playlist if it doesn't exist
   let story_ids = playlist.story_ids;
 
   story_ids.push(story_id);

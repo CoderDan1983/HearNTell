@@ -34,7 +34,7 @@ export const navButtons = [
     {
         to: "/advertiser",
         name: "Advertiser",
-        req: [ROLES.Advertiser, ROLES.Member ], //todo need to remove member role after testing.
+        req: [ ROLES.Advertiser, ROLES.Member ], //todo need to remove member role after testing.
         hasDropdown: false,
     },
     {
