@@ -44,7 +44,7 @@ async function prepareStoryAndSetTags(req){
     user_id, violenceRating, sexRating, languageRating, generalRating 
   } //* NOTE: enjoymentRating not put in by creator :D
 
-  return { new_story_info, ratings_wo_story_id }
+  return { story_info, ratings_wo_story_id }
 }
 
 //* Gets a single story
@@ -236,19 +236,22 @@ async function deleteAStory(req){
 //* Delete a story
 const remove = async (req, res) => {
   console.log('storyController 261, remove!')
-  const { user_id } = await User.findOne({ username: req.user}); //* 0) getting user_id
-  const { story_id, playlist_id } = req.params; //* playlist is undefined :)
-  console.log('in delete we have ids for user, playlist, and story : ', user_id, playlist_id, story_id)
+  const { _id: user_id } = await User.findOne({ username: req.user}); //* 0) getting user_id
+  const { story_id } = req.params; //* playlist is undefined :)
+  console.log('in delete we have ids for user, playlist, and story : ', user_id, story_id)
 
   // //* 1) delete story from all playlists that contain it :)
   let releventPlaylists = await Playlist.find({ story_ids: { $in: story_id } });  //* 1) getting relevant playlists
   for(let r=0; r < releventPlaylists.length; r++){ //* 1.1) updating relavent playlists.
-    const story_ids = releventPlaylists[r]["story_ids"].filter((item)=>{
-      item !== story_id;
+    const playlist = releventPlaylists[r];
+    const playlist_id = playlist._id;
+    const story_ids = playlist["story_ids"].filter((item)=>{
+      console.log(item + ' vs ' + story_id)
+      return item !== story_id;
     });
-    await Playlist.findOneAndUpdate({ playlist_id }, { story_ids });
+    await Playlist.findOneAndUpdate({ playlist_id }, { $set: { story_ids } });
+    //ex: updateOne({ _id: doc._id }, { $set: { name: 'foo' } })`
   };
-
 
   //* 2) deleting story in Story, returning removed story
   const story = await Story.findOneAndDelete({ _id: story_id })
@@ -259,7 +262,7 @@ const remove = async (req, res) => {
 
   
   //* 3) deleting a story's ratings
-  const ratings = await Story.findOneAndDelete({ _id: story.ratings._id });
+  const ratings = story.ratings ? await Story.findOneAndDelete({ _id: story.ratings._id }) : {};
 
   res.json({ story, ratings });
 };
