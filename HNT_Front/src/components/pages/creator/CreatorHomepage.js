@@ -44,18 +44,18 @@ export default function CreatorHomepage({ name, imageUrl }){
 
         function handleAddToPlaylist(event, option, story){
             console.log('handleAddToPlaylist', event, option, story);
-            // const { playlist } = option;
-            // post_private(axP, nav, loc, `${ playlist._id }/story/${ story._id }`, { payload: playlist });
+            const { playlist } = option;
+            post_private(axP, nav, loc, `playlist/${ playlist._id }/story/${ story._id }`, { payload: playlist });
         }
         function handleEditStory(event, option, story){
             console.log('handleEditStory',  event, option, story, story._id);
-            // const { playlist } = option;
-            //nav(`/creatorEditStory/${story._id}`, { state: { from: loc }, replace: true }); //todo go to some edit story page (?)
+            //const { playlist } = option;
+            nav(`/creatorEditStory/${story._id}`, { state: { from: loc }, replace: true }); //todo go to some edit story page (?)
         }
         function handleDeleteStory(event, option, story){
             console.log('handleDeleteStory',  event, option, story, story._id);
-            // const { playlist } = option;
-            // delete_private(axP, nav, loc, 'story', { _id: story._id, payload: playlist });
+            const { playlist } = option;
+            delete_private(axP, nav, loc, 'story', { _id: story._id, payload: playlist });
         }
 
         const playlists = rawPlaylists.map((playlist)=> {
@@ -127,7 +127,7 @@ export default function CreatorHomepage({ name, imageUrl }){
                                 <select 
                                     id= {`option_menu_${i}`}
                                     name="option_menu"
-
+                                    
                                     defaultValue={"default"}
                                     // onChange={ (e) => setSelectedIndex(e.target.selectedIndex - 1) }
                                 >

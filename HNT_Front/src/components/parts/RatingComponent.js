@@ -31,7 +31,7 @@ export default function RatingComponent({ readOnly, state, setter, property }) {
   // const [state, setter] = useState(rated);
   const [hover, setHover] = useState(-1);
   const rating = property ? state[property] : state;
-
+  console.log('rating is: ', rating);
   return (
     <Box
     sx={{

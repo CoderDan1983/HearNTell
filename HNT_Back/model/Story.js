@@ -3,6 +3,7 @@
 const mongoose = require('mongoose'); 
 const TagFit = require('./TagFit');
 const Schema = mongoose.Schema;
+// const Playlist = require('./Playlist');
 const { properlyUppercased } = require("../custom_modules/utilities");
 
 // const tagSchema = new Schema({
@@ -11,6 +12,7 @@ const { properlyUppercased } = require("../custom_modules/utilities");
 
 const Story = new Schema({
     creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    ratings: { type: mongoose.Schema.Types.ObjectId, ref: 'StoryRating' },
     title: String, 
     description: String, 
     isPrivate: Boolean, //if true, Only allow subscribers to listen to this audio.
@@ -20,11 +22,33 @@ const Story = new Schema({
     popularity_rating: { //? still use?
       type: Number,
       default: 0 
-    }
+    },
   }, 
   { 
     timestamps: true 
 }); //* this allows us to access createdAt and updatedAt :D
+
+
+
+
+
+    // sexRating: {
+    //   type: Number,
+    //   default: 0 
+    // },
+    // violenceRating: {
+    //   type: Number,
+    //   default: 0 
+    // },
+    // languageRating: {
+    //   type: Number,
+    //   default: 0 
+    // },
+    // generalRating: { //* ie- the 'kid friendly' rating :)
+    //   type: Number,
+    //   default: 0 
+    // }
+
 
 // Story.query.InTags = function(value) {
 //   const allTags = this.find({ tags: value })

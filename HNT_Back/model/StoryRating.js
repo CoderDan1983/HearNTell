@@ -27,4 +27,4 @@ const StoryRating = new Schema({
 //   not_suitable_for_children_rating: Number
 // });
 
-module.exports = mongoose.model('story_rating', StoryRating);
+module.exports = mongoose.model('StoryRating', StoryRating);

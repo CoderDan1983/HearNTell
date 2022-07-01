@@ -9,37 +9,53 @@ import RatingComponent from "../../parts/RatingComponent";
 import '../../../index.css'
 import { post_formData, get_private } from '../../../hooks/useBackendRequest';
 export default function AddEditStory(){ //* if story passed in, treat it as an edit!
-    const selectedTags = tags => { console.log(tags) };
-    console.log('selectedTags is (10): ', selectedTags)
+    // const selectedTags = tags => { console.log(tags) };
+    // console.log('selectedTags is (10): ', selectedTags)
     const axP = useAxiosPrivate();
     const nav = useNavigate();
     const loc = useLocation();
     const formRef = useRef();
 
     const { story_id } = useParams();
-    const [story, setStory] = useState();
 
     useEffect(()=>{ 
         get_private(axP, nav, loc, 'playlist/user', { setter: setPlaylists });
         
         //* if we have a story id, we'll get the matching matching story :)
-        story_id && get_private(axP, nav, loc, 'story', { _id: story_id, setter: setStory });
+        if(story_id){
+            get_private(axP, nav, loc, 'story', { _id: story_id, setter: setForm });
+        }
     },[axP, nav, loc, story_id]);
     //let selectedTags = []; 
     // const [tags, setTags] = useState([]); //* example #0: array as regular state.
     // const [arrayWithTags, setArrayWithTags] = useState([23, "susan", [], false]); //* example #1: array into array.
 
-    const [title, setTitle] = useState(story ? story.title : '')
-    const [description, setDescription] = useState(story ? story.description : '');
-    const [isPrivate, setIsPrivate] = useState(story ? story.isPrivate : false);
-    const [violenceRating, setViolenceRating] = useState(story ? story.violenceRating : 0);
-    const [sexRating, setSexRating] = useState(story ? story.violenceRating : 0);
-    const [languageRating, setLanguageRating] = useState(story ? story.languageRating : 0);
-    const [generalRating, setGeneralRating] = useState(story ? story.generalRating : 0);
-    const [audioLink, setAudioLink] = useState(story ? story.audioLink : '');
+    function setForm(returnObj){
+        // setStory(returnObj);
+        console.log('running setForm!!!!', returnObj)
+        returnObj.title && setTitle(returnObj.title);
+        returnObj.description && setDescription(returnObj.description);
+        returnObj.isPrivate && setIsPrivate(returnObj.isPrivate);
+        returnObj.violenceRating && setViolenceRating(returnObj.violenceRating);
+        returnObj.sexRating && setSexRating(returnObj.sexRating);
+        returnObj.languageRating && setLanguageRating(returnObj.languageRating);
+        returnObj.generalRating && setGeneralRating(returnObj.generalRating);
+        returnObj.audioLink && setAudioLink(returnObj.audioLink);
+        //setting file allowed?  //todo on server only update if not null!  story ? story.selectedFile : null
+        //const [selectedFile, setSelectedFile] = useState(null); 
+        returnObj.tags && setTags(returnObj.tags);
+    }
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('');
+    const [isPrivate, setIsPrivate] = useState(false);
+    const [violenceRating, setViolenceRating] = useState(0);
+    const [sexRating, setSexRating] = useState(0);
+    const [languageRating, setLanguageRating] = useState(0);
+    const [generalRating, setGeneralRating] = useState(0);
+    const [audioLink, setAudioLink] = useState('');
     //setting file allowed?  //todo on server only update if not null!  story ? story.selectedFile : null
     const [selectedFile, setSelectedFile] = useState(null); 
-    const [tags, setTags] = useState(story ? story.tags : []);
+    const [tags, setTags] = useState([]);
 
     const [ playlists, setPlaylists ] = useState([]);
     // const [ playlist, setPlaylist ] = useState("");
@@ -47,7 +63,7 @@ export default function AddEditStory(){ //* if story passed in, treat it as an e
     // const [violence, setViolence] = useState(0);
     // console.log("selectedFile is: ", selectedFile);
     // console.log("playlist is: ", playlist);
-    console.log("playlists is: ", playlists);
+    console.log("playlists is: ", playlists, ', and story_id is: ', story_id);
 
     // // function setDisRating(state, setter, property, value){
     // //     let newState = state;
@@ -106,8 +122,8 @@ export default function AddEditStory(){ //* if story passed in, treat it as an e
 
             // const storyData { steve: "robbins" }
             // console.log('submitFormHandler selectedFile is', selectedFile, typeof(selectedFile));
-            if(story){ //todo test this version!
-                post_formData(axP, nav, loc, 'api/story', { _id: story._id, payload: storyData });
+            if(story_id){ //todo test this version!
+                post_formData(axP, nav, loc, 'api/story', { _id: story_id, payload: storyData });
             }
             else{
                 post_formData(axP, nav, loc, 'api/story', { payload: storyData }); //options
@@ -122,7 +138,7 @@ export default function AddEditStory(){ //* if story passed in, treat it as an e
 
     // console.log('selectedTags is: ', selectedTags);
     return(<div>
-        <h1>{ story ? "Edit" : "Create" } a Story </h1>
+        <h1>{ story_id ? "Edit" : "Create" } a Story </h1>
         <form id="storyForm" ref= { formRef }>
             <label htmlFor="title">Title: </label>
             <input 
