@@ -30,8 +30,9 @@ const index = async (req, res) => {
 
 //* Get list of all ads for user
 const user_ads = async (req, res) => {
-  let user = User.findOne({username: req.user});
+  let user = await User.findOne({username: req.user});
   let ads = await Ad.find({user_id: user._id});
+  console.log(ads);
   res.json(ads);
 };
 
@@ -60,6 +61,7 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
   const ad_id = req.params.ad_id;
   let ad = await Ad.findOneAndDelete({_id: ad_id});
+  console.log(ad)
   res.json(ad);
 };
 

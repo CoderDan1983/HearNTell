@@ -331,6 +331,13 @@ li {
     left: calc(50% - 300px);
     /* opacity: 0.3; */
 }
+
+.button {
+    background-color: tan;
+    padding: 10px;
+    border: ;
+    margin: 10px;
+}
 /*
 
 @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
