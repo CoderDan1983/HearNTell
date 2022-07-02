@@ -182,11 +182,13 @@ const storiesByCreator = async (req, res) => {
 
 //* Get single story
 const show = async (req, res) => {
+  console.log('storyController, show!')
   const story_id = req.params.story_id;
   let story = await Story.findOne({_id: story_id})
     .populate('creator', "username name")
     .populate("ratings");
 
+  console.log('the story being returned is: ', story)
   res.json(story);
 };
 
@@ -198,35 +200,60 @@ const create = async (req, res) => {
   const rating_info = { ...ratings_wo_story_id, story_id: story._id }
   let ratings = await StoryRating.create(rating_info);
   
+  //* make sure the story has the story ratings id!
+  story.ratings = ratings._id;
+  await story.save(); //await (?)
+
   // console.log("we'll be returning: ", story, ratings);
   res.json({ story, ratings }); //@ e) return values :)
 };
 
 //* Update an existing story
 const update = async (req, res) => {
-  const { story_info, ratings_wo_story_id } = prepareStoryAndSetTags(req);
+  console.log('storyController, update! body is: ', req.body)
+  const { story_info, ratings_wo_story_id } = await prepareStoryAndSetTags(req);
   const story_id = req.params.story_id;
   const ratings_info = { ...ratings_wo_story_id, story_id }
-  
+  console.log('story_info is: ', story_info, ", ratings_info is: ", ratings_info);
+
   const story = await Story.findOneAndUpdate({ _id: story_id }, { $set: story_info }, {upsert: true})
     //.populate('creator', "username name")
     // .populate("ratings");
 
-  let ratings = await StoryRating.create(ratings_info); //? should this be an update!?!
+  //* if upsert inserted a new document, it will return null!  
+  //... (if so, create ratings obj and connect it to the story)   
+  //? should this be an update!?!
+  const ratings = await StoryRating.findOneAndUpdate({ story_id }, ratings_info, {upsert: true});
+  console.log('224.  story is ', story, ', ratings is ', ratings, story.ratings);
+  if((!story)||(!ratings)||(!story.ratings)){ //* make sure the story has the story ratings id!
+    const newStory = await Story.findOne({ _id: story_id });
+    const newRatings = await StoryRating.findOne({ story_id });
+    newStory.ratings = newRatings._id;
+    await newStory.save();
+    console.log('230.  newStory: ', newStory, ', newRatings: ', newRatings);
+  }
 
   res.json({ story, ratings });
 };
 
 //* Create or update a single story
 const saveStory = async (req, res) => { //SKIPPING SAVE!!!
-  const { story_info, ratings_wo_story_id } = prepareStoryAndSetTags(req);
+  console.log('how did we end up at saveStory!?!?')
+  const { story_info, ratings_wo_story_id } = await prepareStoryAndSetTags(req);
   const story_id = req.body.story_id;
   const ratings_info = { ...ratings_wo_story_id, story_id }
 
-  const options = { upsert: true, new: true, setDefaultsOnInsert: true };
+  const options = { upsert: true, new: true, setDefaultsOnInsert: true,  };
   const story = await Story.findOneAndUpdate({ _id: story_id}, story_info, options)
-  let ratings = await StoryRating.findOneAndUpdate({ _id: story_id}, ratings_info, options);
+  let ratings = await StoryRating.findOneAndUpdate({ story_id }, ratings_info, options);
   
+  if((!story)||(!ratings)||(!story.ratings)){ //* make sure the story has the story ratings id!
+    const newStory = await Story.findOne({ _id: story_id });
+    const newRatings = await StoryRating.findOne({ story_id });
+    newStory.ratings = newRatings._id;
+    await newStory.save();
+  }
+
   res.json({ story, ratings });
 }
 
@@ -238,7 +265,7 @@ const remove = async (req, res) => {
   console.log('storyController 261, remove!')
   const { _id: user_id } = await User.findOne({ username: req.user}); //* 0) getting user_id
   const { story_id } = req.params; //* playlist is undefined :)
-  console.log('in delete we have ids for user, playlist, and story : ', user_id, story_id)
+  console.log('in delete we have ids for user, and story_id : ', user_id, story_id) //$ the rating with this story_id not deleted!
 
   // //* 1) delete story from all playlists that contain it :)
   let releventPlaylists = await Playlist.find({ story_ids: { $in: story_id } });  //* 1) getting relevant playlists
@@ -246,12 +273,16 @@ const remove = async (req, res) => {
     const playlist = releventPlaylists[r];
     const playlist_id = playlist._id;
     const story_ids = playlist["story_ids"].filter((item)=>{
-      console.log(item + ' vs ' + story_id)
+      // console.log(item + ' vs ' + story_id)
       return item !== story_id;
     });
-    await Playlist.findOneAndUpdate({ playlist_id }, { $set: { story_ids } });
+    playlist.story_ids = story_ids;
+    await playlist.save();
+    // await Playlist.findOneAndUpdate({ playlist_id }, { $set: { story_ids } });
     //ex: updateOne({ _id: doc._id }, { $set: { name: 'foo' } })`
   };
+
+  console.log('releventPlaylists is: ', releventPlaylists);
 
   //* 2) deleting story in Story, returning removed story
   const story = await Story.findOneAndDelete({ _id: story_id })
@@ -261,9 +292,8 @@ const remove = async (req, res) => {
   ' was found in the following playlists: ', releventPlaylists, ', story is: ', story);
 
   
-  //* 3) deleting a story's ratings
-  const ratings = story.ratings ? await Story.findOneAndDelete({ _id: story.ratings._id }) : {};
-
+  //* 3) deleting a story's ratings //# _id: story.ratings._id
+  const ratings = story.ratings ? await StoryRating.findOneAndDelete({ story_id }) : {};
   res.json({ story, ratings });
 };
 

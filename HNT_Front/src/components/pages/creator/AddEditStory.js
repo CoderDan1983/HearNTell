@@ -7,7 +7,7 @@ import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 // import useAxios from '../../'
 import RatingComponent from "../../parts/RatingComponent";
 import '../../../index.css'
-import { post_formData, get_private } from '../../../hooks/useBackendRequest';
+import { post_formData, get_private, logFormData } from '../../../hooks/useBackendRequest';
 export default function AddEditStory(){ //* if story passed in, treat it as an edit!
     // const selectedTags = tags => { console.log(tags) };
     // console.log('selectedTags is (10): ', selectedTags)
@@ -29,21 +29,29 @@ export default function AddEditStory(){ //* if story passed in, treat it as an e
     //let selectedTags = []; 
     // const [tags, setTags] = useState([]); //* example #0: array as regular state.
     // const [arrayWithTags, setArrayWithTags] = useState([23, "susan", [], false]); //* example #1: array into array.
-
     function setForm(returnObj){
         // setStory(returnObj);
-        console.log('running setForm!!!!', returnObj)
+        const ratings = returnObj.ratings ? returnObj.ratings : {};
+
+        console.log('running setForm!!!!', returnObj, returnObj.isPrivate, typeof(returnObj.isPrivate));
         returnObj.title && setTitle(returnObj.title);
         returnObj.description && setDescription(returnObj.description);
-        returnObj.isPrivate && setIsPrivate(returnObj.isPrivate);
-        returnObj.violenceRating && setViolenceRating(returnObj.violenceRating);
-        returnObj.sexRating && setSexRating(returnObj.sexRating);
-        returnObj.languageRating && setLanguageRating(returnObj.languageRating);
-        returnObj.generalRating && setGeneralRating(returnObj.generalRating);
+
         returnObj.audioLink && setAudioLink(returnObj.audioLink);
+        returnObj.tags && setTags(returnObj.tags);
+
+        ratings.violenceRating && setViolenceRating(ratings.violenceRating);
+        ratings.sexRating && setSexRating(ratings.sexRating);
+        ratings.languageRating && setLanguageRating(ratings.languageRating);
+        ratings.generalRating && setGeneralRating(ratings.generalRating);
         //setting file allowed?  //todo on server only update if not null!  story ? story.selectedFile : null
         //const [selectedFile, setSelectedFile] = useState(null); 
-        returnObj.tags && setTags(returnObj.tags);
+
+        // (returnObj.isPrivate !== undefined) &&
+
+        setIsPrivate(returnObj.isPrivate);
+        let privateBox = document.getElementById("isPrivate");
+        privateBox.checked = returnObj.isPrivate;
     }
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('');
@@ -58,6 +66,7 @@ export default function AddEditStory(){ //* if story passed in, treat it as an e
     const [tags, setTags] = useState([]);
 
     const [ playlists, setPlaylists ] = useState([]);
+
     // const [ playlist, setPlaylist ] = useState("");
     
     // const [violence, setViolence] = useState(0);
@@ -110,11 +119,13 @@ export default function AddEditStory(){ //* if story passed in, treat it as an e
             storyData.append("languageRating", languageRating);
             storyData.append("generalRating", generalRating);
             const grabbedTags = storyData.get('tags');
+            const grabPrivate = storyData.get('isPrivate');
             console.log('in storyData, tags are: ', grabbedTags, typeof(grabbedTags));
             // console.log('storyData title is: ', storyData.entries()); //get('title')
 
-            console.log("lightning! ---------------------")
-
+            console.log("lightning! ---------------------");
+            console.log('grabPrivate: ', grabPrivate, typeof(grabPrivate));
+            logFormData(storyData);
             // console.log('storyData loop end. -----')
             // console.log('form is: ', form);
             // console.log('formRef.current is: ', formRef.current)
@@ -172,7 +183,7 @@ export default function AddEditStory(){ //* if story passed in, treat it as an e
                         id="isPrivate" 
                         name="isPrivate" 
                         type="checkbox"
-                        value={ isPrivate }
+                        value = { isPrivate }
                         onChange = { (e) => setIsPrivate(e.target.checked) }
                     />
                     <label htmlFor="isPrivate">
