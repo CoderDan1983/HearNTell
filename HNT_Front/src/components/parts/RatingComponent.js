@@ -27,11 +27,11 @@ function getLabelText(value) {
 //* state should be setter's partner from useState :)
 
 export default function RatingComponent({ readOnly, state, setter, property }) {
-  console.log("props passed in are: ", readOnly, state, property); //false, true, undefined.
+  // console.log("props passed in are: ", readOnly, state, property); //false, true, undefined.
   // const [state, setter] = useState(rated);
   const [hover, setHover] = useState(-1);
   const rating = property ? state[property] : state;
-  console.log('rating is: ', rating);
+  // console.log('rating is: ', rating);
   return (
     <Box
     sx={{

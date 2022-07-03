@@ -52,7 +52,7 @@ export function lumpDig(lump, keys) {
 export const get_private = (axiosPrivate, navigate, location, path, { _id, queries, dig, options, setter } = {})=>{
     const url = createFullURL(path, { _id, queries });
 
-    console.log('url is: ', url);
+    // console.log('url is: ', url);
     let isMounted = true;
     const controller = new AbortController();
 

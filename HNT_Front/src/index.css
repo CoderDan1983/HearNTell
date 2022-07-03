@@ -266,11 +266,15 @@ li {
     margin-top: 0;
 }
 
-.storyItemWithIcon, .storyItem {
+.storyItemWithPreIco, .storyItem {
     display: grid;
-    grid-template-columns: 1fr 32px;
+    grid-template-columns: 32px 1fr; 
+    grid-auto-columns: 32px;
+    grid-auto-flow: column;
     align-items: center;
     width: 100%;
+    background-color: rgb(69, 119, 185);
+    border-radius: 12px;
 }
 .storyItem {
     grid-template-columns: 1fr;
@@ -335,7 +339,7 @@ li {
 .button {
     background-color: tan;
     padding: 10px;
-    border: ;
+    border: 1px black solid;
     margin: 10px;
 }
 /*

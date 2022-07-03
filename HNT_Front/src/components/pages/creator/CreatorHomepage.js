@@ -1,6 +1,8 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { useEffect, useState } from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
+import BasicMenu from '../../parts/BasicMenu';
 import AudioItem from "./AudioItem";
 import StoryItem from '../../parts/StoryItem';
 import useAuth from "../../../hooks/useAuth";
@@ -26,12 +28,13 @@ export default function CreatorHomepage({ name, imageUrl }){
     },[nav, loc, axP]);
 
     // console.log('playlists is: ', playlists);
-
-    console.log('stories are: ', stories);
     const auth = useAuth();
     const accessToken = auth?.accessToken;
-    console.log('accessToken is: ');
-    console.log(accessToken);
+
+    // console.log('stories are: ', stories);
+    // console.log('accessToken is: ');
+    // console.log(accessToken);
+
     const selectedTags = tags => { console.log(tags) };
     // console.log('selectedIndex: ', selectedIndex)
     function getOptions(rawPlaylists = [], is_creator){
@@ -76,7 +79,12 @@ export default function CreatorHomepage({ name, imageUrl }){
     }
 
     const options = getOptions(playlists, true);
+    const [ preIco, setPreIco ] = useState(false);
 
+    function preIcoClickHandler(e){
+        setPreIco(!preIco);
+        console.log('preIcoClickHandler.  e is: ', e, ', preIco is: ', preIco);
+    }
     // const exampleStories = [
     //     {
     //         title: "old mcDonald bought the farm",
@@ -113,6 +121,7 @@ export default function CreatorHomepage({ name, imageUrl }){
         <>
             <h1>Welcome, { name }</h1>
 
+            <BasicMenu />
             <TagsInput selectedTags={ selectedTags } />
             <LinkListItem name="Edit Profile" to="/editCreatorProfile" />
             <LinkListItem name="Add Story" to="/creatorAddStory" />
@@ -122,7 +131,8 @@ export default function CreatorHomepage({ name, imageUrl }){
                 { stories.map((story, i)=>{
                     return (
                         <div key={`wrapper_${i}`} className="two">
-                            <StoryItem story={ story } to= "/" key={`story_${i}`} />
+                            <StoryItem PreIco = { MenuIcon } preIcoClickHandler = { preIcoClickHandler } 
+                            story={ story } to= "/" key={`story_${i}`} />
                             <div key= { i }>
                                 <select 
                                     id= {`option_menu_${i}`}

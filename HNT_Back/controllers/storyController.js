@@ -246,15 +246,6 @@ async function afterUpdateFixConnectorIfMismatched(doc, dependent, schema, depSc
 }
 
 
-
-// if((!story)||(!ratings)||(!story.ratings)){ //* make sure the story has the story ratings id!
-//   const newStory = await Story.findOne({ _id: story_id });
-//   const newRatings = await StoryRating.findOne({ story_id });
-//   newStory.ratings = newRatings._id;
-//   await newStory.save();
-//   console.log('230.  newStory: ', newStory, ', newRatings: ', newRatings);
-// }
-
 // //* Create or update a single story
 // const saveStory = async (req, res) => { //SKIPPING SAVE!!!
 //   console.log('how did we end up at saveStory!?!?')
