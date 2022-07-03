@@ -217,49 +217,68 @@ const update = async (req, res) => {
   console.log('story_info is: ', story_info, ", ratings_info is: ", ratings_info);
 
   const story = await Story.findOneAndUpdate({ _id: story_id }, { $set: story_info }, {upsert: true})
-    //.populate('creator', "username name")
-    // .populate("ratings");
 
   //* if upsert inserted a new document, it will return null!  
   //... (if so, create ratings obj and connect it to the story)   
-  //? should this be an update!?!
   const ratings = await StoryRating.findOneAndUpdate({ story_id }, ratings_info, {upsert: true});
-  console.log('224.  story is ', story, ', ratings is ', ratings, story.ratings);
-  if((!story)||(!ratings)||(!story.ratings)){ //* make sure the story has the story ratings id!
-    const newStory = await Story.findOne({ _id: story_id });
-    const newRatings = await StoryRating.findOne({ story_id });
-    newStory.ratings = newRatings._id;
-    await newStory.save();
-    console.log('230.  newStory: ', newStory, ', newRatings: ', newRatings);
-  }
+  
+  const { newDoc, newDependant } = await afterUpdateFixConnectorIfMismatched(
+    story, ratings, Story, StoryRating, { _id: story_id }, { story_id }, "ratings");
 
-  res.json({ story, ratings });
+  const sendStory = newDoc ? newDoc : story;
+  const sendRatings = newDependant ? newDependant : ratings;
+  console.log('241.  sendStory: ', sendStory, ', sendRatings: ', sendRatings);
+  res.json({ story: sendStory, ratings: sendRatings });
 };
 
-//* Create or update a single story
-const saveStory = async (req, res) => { //SKIPPING SAVE!!!
-  console.log('how did we end up at saveStory!?!?')
-  const { story_info, ratings_wo_story_id } = await prepareStoryAndSetTags(req);
-  const story_id = req.body.story_id;
-  const ratings_info = { ...ratings_wo_story_id, story_id }
+//* NOTE: this function runs on the assumption that upsert is true, and that a "created" update 
+//... will return null if a new document was created!
+async function afterUpdateFixConnectorIfMismatched(doc, dependent, schema, depSchema, docQuery, depQuery, connectorProp){
+  if((!doc)||(!dependent)||(!doc[connectorProp])){ //* make sure the story has the story ratings id!
+    const newDoc = await schema.findOne(docQuery);
+    const newDependant = await depSchema.findOne(depQuery);
+    newDoc[connectorProp] = newDependant._id;
+    await newDoc.save();
 
-  const options = { upsert: true, new: true, setDefaultsOnInsert: true,  };
-  const story = await Story.findOneAndUpdate({ _id: story_id}, story_info, options)
-  let ratings = await StoryRating.findOneAndUpdate({ story_id }, ratings_info, options);
-  
-  if((!story)||(!ratings)||(!story.ratings)){ //* make sure the story has the story ratings id!
-    const newStory = await Story.findOne({ _id: story_id });
-    const newRatings = await StoryRating.findOne({ story_id });
-    newStory.ratings = newRatings._id;
-    await newStory.save();
+    return { newDoc, newDependant }
   }
-
-  res.json({ story, ratings });
+  return {}; //* if no new changes, return empty :)
 }
 
-async function deleteAStory(req){
 
-}
+
+// if((!story)||(!ratings)||(!story.ratings)){ //* make sure the story has the story ratings id!
+//   const newStory = await Story.findOne({ _id: story_id });
+//   const newRatings = await StoryRating.findOne({ story_id });
+//   newStory.ratings = newRatings._id;
+//   await newStory.save();
+//   console.log('230.  newStory: ', newStory, ', newRatings: ', newRatings);
+// }
+
+// //* Create or update a single story
+// const saveStory = async (req, res) => { //SKIPPING SAVE!!!
+//   console.log('how did we end up at saveStory!?!?')
+//   const { story_info, ratings_wo_story_id } = await prepareStoryAndSetTags(req);
+//   const story_id = req.body.story_id;
+//   const ratings_info = { ...ratings_wo_story_id, story_id }
+
+//   const options = { upsert: true, new: true, setDefaultsOnInsert: true,  };
+//   const story = await Story.findOneAndUpdate({ _id: story_id}, story_info, options)
+//   let ratings = await StoryRating.findOneAndUpdate({ story_id }, ratings_info, options);
+  
+//   if((!story)||(!ratings)||(!story.ratings)){ //* make sure the story has the story ratings id!
+//     const newStory = await Story.findOne({ _id: story_id });
+//     const newRatings = await StoryRating.findOne({ story_id });
+//     newStory.ratings = newRatings._id;
+//     await newStory.save();
+//   }
+
+//   res.json({ story, ratings });
+// }
+
+// async function deleteAStory(req){
+
+// }
 //* Delete a story
 const remove = async (req, res) => {
   console.log('storyController 261, remove!')
