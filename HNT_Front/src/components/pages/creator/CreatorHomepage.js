@@ -1,6 +1,8 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { useEffect, useState } from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
+import BasicMenu from '../../parts/BasicMenu';
 import AudioItem from "./AudioItem";
 import StoryItem from '../../parts/StoryItem';
 import useAuth from "../../../hooks/useAuth";
@@ -26,12 +28,13 @@ export default function CreatorHomepage({ name, imageUrl }){
     },[nav, loc, axP]);
 
     // console.log('playlists is: ', playlists);
-
-    console.log('stories are: ', stories);
     const auth = useAuth();
     const accessToken = auth?.accessToken;
-    console.log('accessToken is: ');
-    console.log(accessToken);
+
+    // console.log('stories are: ', stories);
+    // console.log('accessToken is: ');
+    // console.log(accessToken);
+
     const selectedTags = tags => { console.log(tags) };
     // console.log('selectedIndex: ', selectedIndex)
     function getOptions(rawPlaylists = [], is_creator){
@@ -44,18 +47,18 @@ export default function CreatorHomepage({ name, imageUrl }){
 
         function handleAddToPlaylist(event, option, story){
             console.log('handleAddToPlaylist', event, option, story);
-            // const { playlist } = option;
-            // post_private(axP, nav, loc, `${ playlist._id }/story/${ story._id }`, { payload: playlist });
+            const { playlist } = option;
+            post_private(axP, nav, loc, `playlist/${ playlist._id }/story/${ story._id }`, { payload: playlist });
         }
         function handleEditStory(event, option, story){
             console.log('handleEditStory',  event, option, story, story._id);
-            // const { playlist } = option;
-            //nav(`/creatorEditStory/${story._id}`, { state: { from: loc }, replace: true }); //todo go to some edit story page (?)
+            //const { playlist } = option;
+            nav(`/creatorEditStory/${story._id}`, { state: { from: loc }, replace: true }); //todo go to some edit story page (?)
         }
         function handleDeleteStory(event, option, story){
             console.log('handleDeleteStory',  event, option, story, story._id);
-            // const { playlist } = option;
-            // delete_private(axP, nav, loc, 'story', { _id: story._id, payload: playlist });
+            const { playlist } = option;
+            delete_private(axP, nav, loc, 'story', { _id: story._id, payload: playlist });
         }
 
         const playlists = rawPlaylists.map((playlist)=> {
@@ -76,7 +79,12 @@ export default function CreatorHomepage({ name, imageUrl }){
     }
 
     const options = getOptions(playlists, true);
+    const [ preIco, setPreIco ] = useState(false);
 
+    function preIcoClickHandler(e){
+        setPreIco(!preIco);
+        console.log('preIcoClickHandler.  e is: ', e, ', preIco is: ', preIco);
+    }
     // const exampleStories = [
     //     {
     //         title: "old mcDonald bought the farm",
@@ -113,6 +121,7 @@ export default function CreatorHomepage({ name, imageUrl }){
         <>
             <h1>Welcome, { name }</h1>
 
+            <BasicMenu />
             <TagsInput selectedTags={ selectedTags } />
             <LinkListItem name="Edit Profile" to="/editCreatorProfile" />
             <LinkListItem name="Add Story" to="/creatorAddStory" />
@@ -122,12 +131,13 @@ export default function CreatorHomepage({ name, imageUrl }){
                 { stories.map((story, i)=>{
                     return (
                         <div key={`wrapper_${i}`} className="two">
-                            <StoryItem story={ story } to= "/" key={`story_${i}`} />
+                            <StoryItem PreIco = { MenuIcon } preIcoClickHandler = { preIcoClickHandler } 
+                            story={ story } to= "/" key={`story_${i}`} />
                             <div key= { i }>
                                 <select 
                                     id= {`option_menu_${i}`}
                                     name="option_menu"
-
+                                    
                                     defaultValue={"default"}
                                     // onChange={ (e) => setSelectedIndex(e.target.selectedIndex - 1) }
                                 >

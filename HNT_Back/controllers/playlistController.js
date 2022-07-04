@@ -80,7 +80,10 @@ const userPlaylists = async (req, res) => {
   else if (grab_type === "all") { findObj = { user_id } }
 
   let playlists = await Playlist.find(findObj);
-  console.log('73.  userPlaylists.  playlists is: ', playlists, ", user_id is: ", user_id, ', and grab_type is: ', grab_type);
+  console.log('73.  userPlaylists. user_id is: ', user_id, ', and grab_type is: ', grab_type);
+  for(let p=0; p < playlists.length; p++){
+    console.log(playlists[p].title + " is in playlists");
+  }
 
   res.json(playlists);
 };
@@ -117,7 +120,9 @@ const show = async (req, res) => {
   if(playlist && playlist.story_ids){
     for(let i=0; i < playlist.story_ids.length; i++){
       const story_id = playlist.story_ids[i];
-      const result = await Story.findOne({ _id: story_id });
+      const result = await Story.findOne({ _id: story_id })
+        .populate('creator', "username name")
+        .populate("ratings");
       stories.push(result);
     }
   } 
@@ -127,6 +132,7 @@ const show = async (req, res) => {
 
 //* Update an existing playlist
 const update = async (req, res) => {
+  console.log('updating existing playlist!')
   const playlist_id = req.params.playlist_id;
   let playlist_data = {
     user_id: request_data.user_id,
@@ -147,31 +153,38 @@ const remove = async (req, res) => {
 
 //* Add story to playlist
 const addStory = async (req, res) => {
+  const { _id: user_id } = await User.findOne({ username: req.user}); //@ a) set up basic variables
+  console.log('playlistController 150, addStory!'); //$ AddEditStory test: thus far!
   const { playlist_id, story_id } = req.params;
   const request_data = req.body;
-
+  console.log('playlist_id is ', playlist_id, ', story_id is ', story_id, ", user_id is: ", user_id);
+  console.log('req.body is: ', req.body);
   const playlist_data = {
-    user_id: user._id,
+    user_id,
     story_ids: request_data.story_ids, // expects an array
     title: request_data.title,
     description: request_data.description,
     is_queue: request_data.is_queue,
+    is_creator_list: request_data.is_creator_list,
   }
 
   let playlist = await Playlist.findOne({_id: playlist_id});
   (!playlist) && await Playlist.create(playlist_data); //* create playlist if it doesn't exist
   let story_ids = playlist.story_ids;
 
-  story_ids.push(story_id);
+  const alreadyAdded = story_ids.includes(story_id);
+  !alreadyAdded && story_ids.push(story_id) && console.log('adding story to playlist!');
+  alreadyAdded && console.log('story had already been added to the playlist!');
   playlist.story_ids = story_ids;
   playlist.save();
+
   res.json(playlist);
 };
 
 //* Remove story from playlist
 const removeStory = async (req, res) => {
-  const playlist_id = req.params.playlist_id;
-  const story_id = req.params.story_id;
+  const { playlist_id, story_id } = req.params.playlist_id;
+  console.log('playlistController!  removeStory!  params are: ', req.params);
 
   let playlist = await Playlist.findOne({_id: playlist_id});
   let story_ids = playlist.story_ids;
