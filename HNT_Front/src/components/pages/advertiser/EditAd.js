@@ -1,9 +1,7 @@
 
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useMemo, useEffect, useRef } from 'react';
-import Form from "./Form";
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
-// import useAxios from '../../'
 import '../../../index.css'
 import { post_private } from '../../../hooks/useBackendRequest';
 
@@ -16,6 +14,34 @@ export default function CreateAd(){
 
     const [name, setName] = useState('');
     const [audioUrl, setAudioUrl] = useState('')
+
+    useEffect(()=>{
+        let isMounted = true;
+        const controller = new AbortController();
+
+        const getAd = async () => {
+            try {
+
+                //todo get ad by id
+                const response = await axiosPrivate.get('/api/ad/user', { // ./users
+                    signal: controller.signal
+                });
+      
+                isMounted && setName(response.data.name) && setAudioUrl(response.data.audioUrl) //if isMounted, then setUsers :D
+            }
+            catch (err){
+                console.log("I'm gonna log an error!")
+                console.error(err);
+                navigate('/login', { state: { from: location }, replace: true })
+            }
+        }
+        getAd();
+
+        return () =>{ //* cleanup function ^_^
+            isMounted = false;
+            controller.abort();
+        }
+    }, [])
 
     function submitFormHandler(e){
         e.preventDefault();

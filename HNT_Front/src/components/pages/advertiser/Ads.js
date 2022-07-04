@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { useNavigate, useLocation } from "react-router-dom";
 import Button from "../../parts/Button";
+import { Link } from 'react-router-dom';
+
 
 function AdPage(){
     const [ ads, setAds ] = useState();
@@ -55,7 +57,7 @@ function AdPage(){
                 ads?.length ?
                 (
                    <ul>
-                        { ads.map((ad, i) => <li key={i}>{ad.name} <button data-id={ad._id} onClick={removeAd}>Remove</button></li>) }
+                        { ads.map((ad, i) => <li key={i}>{ad.name} <Link to="/">Edit</Link><button data-id={ad._id} onClick={removeAd}>Remove</button></li>) }
                    </ul> 
                 )
                 : <p>No ads to display</p>
