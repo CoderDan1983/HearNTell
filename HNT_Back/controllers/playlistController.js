@@ -80,7 +80,7 @@ const userPlaylists = async (req, res) => {
   else if (grab_type === "all") { findObj = { user_id } }
 
   let playlists = await Playlist.find(findObj);
-  console.log('73.  userPlaylists. user_id is: ', user_id, ', and grab_type is: ', grab_type);
+  //console.log('73.  userPlaylists. user_id is: ', user_id, ', and grab_type is: ', grab_type);
   for(let p=0; p < playlists.length; p++){
     console.log(playlists[p].title + " is in playlists");
   }
@@ -93,7 +93,7 @@ const userQueue = async (req, res) => {
   // const user_id = req.params.user_id;
   // console.log('user is: ', req.user);
   const { _id: user_id } = await User.findOne({ username: req.user });
-
+  let stories = [];
   let queue = await Playlist.findOne({ user_id: user_id, is_queue: true });
   console.log('userQueue!  queue and user_id are: ', queue, user_id)
   if((!queue)&&(user_id)){ //* creates the queue if it doesn't exists!!!
@@ -106,8 +106,17 @@ const userQueue = async (req, res) => {
       is_queue: true,
     });
   }
-  console.log('85.  userQueue.  queue is: ', queue)
-  queue && res.json(queue);
+
+  for(let i=0; i < queue.story_ids.length; i++){ //* grab the stories that go in the queue!
+    const story_id = queue.story_ids[i];
+    const result = await Story.findOne({ _id: story_id })
+      .populate('creator', "username name")
+      .populate("ratings");
+    stories.push(result);
+  }
+
+  //console.log('85.  userQueue.  queue is: ', queue, ', stories are : ', stories);
+  queue && res.json({ queue, stories });
   !queue && res.status(204).json({ 'message': 'No queue found' });
 };
 
@@ -183,8 +192,9 @@ const addStory = async (req, res) => {
 
 //* Remove story from playlist
 const removeStory = async (req, res) => {
-  const { playlist_id, story_id } = req.params.playlist_id;
+  const { playlist_id, story_id } = req.params;
   console.log('playlistController!  removeStory!  params are: ', req.params);
+  console.log('body is: ', req.body);
 
   let playlist = await Playlist.findOne({_id: playlist_id});
   let story_ids = playlist.story_ids;

@@ -1,38 +1,79 @@
 const Profile = require('../model/Profile');
+const User = require('../model/User');
 const SubscriptionRequest = require('../model/SubscriptionRequest');
 
+// //* Create creator profile
+// const createProfile = async (req, res) => {
+//   const { _id: user_id } = await User.findOne({ username: req.user });
+//   let request_data = req.body;
+//   console.log('createController, createProfile.  req.body is: ', req.body, ", user_id is: ", user_id);
+//   let profile_data = {
+//     name: request_data.name,
+//     user_id: user_id,
+//     image_url: request_data.image_url,
+//     about_me: request_data.about_me,
+//   }
+//   // let profile = await Profile.createProfile(profile_data);
+//   //   res.json(profile);
+// };
 
-//* Create creator profile
-const create = async (req, res) => {
-  let request_data = req.body;
-  let profile_data = {
-    name: request_data.name,
-    user_id: request_data.user_id,
-    image_url: request_data.image_url,
-    about_me: request_data.about_me,
-  }
-  let profile = await Profile.create(profile_data);
-    res.json(profile);
-};
+// //* Update creator profile
+// const updateProfile = async (req, res) => {
+//   const { _id: user_id } = await User.findOne({ username: req.user });
+//   let request_data = req.body;
+//   console.log('createController, updateProfile.  req.body is: ', 
+//   req.body, ", user_id is: ", user_id);
 
-//* Update creator profile
-const updateCreatorProfile = async (req, res) => {
-  let request_data = req.body;
+//   let profile_data = {
+//     name: request_data.name,
+//     user_id: user_id,
+//     image_url: request_data.image_url,
+//     about_me: request_data.about_me,
+//   }
+//   let profile = await Profile.findOneAndUpdate({_id: req.body.id},profile_data);
+//     res.json(profile);
+// };
+
+//* Save creator profile
+const saveProfile = async (req, res) => {
+  const { _id: user_id } = await User.findOne({ username: req.user });
+  let request_data = req.body || {};
+  console.log('saveController, saveProfile.  req.body is: ', 
+  req.body, ", user_id is: ", user_id);
+
   let profile_data = {
-    name: request_data.name,
-    user_id: request_data.user_id,
-    image_url: request_data.image_url,
-    about_me: request_data.about_me,
+    name: request_data.name || "",
+    user_id: user_id,
+    image_url: request_data.image_url || "",
+    about_me: request_data.about_me || "",
   }
-  let profile = await Profile.findOneAndUpdate({_id: req.body.id},profile_data);
-    res.json(profile);
+
+  let profile = await Profile.findOne({ user_id });
+  profile && (profile = await Profile.findOneAndUpdate({ user_id }, profile_data));
+  !profile && (profile = await Profile.create(profile_data));
+
+  // profile && await Profile.findOneAndUpdate({_id: req.body.id},profile_data);
+  // let profile = await Profile.findOneAndUpdate({_id: req.body.id},profile_data);
+  //   res.json(profile);
+
+  console.log('saveProfile.  returning profile as: ', profile);
+
+  res.json(profile)
 };
 
 //* Get creator profile
-const creatorProfile = async (req, res) => {
-  const user_id = req.params.user_id;
-  let profile = await Profile.findOne({user_id: user_id});
-  res.json(profile);
+//? should there be two seperate versions: one to see own, and the other to see others?
+const showProfile = async (req, res) => {
+  const { _id: user_id } = await User.findOne({ username: req.user }); //* a) get variables
+  let { profile_id } = req.params;
+
+  // console.log('showProfile.  req.params is: ', req.params);
+  //* b) if a profile_id was sent over, use that.  Otherwise, view your own profile :D
+  let profile = (profile_id === "self") ? await Profile.findOne({ user_id }) 
+    : await Profile.findOne({ _id: profile_id });
+
+  console.log('showProfile returning: ', profile);
+  res.json(profile); //* c) return profile :)
 };
 
 //* Get Subscription requests for this creator
@@ -59,10 +100,11 @@ const subscriptionsPending = async (req, res) => {
 
 
 module.exports = {
-  create,
-  creatorProfile,
+  saveProfile,
+  // createProfile,
+  // updateProfile,
+  showProfile,
   subscriptionRequests,
   subscriptionsApproved,
   subscriptionsPending,
-  updateCreatorProfile,
 }

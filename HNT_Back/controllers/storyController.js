@@ -171,12 +171,12 @@ const storiesForPlaylist = async (req, res) => {
 const storiesByCreator = async (req, res) => {
   const user = await User.findOne({ username: req.user });
   const user_id = user._id;
-  console.log('storiesByCreator 184!')
+  //console.log('storiesByCreator 184!')
 
   let stories = await Story.find({ creator: user_id })
     .populate('creator', "username name")
     .populate("ratings");
-  console.log('user: ', user, ', stories: ', stories)
+  //console.log('user: ', user, ', stories: ', stories)
   res.json(stories);
 };
 

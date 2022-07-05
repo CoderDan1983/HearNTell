@@ -76,7 +76,7 @@ const Home = () => {
 
 // console.log('testing digLump: ', lumpDig(mixedObj, [0, "chipmunks", 0, "name"]));
 
-    // const { story_id } = useParams();
+    const { story_id } = useParams();
 
     //* this should fetch all the stories ^_^
 

@@ -133,11 +133,12 @@ export default function AddEditStory(){ //* if story passed in, treat it as an e
 
             // const storyData { steve: "robbins" }
             // console.log('submitFormHandler selectedFile is', selectedFile, typeof(selectedFile));
+            const goTo = '../creatorHomepage';
             if(story_id){ //todo test this version!
-                post_formData(axP, nav, loc, 'api/story', { _id: story_id, payload: storyData });
+                post_formData(axP, nav, loc, 'api/story', { _id: story_id, payload: storyData, goTo });
             }
             else{
-                post_formData(axP, nav, loc, 'api/story', { payload: storyData }); //options
+                post_formData(axP, nav, loc, 'api/story', { payload: storyData, goTo }); //options
             }
         }
     }

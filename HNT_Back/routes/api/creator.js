@@ -5,20 +5,20 @@ const creatorController = require('../../controllers/creatorController.js');
 const ROLES_LIST = require('../../config/roles_list');
 const verifyRoles = require('../../middleware/verifyRoles');
 
-router.route('/updateCreatorProfile')
-    .post(verifyRoles(ROLES_LIST.Member), creatorController.updateCreatorProfile); //! old routes leftover
-
-
+// router.route('/profile/:profile_id')
+//     .post(verifyRoles(ROLES_LIST.Member), creatorController.updateProfile); //! old routes leftover
 
 //* CREATOR Routes /api/creator
 
 // Create / update creator profile             POST /api/creator/{account_id}
-router.route('/:account_id')
-    .post(verifyRoles(ROLES_LIST.Member), creatorController.create);
+// router.route('/:account_id')
+router.route('/profile/')
+    .post(verifyRoles(ROLES_LIST.Member), creatorController.saveProfile);
 
 // Get creator profile                         GET /api/creator/{account_id}
-router.route('/:account_id')
-    .get(verifyRoles(ROLES_LIST.Member), creatorController.creatorProfile);
+// router.route('/:account_id')
+router.route('/profile/:profile_id')
+    .get(verifyRoles(ROLES_LIST.Member), creatorController.showProfile);
 
 // Subscription requests                         GET /api/creator/{account_id}/subscription_requests
 router.route('/:account_id/subscription_requests')

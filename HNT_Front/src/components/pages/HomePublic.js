@@ -4,7 +4,7 @@ import { get_public } from '../../hooks/useBackendRequest';
 
 import StoryItem from '../parts/StoryItem';
 import SearchComponent from '../parts/SearchComponent';
-import { fakeStories, fakeStories1, fakeTags, fakeSearches, loadStoriesByTag } from '../fakeApi/fakeStories';
+// import { fakeStories, fakeStories1, fakeTags, fakeSearches, loadStoriesByTag } from '../fakeApi/fakeStories';
 
 // import { Grid, Item } from '@mui/material';
 import '../../index.css';

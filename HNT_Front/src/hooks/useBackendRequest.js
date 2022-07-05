@@ -49,7 +49,7 @@ export function lumpDig(lump, keys) {
 
 //@ Part B: Route Control: get_private, post_private, post_formData, delete_private, get_public
 //* for "private" routes
-export const get_private = (axiosPrivate, navigate, location, path, { _id, queries, dig, options, setter } = {})=>{
+export const get_private = (axiosPrivate, navigate, location, path, { _id, queries, dig, options, setter, goTo } = {})=>{
     const url = createFullURL(path, { _id, queries });
 
     // console.log('url is: ', url);
@@ -70,6 +70,7 @@ export const get_private = (axiosPrivate, navigate, location, path, { _id, queri
 
             const returnVal = dig ? lumpDig(response.data, dig) : response.data;
             isMounted && setter && setter(returnVal) //if isMounted, then setUsers :D
+            isMounted && goTo && navigate(goTo, { state: { from: location }, replace: true });
         }
         catch (err){
             console.log("we got an error with the request to : ", url)
@@ -86,7 +87,7 @@ export const get_private = (axiosPrivate, navigate, location, path, { _id, queri
 }
 
 export const post_private = (axiosPrivate, navigate, location, path, 
-    { _id, payload, queries, dig, options, setter } = {})=>{
+    { _id, payload, queries, dig, options, setter, goTo } = {})=>{
     const url = createFullURL(path, { _id, queries });
     let isMounted = true;
     const controller = new AbortController();
@@ -106,7 +107,8 @@ export const post_private = (axiosPrivate, navigate, location, path,
 
             const returnVal = dig ? lumpDig(response.data, dig) : response.data;
             isMounted && setter && setter(returnVal) //if isMounted, then setUsers :D
-
+            isMounted && goTo && navigate(goTo, { state: { from: location }, replace: true });
+            
             console.log(response.data);
         }
         catch (err){
@@ -124,7 +126,7 @@ export const post_private = (axiosPrivate, navigate, location, path,
 }
 
 export const delete_private = (axiosPrivate, navigate, location, path, 
-    { _id, queries, dig, options, setter } = {})=>{
+    { _id, queries, dig, options, setter, goTo } = {})=>{
     const url = createFullURL(path, { _id, queries });
     let isMounted = true;
     const controller = new AbortController();
@@ -143,6 +145,7 @@ export const delete_private = (axiosPrivate, navigate, location, path,
 
             const returnVal = dig ? lumpDig(response.data, dig) : response.data;
             isMounted && setter && setter(returnVal) //if isMounted, then setUsers :D
+            isMounted && goTo && navigate(goTo, { state: { from: location }, replace: true });
 
             console.log(response.data);
         }
@@ -165,7 +168,7 @@ export const delete_private = (axiosPrivate, navigate, location, path,
 //   headers: formData.getHeaders()
 // });
 export const post_formData = (someAxiosPassedIn, navigate, location, path, 
-    { _id, payload, queries, dig, options, setter } = {})=>{
+    { _id, payload, queries, dig, options, setter, goTo } = {})=>{
     const url = createFullURL(path, { _id, queries });
     let isMounted = true;
     const controller = new AbortController();
@@ -184,6 +187,7 @@ export const post_formData = (someAxiosPassedIn, navigate, location, path,
             console.log('the setter is: ', setter);
             const returnVal = dig ? lumpDig(response.data, dig) : response.data;
             isMounted && setter && setter(returnVal) //if isMounted, then setUsers :D
+            isMounted && goTo && navigate(goTo, { state: { from: location }, replace: true });
         }
         catch (err){
             console.log("I'm gonna log an error!")
@@ -201,6 +205,7 @@ export const post_formData = (someAxiosPassedIn, navigate, location, path,
 
 //* for "public" routes. (well, it can be used for that ^_^ )
 //^ for setter: pass in a single setter, or an array of { setter: setSomething, key: "something" }
+//? add a goTo !??!
 export const get_public = (path, { _id, queries, dig, options, setter } = {}) => {
     const url = createFullURL(path, { _id, queries });
     let isMounted = true;

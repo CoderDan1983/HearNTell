@@ -1,14 +1,21 @@
 import '../../index.css';
 import { Link } from "react-router-dom";
 import RatingComponent from './RatingComponent';
+import BasicMenu from './BasicMenu';
+import { inputClasses } from '@mui/material';
 
-
-export default function StoryItem({ story, to, Ico, PreIco, icoClickHandler, preIcoClickHandler }){
+// IcoArray = [
+//     { Icon, clickHandler }
+// ]
+export default function StoryItem({ story, to, IcoArray, pre, menu }){
     const { title, tags, popularity_rating, author, duration,  } = story; //private //* unused: account_id, audio_url, description
     // const tags = story.tags.map((tag) => tag.tag);
-
-    return(<div className={ PreIco ? "storyItemWithPreIco" : "storyItem" }> 
-        { PreIco && <PreIco onClick= { preIcoClickHandler && preIcoClickHandler } />}   
+    console.log('menu is: ', menu);
+    return(<div className={ pre ? "storyItemWithPreIco" : "storyItem" }> 
+        {/* { IcoArray && IcoArray.length && IcoArray.map((ico)=>{
+            return ico.pre ? (<ico.Icon onClick= { ico.clickHandler && ico.clickHandler } />) : <div></div>;
+        })} */}
+        { pre && menu && <BasicMenu story= { story } menu = { menu } /> }
         <Link to= { to } className="link"> {/* no grid */}
             <div className='storyItemTop' >
                 <span className="storyItemTitle">{title}</span> {/* no grid */}
@@ -25,7 +32,10 @@ export default function StoryItem({ story, to, Ico, PreIco, icoClickHandler, pre
                 })}
             </div>
         </Link>
-        { Ico && <Ico onClick= { icoClickHandler && icoClickHandler } />}
+        { IcoArray && IcoArray.length && IcoArray.map((ico, i)=>{
+            return (<ico.Icon key = { i } onClick= { ico.clickHandler && ico.clickHandler } />);
+        })}
+        { !pre && menu && <BasicMenu menu = { menu } /> }
     </div>)
 }
 

@@ -1,7 +1,8 @@
 
 import '../../../index.css';
-import { useState, useMemo, useEffect } from 'react';
-
+import { useState, useEffect } from 'react';
+import useAuth from "../../../hooks/useAuth";
+import { useGetRoles } from '../../../hooks/useRoles'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 
@@ -16,27 +17,39 @@ import CreatePlaylist from './CreatePlaylist';
 import { get_private } from '../../../hooks/useBackendRequest';
 import { DeleteForever } from '@mui/icons-material';
 import { createSetter } from '../../../custom_modules_front/utility_front';
-
 export default function Listener(){
     const axP = useAxiosPrivate();
     const nav = useNavigate();
     const loc = useLocation();
     
+    // const auth = useAuth();
+    // const { decoded, roles } = useGetRoles();
+    // const accessToken = auth?.accessToken;
+    // console.log('auth is: ', auth);
     const params = useParams()
     const user_id = params.user_id || "0a"; //* default testing value :)
     const [searches, setSearches] = useState([]);
     const [subscriptions, setSubscriptions] = useState([]);
     const [playlists, setPlaylists] = useState([]);
-    const [queue, setQueue] = useState([]);
+    const [queue, setQueue] = useState({});
+    const [queueStories, setQueueStories] = useState([]);
     const addPlaylistSetter = createSetter(playlists, setPlaylists, { push: true });
     // console.log('addPlaylistSetter: ', addPlaylistSetter);
     // const [loading, setLoading] = useState(false);
+
+    function queueSetter(info){
+        const { queue: queueI, stories: storiesI } = info;
+        setQueue(queueI);
+        setQueueStories(storiesI);
+        console.log('queueSetter.  queue is: ', queueI, ', queueStories is: ', storiesI);
+    }
+
     console.log('render!', user_id)
     useEffect(() => {
         get_private(axP, nav, loc, 'search', { _id: user_id, setter: setSearches });
         get_private(axP, nav, loc, 'subscription/listener', { _id: user_id, setter: setSubscriptions });
         get_private(axP, nav, loc, 'playlist/user', { setter: setPlaylists });
-        get_private(axP, nav, loc, 'playlist/queue', { setter: setQueue });
+        get_private(axP, nav, loc, 'playlist/queue', { setter: queueSetter });
         // get_private(axP, nav, loc, 'playlist/myBaskets', { _id: user_id, setter: setPlaylists });
         // get_private(axP, nav, loc, 'queue', { _id: user_id, setter: setQueue });
         
@@ -50,7 +63,7 @@ export default function Listener(){
     // }
 
     // console.log(queryParamString(query))
-    console.log('queue is: ', queue, queue.story_ids);
+    // console.log('queue is: ', queue, queue.story_ids);
     return(<div className='main'>
         <div className="hearAStory">
         <h1 className="consulting">Hear a Story</h1>
@@ -94,21 +107,15 @@ export default function Listener(){
                 MyQueue <br />
                 (Where does this go?)
             </div>
-            { queue && queue.story_ids && queue.story_ids.map((item)=>{
+            { queueStories && queueStories.length && queueStories.map((story)=>{
                 return (<LinkListItem 
-                    key={item._id} 
+                    key={ story._id } 
                     to= "/listenerSingleStory" 
-                    name={ item.title } 
-                    _id = { item._id }
+                    name={ story.title } 
+                    _id = { story._id }
                 />)
             })}
         </div>
     </div>
     </div>)
 }
-
-
-
-{/* <div className='main'>
-<ListenerPlaylist playlistName="Jommys"/>        
-</div> */}

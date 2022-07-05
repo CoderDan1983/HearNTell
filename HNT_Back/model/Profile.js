@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const Profile = new Schema({
   name: String,
-  account_id: String,
+  user_id: String,
   image_url: String,
   about_me: String,
 }, 

@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
 import useAuth from '../../../hooks/useAuth';
 import axios from '../../../api/axios';
-const PROFILE_URL = '/creator/updateCreatorProfile'; 
+// const PROFILE_URL = '/creator/updateCreatorProfile'; 
+const PROFILE_URL = '/creator/profile'; 
     // '../../../../public/user-icon.png'
 
 export default function CreatorHomepage({ 

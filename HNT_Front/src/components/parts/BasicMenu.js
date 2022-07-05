@@ -1,12 +1,17 @@
 //@ Taken from material ui website, so to speak :)
 
 import { useState } from 'react';
-import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import MenuIcon from '@mui/icons-material/Menu';
 
-export default function BasicMenu() {
-  const [anchorEl, setAnchorEl] = useState(null);
+//* the general are true for all BasicMenus in a group.
+//* the special is unique to this basic menu 
+//*(but the same for all menuitems in this basic menu) :)
+
+export default function BasicMenu({ menu }) {
+  const [ anchorEl, setAnchorEl ] = useState(null);
+  const { general, special } = menu;
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -17,27 +22,35 @@ export default function BasicMenu() {
 
   return (
     <div>
-      <Button
+      <MenuIcon 
         id="basic-button"
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-      >
-        Dashboard
-      </Button>
+        onClick={ handleClick } 
+      />
       <Menu
         id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
+        anchorEl={ anchorEl }
+        open={ open }
         onClose={handleClose}
         MenuListProps={{
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        { general && general.length && general.map((item, i) => {
+          return (
+            <MenuItem 
+              onClick={ (e) => {
+                item.handleClick(e, i, { general, special } )
+                handleClose(e);
+              }}
+              key = { i }
+            >
+              { item.title }
+            </MenuItem>
+          )
+        })}
       </Menu>
     </div>
   );
