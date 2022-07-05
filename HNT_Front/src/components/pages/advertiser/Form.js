@@ -3,7 +3,7 @@ import '../../../index.css';
 export default function Form({ title="Create an Ad", button_name="Create"}){
     return(
         <div>
-            <h1>{title} </h1>
+            {/* <h1>{title} </h1>
             <form id="campaignForm" ref= { formRef }>
                 <label htmlFor="Name">Name of Ad: </label>
                 <input 
@@ -28,7 +28,7 @@ export default function Form({ title="Create an Ad", button_name="Create"}){
 
 
                 <button type="button" onClick={submitFormHandler}>{button_name}</button>
-            </form>
+            </form> */}
         </div>
     )
 }

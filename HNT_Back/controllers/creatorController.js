@@ -64,13 +64,18 @@ const saveProfile = async (req, res) => {
 //* Get creator profile
 //? should there be two seperate versions: one to see own, and the other to see others?
 const showProfile = async (req, res) => {
-  const { _id: user_id } = await User.findOne({ username: req.user }); //* a) get variables
-  let { profile_id } = req.params;
-
+  let { creator_id } = req.params;
   // console.log('showProfile.  req.params is: ', req.params);
   //* b) if a profile_id was sent over, use that.  Otherwise, view your own profile :D
-  let profile = (profile_id === "self") ? await Profile.findOne({ user_id }) 
-    : await Profile.findOne({ _id: profile_id });
+
+  let profile =  await Profile.findOne({ user_id: creator_id }).populate("creator", "username name");
+
+  if(!profile){
+    await Profile.create({ user_id: creator_id, creator: creator_id });
+    profile =  await Profile.findOne({ user_id: creator_id }).populate("creator", "username name");
+  }
+  // profile.creator = creator_id;
+  // profile.save();
 
   console.log('showProfile returning: ', profile);
   res.json(profile); //* c) return profile :)

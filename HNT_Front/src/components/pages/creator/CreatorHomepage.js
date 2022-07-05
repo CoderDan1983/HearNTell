@@ -51,7 +51,7 @@ export default function CreatorHomepage({ name, imageUrl }){
     //     handleClick: (e, i { general, special: story }) => { console.log('running') },
     //     playlist: 'something',
     //     title: "bobby",
-    // }];
+    // }];/creatorProfile/edit
 
     return(
         <>
@@ -59,7 +59,7 @@ export default function CreatorHomepage({ name, imageUrl }){
 
             <TagsInput selectedTags={ selectedTags } />
             <LinkListItem name="View My Profile" to= { `/creatorProfile/${ user_id }` } />
-            <LinkListItem name="Edit Profile" to="/creatorProfile/edit" />
+            <LinkListItem name="Edit Profile" to="/editCreatorProfile" />
             <LinkListItem name="Add Story" to="/creatorAddStory" />
 
             <div>

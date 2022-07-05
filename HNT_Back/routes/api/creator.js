@@ -17,7 +17,8 @@ router.route('/profile/')
 
 // Get creator profile                         GET /api/creator/{account_id}
 // router.route('/:account_id')
-router.route('/profile/:profile_id')
+// router.route('/profile/:profile_id')
+router.route('/profile/:creator_id')
     .get(verifyRoles(ROLES_LIST.Member), creatorController.showProfile);
 
 // Subscription requests                         GET /api/creator/{account_id}/subscription_requests
