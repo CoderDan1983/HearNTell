@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const Profile = new Schema({
   creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   user_id: String,
-  image_url: String,
+  image_name: String,
+  // image_file: Object,
   about_me: String,
 }, 
 { 

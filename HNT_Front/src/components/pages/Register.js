@@ -16,7 +16,7 @@ const Register = () => {
     const emailRef = useRef();
     const errRef = useRef();
 
-    const [user, setUser] = useState('');
+    const [name, setName] = useState('');
     const [validName, setValidName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
 
@@ -43,8 +43,8 @@ const Register = () => {
     }, [])
 
     useEffect(() => {
-        setValidName(USER_REGEX.test(user));
-    }, [user])
+        setValidName(USER_REGEX.test(name));
+    }, [name])
 
     useEffect(() => {
         setValidEmail(EMAIL_REGEX.test(email));
@@ -57,12 +57,12 @@ const Register = () => {
 
     useEffect(() => {
         setErrMsg('');
-    }, [user, email, pwd, matchPwd])
+    }, [name, email, pwd, matchPwd])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         // if button enabled with JS hack
-        const v1 = USER_REGEX.test(user);
+        const v1 = USER_REGEX.test(name);
         const v2 = PWD_REGEX.test(pwd);
         const v3 = EMAIL_REGEX.test(email);
 
@@ -71,8 +71,12 @@ const Register = () => {
             return;
         }
         try {
+            //* IMPORTANT!!!  the email and the name have been switched!!!
+            //* this seemed to be the easiest way to switch their uses.
+            //* a) the username will now refer to the email, and when people login, they will essentially be using their email!
+            //* b) the "email" will now refer to their actual name!  I may be chaning more, though! :D
             const response = await axios.post(REGISTER_URL,
-                JSON.stringify({ user, pwd, email, advertise }),
+                JSON.stringify({ email, pwd, name, advertise }),
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
@@ -84,7 +88,7 @@ const Register = () => {
             setSuccess(true);
             //clear state and controlled inputs
             //need value attrib on inputs for this
-            setUser('');
+            setName('');
             setEmail('');
             setPwd('');
             setMatchPwd('');
@@ -92,7 +96,7 @@ const Register = () => {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response?.status === 409) {
-                setErrMsg('Username Taken');
+                setErrMsg('Name Taken');
             } else {
                 setErrMsg('Registration Failed')
             }
@@ -115,9 +119,9 @@ const Register = () => {
                     <h1>Register</h1>
                     <form onSubmit={handleSubmit}>
                         <label htmlFor="username">
-                            Username:
+                            Name:
                             <FontAwesomeIcon icon={faCheck} className={validName ? "valid" : "hide"} />
-                            <FontAwesomeIcon icon={faTimes} className={validName || !user ? "hide" : "invalid"} />
+                            <FontAwesomeIcon icon={faTimes} className={validName || !name ? "hide" : "invalid"} />
                         </label>
                         
                         <input
@@ -125,15 +129,15 @@ const Register = () => {
                             id="username"
                             ref={userRef}
                             autoComplete="off"
-                            onChange={(e) => setUser(e.target.value)}
-                            value={user}
+                            onChange={(e) => setName(e.target.value)}
+                            value={name}
                             required
                             aria-invalid={validName ? "false" : "true"}
                             aria-describedby="uidnote"
                             onFocus={() => setUserFocus(true)}
                             onBlur={() => setUserFocus(false)}
                         />
-                        <p id="uidnote" className={userFocus && user && !validName ? "instructions" : "offscreen"}>
+                        <p id="uidnote" className={userFocus && name && !validName ? "instructions" : "offscreen"}>
                             <FontAwesomeIcon icon={faInfoCircle} />
                             4 to 24 characters.<br />
                             Must begin with a letter.<br />

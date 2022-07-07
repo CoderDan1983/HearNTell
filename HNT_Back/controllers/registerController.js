@@ -3,12 +3,12 @@ const Playlist = require('../model/Playlist');
 
 const bcrypt = require('bcrypt');
 const handleNewUser = async (req, res) => {
-    
-    const { user, pwd } = req.body;
-    if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' });
+    console.log('registerController, handleNewUser recieved: ', req.body);
+    const { email, name, pwd, advertise } = req.body; //* keep name in here!?!
+    if (!email || !pwd) return res.status(400).json({ 'message': 'Email and password are required.' });
     
     // check for duplicate usernames in the db
-    const duplicate = await User.findOne({ username: user }).exec();
+    const duplicate = await User.findOne({ username: email }).exec();
     if (duplicate) return res.sendStatus(409); //Conflict 
     
     try {
@@ -17,7 +17,8 @@ const handleNewUser = async (req, res) => {
 
         //create and store the new user
         const createdUser = await User.create({
-            "username": user,
+            "username": email,
+            name,
             //"roles": { "User": 2001, "Editor": 1984 },
             //"roles": { "User": 2001 }, //inserted by schema so unneeded ^_^
             "password": hashedPwd
@@ -35,7 +36,7 @@ const handleNewUser = async (req, res) => {
         });
         // console.log('playlist is: ', playlist);
 
-        res.status(201).json({ 'success': `New user ${user} created!` });
+        res.status(201).json({ 'success': `New user ${ email } created!` });
     } catch (err) {
         res.status(500).json({ 'message': err.message });
     }

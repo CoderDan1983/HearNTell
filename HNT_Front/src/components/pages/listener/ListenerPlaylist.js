@@ -61,7 +61,8 @@ export default function ListenerPlaylist({ playlistName }){
                         <StoryItem 
                             story = { story }
                             key= { index }
-                            to= { `/listener/${story._id}` }
+                            // to= { `/listener/${story._id}` }
+                            to= { `/listenerSingleStory/${story._id}` }
                             IcoArray = { [{ Icon: DeleteForever }] }
                         />
                     </div>))

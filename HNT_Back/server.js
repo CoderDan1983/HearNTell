@@ -29,7 +29,9 @@ app.use(credentials);
 app.use(cors(corsOptions));
 
 // built-in middleware to handle urlencoded form data
-app.use(fileupload());
+app.use(fileupload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+}));
 app.use(express.urlencoded({ extended: true })); //originally --> false
 
 // built-in middleware for json 
@@ -40,6 +42,8 @@ app.use(cookieParser());
 
 //serve static files
 app.use('/', express.static(path.join(__dirname, '/public')));
+app.use('/images', express.static(path.join(__dirname, '/public/images'))); ///src/images
+// app.use('/', express.static(path.join(__dirname, '/public')));
 
 // routes
 app.use('/', require('./routes/root'));

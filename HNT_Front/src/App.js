@@ -72,7 +72,7 @@ function App() {
           <Route element={ <RequiredAuth allowedRoles={[ ROLES.Member ]}/> }>
             <Route path="editor" element = { <Editor /> } /> {/* tutorial route */}
             <Route path="creatorHomepage" element = { <CreatorHomepage /> } />
-            <Route path="editCreatorProfile" element = { <EditCreatorProfile /> } />
+            <Route path="editCreatorProfile/:creator_id" element = { <EditCreatorProfile /> } />
             <Route path="creatorAddStory" element = { <AddEditStory /> } />
             <Route path="creatorEditStory/:story_id" element = { <AddEditStory /> } />
             <Route path="creatorAccessRequests" element = { <CreatorAccessRequests /> } />

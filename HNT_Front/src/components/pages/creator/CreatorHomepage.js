@@ -1,10 +1,11 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { createPlaylistMenu } from '../../../hooks/useMenus';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import AudioItem from "./AudioItem";
 import StoryItem from '../../parts/StoryItem';
+
 // import useAuth from "../../../hooks/useAuth";
 import './../../../index.css';
 
@@ -23,16 +24,25 @@ export default function CreatorHomepage({ name, imageUrl }){
     const [ stories, setStories ] = useState([]);
     // const [ selectedIndex, setSelectedIndex ] = useState(-1);
     const [ playlists, setPlaylists ] = useState([]);
-    const [ profile, setProfile ] = useState({});
+    // const [ profile, setProfile ] = useState({});
+    const [ userId, setUserId ] = useState("");
+    const userIdRef = useRef("");
+    
+    console.log("user_id is: ", userIdRef.current);
+    
+    // console.log('profile is: ', profile)
+    function setPlaylistsAndUserId(info){
+        setPlaylists(info);
+        info.length && setUserId(info[0]["user_id"]);
+        console.log('info is: ', info);
+    }
 
-    const user_id = playlists.length? playlists[0]["user_id"] : "";
-    console.log("user_id is: ", user_id);
-    console.log('profile is: ', profile)
+    console.log('userId is: ', userId);
 
     useEffect(()=>{
         // get_private(axP, nav, loc, 'creator/profile/self', { setter: setProfile }); //, { _id: "..." }
         get_private(axP, nav, loc, 'story/creator', { setter: setStories }); //, { _id: "..." }
-        get_private(axP, nav, loc, 'playlist/user', { _id: "all", setter: setPlaylists });
+        get_private(axP, nav, loc, 'playlist/user', { _id: "all", setter: setPlaylistsAndUserId });
     },[nav, loc, axP]);
 
     // console.log('playlists are: ', playlists);
@@ -53,13 +63,15 @@ export default function CreatorHomepage({ name, imageUrl }){
     //     title: "bobby",
     // }];/creatorProfile/edit
 
+    
+
     return(
         <>
             <h1>Welcome, { name }</h1>
 
             <TagsInput selectedTags={ selectedTags } />
-            <LinkListItem name="View My Profile" to= { `/creatorProfile/${ user_id }` } />
-            <LinkListItem name="Edit Profile" to="/editCreatorProfile" />
+            <LinkListItem name="View My Profile" to= "/creatorProfile" _id = { userId } />
+            <LinkListItem name="Edit Profile" to="/editCreatorProfile" _id = { userId } />
             <LinkListItem name="Add Story" to="/creatorAddStory" />
 
             <div>
@@ -74,7 +86,7 @@ export default function CreatorHomepage({ name, imageUrl }){
                         <div key={`wrapper_${i}`} className="two">
                             <StoryItem 
                             // IcoArray = { IcoArray } 
-                            story={ story } to= "/" key={`story_${i}`} menu = { menu } />
+                            story={ story } to= { `/listenerSingleStory/${story._id}` } key={`story_${i}`} menu = { menu } />
                             
                             
                         </div>
