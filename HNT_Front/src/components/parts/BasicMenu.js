@@ -12,6 +12,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 export default function BasicMenu({ menu }) {
   const [ anchorEl, setAnchorEl ] = useState(null);
   const { general, special } = menu;
+  console.log('basicMenu.  menu is: ', menu);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

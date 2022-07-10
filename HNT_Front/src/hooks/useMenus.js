@@ -1,60 +1,73 @@
 import { post_private, delete_private } from './useBackendRequest';
 
-export function playlistsMenu({ nav, loc, axP }, rawPlaylists = [], story, subscriptions, is_creator_list){
-    let playlists = [];
-    
-    rawPlaylists
-        .sort()
-        .filter((list)=> list.is_creator_list === is_creator_list)
-        .forEach((playlist)=> {
-            const play_subbed = followingPlaylist(playlist);            
-            playlists.push({ //* creator, listener
-                title: `Remove ${ playlist.title } playlist`,
-                playlist,
-                handleClick: handleRemovePlaylist,
-            });
+export function playlistsMenu({ nav, loc, axP }, playlist, story, subscriptions, options){
+    let menu = [];
 
-            //* if a "subscribed" listener with a status of approved or pending, deal with accordingly.
-            !is_creator_list && play_subbed.length && 
-            play_subbed[0].status !== "rejected" &&
-            playlists.push({ //*listener
-                title: play_subbed[0].status === "approved" ? 
-                    `Unsubscribe from ${ playlist.title }` : 
-                    `Cancel Subscription Request to ${ playlist.title }`,
-                info: { subscription_id: play_subbed[0]._id }, //playlist
-                handleClick: handleDeleteSubscription,
-            });
-            //* if a listener and "non subscribed", give option to subscribe
-            !is_creator_list && !play_subbed.length && 
-            playlists.push({ //*listener
-                title: `Subscribe to ${ playlist.title }`,
-                //* req.user will be available on server ^_^ 
-                info: { creator_id: playlist.creator_id, playlist_id: playlist._id, }, //playlist
-                handleClick: handleCreateSubscriptionRequest,
-            });
-        });
+    const { creator_mode, can_remove_playlist, subscribe_option } = options;
+    console.log('playlistsMenu, line 5.  rawPlaylists is: ', playlist);
+    // rawPlaylists
+    //     .sort()
+    //     .filter((list)=> { 
+    //         //console.log('line 9.  it is ' + list.creator_mode + " vs " + creator_mode)
+    //         return list.is_creator_list === creator_mode;
+    //     })
+    //     .forEach((playlist)=> {
 
-    const followCreator = (subscriptions && subscriptions.length) && 
-        subscriptions.filter((sub)=> sub.creator_id === story.creator._id);
-    const is_following_creator = (followCreator && followCreator.length) ? true : false;
-
-    //* if not subscribed, offer the opportunity to subscribe
-    !is_creator_list && (!is_following_creator) && playlists.push({
-        title: `Subscribe to ${story?.creator?.name}`,
-        handleClick: handleCreateSubscriptionRequest,
+    //case 0: a creator is at their homepage.  They should be able to remove their playlist :)
+    //case 1: a listener is at someone else's page.  They should NOT be able to remove the playlist.
+    //case 2:  a listener is at their listener page.  They SHOULD be able to remove their playlist :)
+    const playlist_subscription = followingPlaylist(playlist, subscriptions);
+    const playlist_subscribed = (playlist_subscription && playlist_subscription.length) ? true : false;
+    console.log('for ' + playlist.title + ", playlist_subscription is ", playlist_subscription)         
+    can_remove_playlist && menu.push({ //* creator, listener.  If it's here, we'll have the option to remove the playlist :)
+        title: `Remove ${ playlist.title } playlist`,
+        playlist,
+        handleClick: handleRemovePlaylist,
     });
 
-    //* if "subscribed" and not rejected, offer opportunity to cancel request ^_^
-    !is_creator_list && is_following_creator && 
-    (followCreator[0].status !== "rejected") &&
-    playlists.push({
-        title: followCreator[0].status === "approved" ? 
-            `Unsubscribe from ${ followCreator[0].creator.name }` :    
-            `Cancel Subscription Request to ${ followCreator[0].creator.name }`,
-        handleClick: handleCreateSubscriptionRequest,
-    }); 
 
-    let playlistStarter = [...playlists];
+
+    if((!creator_mode)&&subscribe_option) { //* only listeners have the option to subscribe/unsubscribe :)
+        //@ subscribe to playlist options.
+        //* if a "subscribed" listener with a status of approved or pending, deal with accordingly.
+        playlist_subscribed && playlist_subscription[0].status !== "rejected" &&
+        menu.push({ //*listener
+            title: playlist_subscription[0].status === "approved" ? 
+                `Unsubscribe from ${ playlist.title }` : 
+                `Cancel Subscription Request to ${ playlist.title }`,
+            info: { subscription_id: playlist_subscription[0]._id }, //playlist
+            handleClick: handleDeleteSubscription,
+        });
+
+        //* if a listener and "non subscribed", give option to subscribe
+        !playlist_subscribed && menu.push({ //*listener
+            title: `Subscribe to ${ playlist.title }`,
+            //* req.user will be available on server ^_^ 
+            info: { creator_id: playlist.creator_id, playlist_id: playlist._id, }, //playlist
+            handleClick: handleCreateSubscriptionRequest,
+        });
+
+        const followCreator = (subscriptions && subscriptions.length) && 
+            subscriptions.filter((sub)=> sub.creator_id === story.creator._id);
+        const is_following_creator = (followCreator && followCreator.length) ? true : false;
+
+        //@ subscribe to creator options
+        //* if not subscribed, offer the opportunity to subscribe
+        (!is_following_creator) && menu.push({
+            title: `Subscribe to ${story?.creator?.name}`,
+            handleClick: handleCreateSubscriptionRequest,
+        });
+
+        //* if "subscribed" and not rejected, offer opportunity to cancel request ^_^
+        is_following_creator && (followCreator[0].status !== "rejected") &&menu.push({
+            title: followCreator[0].status === "approved" ? 
+                `Unsubscribe from ${ followCreator[0].creator.name }` :    
+                `Cancel Subscription Request to ${ followCreator[0].creator.name }`,
+            handleClick: handleCreateSubscriptionRequest,
+        }); 
+    }
+
+    let playlistStarter = [...menu];
 
     function handleCreateSubscriptionRequest(event, index, payload){ //user_id, creator_id, playlist_id
         post_private(axP, nav, loc, 'subscription/', { payload }); //* listener
@@ -70,11 +83,11 @@ export function playlistsMenu({ nav, loc, axP }, rawPlaylists = [], story, subsc
         delete_private(axP, nav, loc, `playlist/${ playlist_id }`, { });
     }
 
-    function followingPlaylist(playlist){
+    function followingPlaylist(playlist, subscriptions){
         return subscriptions.filter((sub) => sub.playlist_id === playlist._id);
     }
 
-    // subscriptions.some((sub)=> playlists.some((play) => sub.playlist_id === play._id));
+    // subscriptions.some((sub)=> menu.some((play) => sub.playlist_id === play._id));
 
     return playlistStarter;
 }

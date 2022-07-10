@@ -11,6 +11,8 @@ import SearchComponent from '../../parts/SearchComponent';
 import LinkListItem from '../../parts/LinkListItem';
 import ModalWrapper from '../../parts/ModalWrapper';
 import CreatePlaylist from './CreatePlaylist';
+import { storyMenu, playlistsMenu } from '../../../hooks/useMenus';
+
 // import ListenerPlaylist from './ListenerPlaylist';
 // import { fakeStories, fakeStories1, fakeTags, fakeSearches, fakeSubList, fakeBaskets, 
 //     fakeQueue } from '../../fakeApi/fakeStories';
@@ -29,11 +31,16 @@ export default function Listener(){
     const params = useParams()
     const user_id = params.user_id || "0a"; //* default testing value :)
     const [searches, setSearches] = useState([]);
-    const [subscriptions, setSubscriptions] = useState([]);
-    const [playlists, setPlaylists] = useState([]);
+    
+    const [ mySubscriptions, setMySubscriptions ] = useState([]);
+
+    const [myPlaylists, setMyPlaylists] = useState([]);
+    const forPlaylistsMenu = { nav, loc, axP };
+    const playlistOptions = { creator_mode: false, can_remove_playlist: true, subscribe_option: false };
+
     const [queue, setQueue] = useState({});
     const [queueStories, setQueueStories] = useState([]);
-    const addPlaylistSetter = createSetter(playlists, setPlaylists, { push: true });
+    const addPlaylistSetter = createSetter(myPlaylists, setMyPlaylists, { push: true });
     // console.log('addPlaylistSetter: ', addPlaylistSetter);
     // const [loading, setLoading] = useState(false);
 
@@ -47,18 +54,18 @@ export default function Listener(){
     console.log('render!', user_id)
     useEffect(() => {
         get_private(axP, nav, loc, 'search', { _id: user_id, setter: setSearches });
-        // get_private(axP, nav, loc, 'subscription/listener', { _id: user_id, setter: setSubscriptions });
-        get_private(axP, nav, loc, 'subscription/account', { setter: setSubscriptions });
+        // get_private(axP, nav, loc, 'subscription/listener', { _id: user_id, setter: setMySubscriptions });
+        get_private(axP, nav, loc, 'subscription/account', { setter: setMySubscriptions });
         
-        get_private(axP, nav, loc, 'playlist/user', { setter: setPlaylists });
+        get_private(axP, nav, loc, 'playlist/user', { setter: setMyPlaylists });
         get_private(axP, nav, loc, 'playlist/queue', { setter: queueSetter });
-        // get_private(axP, nav, loc, 'playlist/myBaskets', { _id: user_id, setter: setPlaylists });
+        // get_private(axP, nav, loc, 'playlist/myBaskets', { _id: user_id, setter: setMyPlaylists });
         // get_private(axP, nav, loc, 'queue', { _id: user_id, setter: setQueue });
         
         console.log('listener should be loaded this render :) ');
     },[axP, nav, loc, user_id]);
 
-    console.log('subscriptions are : ', subscriptions)
+    console.log('mySubscriptions are : ', mySubscriptions)
 
     // const query = {
     //     sortBy: "age",
@@ -77,7 +84,7 @@ export default function Listener(){
         <div className="mainItems">
             <div>
                 People I subscribe to
-                { subscriptions && subscriptions.map((sub)=>{
+                { mySubscriptions && mySubscriptions.map((sub)=>{
                     return (<LinkListItem 
                         key={sub._id} 
                         to= "/creatorProfile"
@@ -91,8 +98,11 @@ export default function Listener(){
         <div className="mainItems">
             <div>
                 My Playlists
-                { console.log('playlists is: ', playlists)}
-                { playlists && playlists.map((playlist)=>{
+                { console.log('myPlaylists is: ', myPlaylists)}
+                { myPlaylists && myPlaylists.map((playlist)=>{
+                    const playlistMenu = { 
+                        general: playlistsMenu(forPlaylistsMenu, playlist, null, mySubscriptions, playlistOptions),
+                    }
                     return (
                         !playlist.is_creator_list ? 
                         <LinkListItem 
@@ -100,6 +110,7 @@ export default function Listener(){
                             to= "/listenerPlaylist"
                             name={ playlist.title }
                             _id = { playlist._id } 
+                            menu = { playlistMenu }
                         /> : 
                         <div key={ playlist._id }></div>
                     ) 

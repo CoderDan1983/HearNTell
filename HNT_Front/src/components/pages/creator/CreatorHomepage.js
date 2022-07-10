@@ -26,6 +26,7 @@ export default function CreatorHomepage({ name, imageUrl }){
     const goTo = '../creatorHomepage';
     const forStoryMenu = { nav, loc, axP, goTo };
     const forPlaylistsMenu = { nav, loc, axP };
+    const playlistOptions = { creator_mode: true, can_remove_playlist: true, subscribe_option: false };
     const [ stories, setStories ] = useState([]);
     const [ subscribers, setSubscribers ] = useState([{}]);
     // const [ selectedIndex, setSelectedIndex ] = useState(-1);
@@ -90,8 +91,11 @@ export default function CreatorHomepage({ name, imageUrl }){
                     <div>
                         Created Playlists
                         { console.log('playlists is: ', playlists)}
-                        { playlists && playlists.map((playlist, i)=>{
-                            const playlistMenu = playlistsMenu(forPlaylistsMenu, playlists, null, true)
+                        { playlists && playlists.map((playlist, i)=>{ //story is currently 'null' ^_^
+                            const playlistMenu = {
+                                general: playlistsMenu(forPlaylistsMenu, playlist, null, subscribers, playlistOptions),
+                            }
+                            console.log('95.  playlistMenus is: ', playlistMenu);
                             return (
                                 playlist.is_creator_list ? 
                                 <LinkListItem 
