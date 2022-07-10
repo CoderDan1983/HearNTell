@@ -99,7 +99,7 @@ const saveProfile = async (req, res) => {
   const truncated = req.files?.file?.truncated;
   const name = req.body.name || "";
   const about_me = req.body.about_me || "";
-  const image_file = (!truncated && req.files?.image_file) || undefined; //{}
+  const image_file = (!truncated && req.files?.image_file) || undefined;
   // const image_data = (image_file && image_file.data && image_file.data) || undefined;
   const image_name =  image_file ? user_id + "_" + image_file.name : undefined;
   const profile_data = { creator: user_id, user_id, image_name,  about_me } //image_file
@@ -149,6 +149,7 @@ const showProfile = async (req, res) => {
   res.json(profile); //* c) return profile :)
 };
 
+//? Are these three functions in the right place (?)
 //* Get Subscription requests for this creator
 const subscriptionRequests = async (req, res) => {
   const user_id = req.params.user_id;
@@ -166,7 +167,7 @@ const subscriptionsApproved = async (req, res) => {
 //* Get subscription requests that are pending for this creator
 const subscriptionsPending = async (req, res) => {
   const user_id = req.params.user_id;
-  let pending_subscription_requests = await SubscriptionRequest.find({creator_user_id: user_id, aproved: false});
+  let pending_subscription_requests = await SubscriptionRequest.find({creator_user_id: user_id, approved: false});
   res.json(pending_subscription_requests);
 };
 

@@ -24,6 +24,10 @@ router.route('/')
 router.route('/user') //# '/user/:account_id'
     .get(verifyRoles(ROLES_LIST.Member), playlistController.userPlaylists);
 
+//     Get playlists for creator                      GET /api/playlist/user/{account_id}
+router.route('/creator/:creator_id') //# '/user/:account_id'
+    .get(verifyRoles(ROLES_LIST.Member), playlistController.creatorPlaylists);
+
 router.route('/user/:grab_type') //# '/user/:account_id'
     .get(verifyRoles(ROLES_LIST.Member), playlistController.userPlaylists);
 

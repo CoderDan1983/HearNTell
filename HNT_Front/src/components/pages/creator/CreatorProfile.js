@@ -12,30 +12,32 @@ import TagsInput from "../../parts/TagsInput";
 
 import ProfileComponent from "../../parts/ProfileComponent";
 import LinkListItem from "../../parts/LinkListItem";
-import { createPlaylistMenu } from '../../../hooks/useMenus';
+import { storyMenu } from '../../../hooks/useMenus';
 import { get_private, post_private, delete_private } from '../../../hooks/useBackendRequest';
 
 
-export default function CreatorProfile(){
+export default function CreatorProfile(){    
     const nav = useNavigate();
     const loc = useLocation();
     const axP = useAxiosPrivate();
     const goTo = "/";
     const forTheMenu = { nav, loc, axP, goTo }
     const { creator_id } = useParams();
-    const [ profile, setProfile ] = useState({});
+    const [ profile, setProfile ] = useState();
+    const [playlists, setPlaylists] = useState([]);
     useEffect(()=>{
         // get_private(axP, nav, loc, 'story/creator', { setter: setStories }); //, { _id: "..." }
-        // get_private(axP, nav, loc, 'playlist/user', { _id: "all", setter: setPlaylists });
+        get_private(axP, nav, loc, 'playlist/creator', { _id: creator_id, setter: setPlaylists });
         get_private(axP, nav, loc, `creator/profile/${creator_id}`, { setter: setProfile });
     },[nav, loc, axP, creator_id]);
 
     console.log('profile is: ', profile);
+    console.log('playlists is: ', playlists);
 
     return(
         <>
             <h1 className="home">Creator Profile Page</h1>
-            <ProfileComponent profile = { profile } />
+            { profile && <ProfileComponent profile = { profile } /> }
             <form>
 
             </form>

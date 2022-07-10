@@ -5,7 +5,7 @@ import { post_formData, logFormData } from '../../../hooks/useBackendRequest';
 
 import '../../../index.css'
 import { ModalContext } from '../../parts/ModalWrapper';
-export default function CreatePlaylist({ setter }){
+export default function CreatePlaylist({ setter, is_creator_list }){
     const axP = useAxiosPrivate();
     const nav = useNavigate();
     const loc = useLocation();
@@ -18,6 +18,7 @@ export default function CreatePlaylist({ setter }){
 
         const form = document.getElementById("playlistForm");
         const formData = form ? new FormData(form) : new FormData();
+        formData.append("is_creator_list", is_creator_list);
 
         console.log('formData is: ', logFormData(formData));
 

@@ -1,10 +1,13 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
-import { createPlaylistMenu } from '../../../hooks/useMenus';
+import { storyMenu, playlistsMenu } from '../../../hooks/useMenus';
 import { useEffect, useState, useRef } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import AudioItem from "./AudioItem";
 import StoryItem from '../../parts/StoryItem';
+
+import ModalWrapper from '../../parts/ModalWrapper';
+import CreatePlaylist from '../listener/CreatePlaylist';
 
 // import useAuth from "../../../hooks/useAuth";
 import './../../../index.css';
@@ -14,19 +17,24 @@ import TagsInput from "../../parts/TagsInput";
 import LinkListItem from "../../parts/LinkListItem";
 
 import { get_private } from '../../../hooks/useBackendRequest';
+import { createSetter } from '../../../custom_modules_front/utility_front';
 
 export default function CreatorHomepage({ name, imageUrl }){
     const nav = useNavigate();
     const loc = useLocation();
     const axP = useAxiosPrivate();
     const goTo = '../creatorHomepage';
-    const forTheMenu = { nav, loc, axP, goTo }
+    const forStoryMenu = { nav, loc, axP, goTo };
+    const forPlaylistsMenu = { nav, loc, axP };
     const [ stories, setStories ] = useState([]);
+    const [ subscribers, setSubscribers ] = useState([{}]);
     // const [ selectedIndex, setSelectedIndex ] = useState(-1);
     const [ playlists, setPlaylists ] = useState([]);
     // const [ profile, setProfile ] = useState({});
     const [ userId, setUserId ] = useState("");
     const userIdRef = useRef("");
+
+    const addPlaylistSetter = createSetter(playlists, setPlaylists, { push: true });
     
     console.log("user_id is: ", userIdRef.current);
     
@@ -41,11 +49,12 @@ export default function CreatorHomepage({ name, imageUrl }){
 
     useEffect(()=>{
         // get_private(axP, nav, loc, 'creator/profile/self', { setter: setProfile }); //, { _id: "..." }
+        get_private(axP, nav, loc, 'subscription/subscribers', { setter: setSubscribers }); //, { _id: "..." }
         get_private(axP, nav, loc, 'story/creator', { setter: setStories }); //, { _id: "..." }
         get_private(axP, nav, loc, 'playlist/user', { _id: "all", setter: setPlaylistsAndUserId });
     },[nav, loc, axP]);
 
-    // console.log('playlists are: ', playlists);
+    console.log('subscribers are: ', subscribers);
     // const auth = useAuth();
     // const accessToken = auth?.accessToken;
 
@@ -73,13 +82,35 @@ export default function CreatorHomepage({ name, imageUrl }){
             <LinkListItem name="View My Profile" to= "/creatorProfile" _id = { userId } />
             <LinkListItem name="Edit Profile" to="/editCreatorProfile" _id = { userId } />
             <LinkListItem name="Add Story" to="/creatorAddStory" />
-
+            <ModalWrapper buttonTitle="Create Playlist">
+                <CreatePlaylist is_creator_list = { true } setter = { addPlaylistSetter } />
+            </ModalWrapper>
             <div>
+                <div className="mainItems">
+                    <div>
+                        Created Playlists
+                        { console.log('playlists is: ', playlists)}
+                        { playlists && playlists.map((playlist, i)=>{
+                            const playlistMenu = playlistsMenu(forPlaylistsMenu, playlists, null, true)
+                            return (
+                                playlist.is_creator_list ? 
+                                <LinkListItem 
+                                    key={ playlist._id } 
+                                    to= "/listenerPlaylist"
+                                    name={ playlist.title }
+                                    _id = { playlist._id } 
+                                    menu = { playlistMenu }
+                                /> : 
+                                <div key={ playlist._id } ></div>
+                            ) 
+                        })}
+                    </div>
+                </div>
                 <h2>My Stories</h2>
                 { stories.map((story, i)=>{
 
                     const menu = {
-                        general: createPlaylistMenu(forTheMenu, playlists, story, true)
+                        general: storyMenu(forStoryMenu, playlists, story, true)
                     }
                     
                     return (

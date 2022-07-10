@@ -4,9 +4,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const SubscriptionRequest = new Schema({
-  listener_account_id: String,
-  creator_account_id: String,
-  playlist_id: String,
+  listener_id: String,
+  creator_id: String,
+  // playlist_id: String,
   approved: {
     type: Boolean,
     default: false

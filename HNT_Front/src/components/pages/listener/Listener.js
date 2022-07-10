@@ -47,7 +47,9 @@ export default function Listener(){
     console.log('render!', user_id)
     useEffect(() => {
         get_private(axP, nav, loc, 'search', { _id: user_id, setter: setSearches });
-        get_private(axP, nav, loc, 'subscription/listener', { _id: user_id, setter: setSubscriptions });
+        // get_private(axP, nav, loc, 'subscription/listener', { _id: user_id, setter: setSubscriptions });
+        get_private(axP, nav, loc, 'subscription/account', { setter: setSubscriptions });
+        
         get_private(axP, nav, loc, 'playlist/user', { setter: setPlaylists });
         get_private(axP, nav, loc, 'playlist/queue', { setter: queueSetter });
         // get_private(axP, nav, loc, 'playlist/myBaskets', { _id: user_id, setter: setPlaylists });
@@ -55,6 +57,8 @@ export default function Listener(){
         
         console.log('listener should be loaded this render :) ');
     },[axP, nav, loc, user_id]);
+
+    console.log('subscriptions are : ', subscriptions)
 
     // const query = {
     //     sortBy: "age",
@@ -89,17 +93,21 @@ export default function Listener(){
                 My Playlists
                 { console.log('playlists is: ', playlists)}
                 { playlists && playlists.map((playlist)=>{
-                    return (<LinkListItem 
-                        key={ playlist._id } 
-                        to= "/listenerPlaylist"
-                        name={ playlist.title }
-                        _id = { playlist._id } 
-                    />)
+                    return (
+                        !playlist.is_creator_list ? 
+                        <LinkListItem 
+                            key={ playlist._id } 
+                            to= "/listenerPlaylist"
+                            name={ playlist.title }
+                            _id = { playlist._id } 
+                        /> : 
+                        <div key={ playlist._id }></div>
+                    ) 
                 })}
             </div>
             {/* <button>Add Playlist</button> */}
             <ModalWrapper buttonTitle="Create Playlist">
-                <CreatePlaylist setter = { addPlaylistSetter } />
+                <CreatePlaylist is_creator_list = { false } setter = { addPlaylistSetter } />
             </ModalWrapper>
         </div>
         <div className="mainItems">

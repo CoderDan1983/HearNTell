@@ -68,8 +68,8 @@ export default function CreatorHomepage(){
         const form = document.getElementById("profileForm");
         const profileData = form ? new FormData(form) : new FormData();
         console.log('profileData is: ', logFormData(profileData));
-        const goTo = '/';
-        post_formData(axP, nav, loc, 'creator/profile', { payload: profileData }); //goTo
+        const goTo = '../creatorHomepage';
+        post_formData(axP, nav, loc, 'creator/profile', { payload: profileData, goTo }); //
 
     //     try {
     //         const response = await axios.post(PROFILE_URL, //* this url is auto attached to the base url from axios.js

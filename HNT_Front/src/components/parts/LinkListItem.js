@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import '../../index.css';
 import ListenerSingleStory from '../pages/listener/ListenerSingleStory';
-export default function LinkListItem({ to, name, classy="link", PreIco, Ico, _id }){
+import BasicMenu from './BasicMenu';
+export default function LinkListItem({ to, name, classy="link", PreIco, Ico, _id, menu }){
     // _id && alert("_id is: ", _id);
     console.log('reloading LinkListItem!', name, _id)
     // return(<Link to={ `${path}/${_id}/${path1}` }>
@@ -18,6 +19,7 @@ export default function LinkListItem({ to, name, classy="link", PreIco, Ico, _id
             </div>
         </Link>
         { Ico && <Ico /> }
+        { menu && <BasicMenu menu= { menu } /> }
     </div>)
 }
 

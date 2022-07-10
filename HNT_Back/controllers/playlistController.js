@@ -63,11 +63,20 @@ const create = async (req, res) => {
     title: request_data.title,
     description: request_data.description,
     is_queue: request_data.is_queue,
+    is_creator_list: request_data.is_creator_list,
   };
   let playlist = await Playlist.create(playlist_data);
   console.log('playlist is : ', playlist)
   res.json(playlist);
 };
+
+const remove = async (req, res) => { //* remove a playlist!
+  const playlist_id = req.params.playlist_id;
+  console.log('removing playlist.  playlist_id is: ', playlist_id);
+  // let playlist = await Playlist.findOneAndDelete({_id: playlist_id});
+  // res.json(playlist);
+  res.json({ testing: "testing" })
+}
 
 //* Get playlists for user NOTE: (can now grab queue!)
 const userPlaylists = async (req, res) => {
@@ -84,7 +93,20 @@ const userPlaylists = async (req, res) => {
   for(let p=0; p < playlists.length; p++){
     console.log(playlists[p].title + " is in playlists");
   }
+  res.json(playlists);
+};
 
+//* Get playlists for creator
+const creatorPlaylists = async (req, res) => {
+  const { creator_id } = req.params;
+  
+  console.log('creatorPlaylists, 94')
+  let findObj = { user_id: creator_id, is_queue: false, is_creator_list: true }
+
+  let playlists = await Playlist.find(findObj);
+  for(let p=0; p < playlists.length; p++){
+    console.log(playlists[p].title + " is in playlists");
+  }
   res.json(playlists);
 };
 
@@ -154,12 +176,6 @@ const update = async (req, res) => {
   res.json(playlist);
 };
 
-const remove = async (req, res) => {
-  const playlist_id = req.params.playlist_id;
-  let playlist = await Playlist.findOneAndDelete({_id: playlist_id});
-  res.json(playlist);
-}
-
 //* Add story to playlist
 const addStory = async (req, res) => {
   const { _id: user_id } = await User.findOne({ username: req.user}); //@ a) set up basic variables
@@ -210,6 +226,7 @@ module.exports = {
   getPlaylist,
   getMyBaskets,
   create,
+  creatorPlaylists,
   userPlaylists,
   userQueue,
   show,
