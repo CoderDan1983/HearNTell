@@ -39,7 +39,8 @@ const user_ads = async (req, res) => {
 //* Get single ad
 const show = async (req, res) => {
   const ad_id = req.params.ad_id;
-  let ad = Ad.findOne({_id: ad_id});
+  let ad = await Ad.findOne({_id: ad_id});
+  console.log("In show", ad);
   res.json(ad);
 };
 
@@ -53,7 +54,8 @@ const update = async (req, res) => {
     duration: request_data.duration,
     file_size: request_data.file_size
   }
-  let ad = Ad.findOneAndUpdate({_id: ad_id}, ad_data);
+  console.log("Made it to ad update");
+  let ad = await Ad.findOneAndUpdate({_id: ad_id}, ad_data);
   res.json(ad);
 };
 

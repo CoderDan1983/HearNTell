@@ -1,11 +1,18 @@
 
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useMemo, useEffect, useRef } from 'react';
+// import Form from "./Form";
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
+// import useAxios from '../../'
 import '../../../index.css'
 import { post_private } from '../../../hooks/useBackendRequest';
+import axios, { axiosPrivate } from '../../../api/axios';
 
-export default function CreateAd(){
+
+import { useContext } from 'react'; 
+import { ModalContext } from '../../parts/ModalWrapper';
+
+export default function EditAd(props){
 
     const axP = useAxiosPrivate();
     const nav = useNavigate();
@@ -13,36 +20,25 @@ export default function CreateAd(){
     const formRef = useRef();
 
     const [name, setName] = useState('');
-    const [audioUrl, setAudioUrl] = useState('')
+    const [audioUrl, setAudioUrl] = useState('');
+    const ad_id = props.ad_id;
+
+    //todo Load the initial ad data into the form.
 
     useEffect(()=>{
-        let isMounted = true;
-        const controller = new AbortController();
+        const fetchData = async () => {
+            const url = "api/ad/" + ad_id;
+            const response = await axiosPrivate.get(url);
+            setAudioUrl(response.data.audio_url);
+            setName(response.data.name);
 
-        const getAd = async () => {
-            try {
-
-                //todo get ad by id
-                const response = await axiosPrivate.get('/api/ad/user', { // ./users
-                    signal: controller.signal
-                });
-      
-                isMounted && setName(response.data.name) && setAudioUrl(response.data.audioUrl) //if isMounted, then setUsers :D
-            }
-            catch (err){
-                console.log("I'm gonna log an error!")
-                console.error(err);
-                navigate('/login', { state: { from: location }, replace: true })
-            }
         }
-        getAd();
+        fetchData()
+        .catch(console.error);
+    },[]);
 
-        return () =>{ //* cleanup function ^_^
-            isMounted = false;
-            controller.abort();
-        }
-    }, [])
 
+    const { setOpen } = useContext(ModalContext);
     function submitFormHandler(e){
         e.preventDefault();
 
@@ -52,8 +48,8 @@ export default function CreateAd(){
         }
 
         console.log(adData);
-
-        post_private(axP, nav, loc, 'api/ad', { payload: adData }); 
+        const url = "api/ad/" + ad_id
+        post_private(axP, nav, loc, url, { payload: adData }); 
         nav(`/ads`, { state: { from: loc }, replace: true });
         
     }
@@ -61,8 +57,9 @@ export default function CreateAd(){
 
 
     return(<div>
-        <h1>Create Ad </h1>
-        <form id="campaignForm" ref= { formRef }>
+        <h1>Edit Ad </h1>
+        <p>{ad_id}</p>
+        <form id="campaignForm" >
             <label htmlFor="Name">Name of Ad: </label>
             <input 
                 id="name" 
@@ -82,10 +79,8 @@ export default function CreateAd(){
                 value = { audioUrl } 
                 onChange={ (e) => setAudioUrl(e.target.value) }
             />
-
-
-
-            <button type="button" onClick={submitFormHandler}>Create Ad</button>
+            <button type="button" onClick = { (e) => setOpen(false) }>Cancel</button>
+            <button type="button" onClick={submitFormHandler}>Update Ad</button>
         </form>
     </div>)
 }

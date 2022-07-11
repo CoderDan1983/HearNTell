@@ -3,6 +3,11 @@ import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { useNavigate, useLocation } from "react-router-dom";
 import Button from "../../parts/Button";
 import { Link } from 'react-router-dom';
+import EditAd from './EditAd';
+import CreateAd from './CreateAd';
+
+import ModalWrapper from "../../parts/ModalWrapper";
+
 
 
 function AdPage(){
@@ -37,14 +42,13 @@ function AdPage(){
         }
     }, [])
 
+    //* Remove ad and refreash the Ad state.
     const removeAd = async (e) => {
         e.preventDefault();
         const ad_id = e.target.dataset.id;
         const deleted_ad = await axiosPrivate.delete(`/api/ad/${ad_id}`, { 
         });
-        console.log(deleted_ad.data._id);
         const newAds = ads.filter((ad) => ad._id !== deleted_ad.data._id);
-        console.log(newAds);
         setAds(newAds);
     }
 
@@ -52,12 +56,18 @@ function AdPage(){
         <>
             <h1 className="services">Ads Page</h1>
             <h2 className="services">A list of advertiser's Ads</h2>
-            <Button name="Create Ad" to="/createAd" />
+            <ModalWrapper buttonTitle="Create Ad">
+                                <CreateAd />
+                            </ModalWrapper>
             {
                 ads?.length ?
                 (
                    <ul>
-                        { ads.map((ad, i) => <li key={i}>{ad.name} <Link to="/">Edit</Link><button data-id={ad._id} onClick={removeAd}>Remove</button></li>) }
+                        { ads.map((ad, i) => <li key={i}>{ad.name}             
+                            <ModalWrapper buttonTitle="Edit">
+                                <EditAd ad_id={ad._id}/>
+                            </ModalWrapper>
+                        <button data-id={ad._id} onClick={removeAd}>Remove</button></li>) }
                    </ul> 
                 )
                 : <p>No ads to display</p>
