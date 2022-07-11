@@ -86,11 +86,11 @@ export default function Listener(){
                 People I subscribe to
                 { mySubscriptions && mySubscriptions.map((sub)=>{
                     return (<LinkListItem 
-                        key={sub._id} 
+                        key={ sub.listener_id } 
                         to= "/creatorProfile"
-                        name={ sub.author } 
+                        name={ sub.creator.name } 
                         Ico={ DeleteForever }
-                        _id = { sub._id } 
+                        _id = { sub.creator_id } 
                     />)
                 })}
             </div>

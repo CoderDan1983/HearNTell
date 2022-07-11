@@ -35,7 +35,7 @@ router.route('/:subscription_id') //* using this one
 //   .post(verifyRoles(ROLES_LIST.Member), subscriptionController.createRequest);
 
 //     Approve subscription request                POST /api/subscription/request/{subscription_request_id}/approve
-router.route('/request/:subscription_request_id/approve') //* using this one
+router.route('/request/:subscription_id/approve') //* using this one
   .post(verifyRoles(ROLES_LIST.Member), subscriptionController.approve_request);
 
 //     Delete subscription request                 DELETE /api/subscription/request/{subscription_request_id}

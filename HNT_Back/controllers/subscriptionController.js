@@ -8,9 +8,9 @@ const index = async (req, res) => {
   const { _id: listener_id } = await User.findOne({ username: req.user });
   console.log('subscriptionController, index.  user_id is: ', listener_id);
 
-  let subscriptions = listener_id && await Subscription.find({ listener_id });
+  let subscriptions = listener_id && await Subscription.find({ listener_id }).populate("creator", "name").populate("listener", "name");
   console.log('line 12.  subscriptions is: ', subscriptions);
-  subscriptions && subscriptions.length && subscriptions.populate("creator", "name").populate("listener", "name");
+  // subscriptions && subscriptions.length && subscriptions;
 
   console.log('returning the following subscriptions: ', subscriptions);
   res.json(subscriptions);
@@ -22,9 +22,10 @@ const subscribers = async (req, res) => {
   // const { creator_id } = req.params; //$ currently creator_id is undefined :)
   console.log('subscriptionController, subscribers.  creator_id is: ', creator_id);
 
-  let subscriptions = creator_id && await Subscription.find({ creator_id });
+  let subscriptions = creator_id && await Subscription.find({ creator_id })
+    .populate("creator", "name").populate("listener", "name");
   console.log('line 25.  subscriptions are: ', subscriptions);
-  subscriptions && subscriptions.length && subscriptions.populate("creator", "name").populate("listener", "name");
+  // subscriptions && subscriptions.length && subscriptions;
   console.log('returning the following subscriptions: ', subscriptions);
   res.json(subscriptions);
 };
@@ -76,6 +77,7 @@ const remove = async (req, res) => {
 //* Create subscription ("request".  status starts out as pending, after all)
 const create = async (req, res) => { //createRequest //* only listeners can create subscription requests :)
   const { _id: listener_id } = await User.findOne({ username: req.user });
+  
   const subscription_request_data = {
     listener_id,
     listener: listener_id,
@@ -94,23 +96,23 @@ const create = async (req, res) => { //createRequest //* only listeners can crea
 //* Approve subscription ("request")
 const approve_request = async (req, res) => {
   // const { _id: user_id } = await User.findOne({ username: req.user });
-  const subscription_request_id = req.params.subscription_request_id;
-  console.log('subscriptionController, approveRequest.  subscription_request_id is: ', subscription_request_id);
+  const subscription_id = req.params.subscription_id; //$ correct subscription_id passed here from creatorAccessRequests!
+  console.log('subscriptionController, approveRequest.  subscription_id is: ', subscription_id);
 
   // let request = await SubscriptionRequest.findOneAndUpdate({_id: subscription_request_data}, {approved: true});
-  let request = await Subscription.findOneAndUpdate({_id: subscription_request_data}, { status: "approved" });
+  let request = await Subscription.findOneAndUpdate({_id: subscription_id}, { status: "approved" });
   console.log('returning: ', request)
 
-  res.json(request);
+  res.json(request); //returns non-updated version :)
 };
 
 //* Delete subscription request
 const remove_request = async (req, res) => {
   // const { _id: user_id } = await User.findOne({ username: req.user });
-  const subscription_request_id = req.params.subscription_request_id;
-  console.log('subscriptionController, removeRequest.  subscription_request_id is: ', subscription_request_id);
+  const subscription_id = req.params.subscription_id;
+  console.log('subscriptionController, removeRequest.  subscription_id is: ', subscription_id);
 
-  let request = await Subscription.findOneAndDelete({ _id: subscription_request_id });
+  let request = await Subscription.findOneAndDelete({ _id: subscription_id });
   console.log('returning: ', request)
   res.json(request);
 };

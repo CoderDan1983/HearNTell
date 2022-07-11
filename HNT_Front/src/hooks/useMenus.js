@@ -41,30 +41,30 @@ export function playlistsMenu({ nav, loc, axP }, playlist, story, subscriptions,
 
         //* if a listener and "non subscribed", give option to subscribe
         !playlist_subscribed && menu.push({ //*listener
-            title: `Subscribe to ${ playlist.title }`,
+            title: `Subscribe to playlist: ${ playlist.title }`,
             //* req.user will be available on server ^_^ 
             info: { creator_id: playlist.creator_id, playlist_id: playlist._id, }, //playlist
             handleClick: handleCreateSubscriptionRequest,
         });
 
-        const followCreator = (subscriptions && subscriptions.length) && 
-            subscriptions.filter((sub)=> sub.creator_id === story.creator._id);
-        const is_following_creator = (followCreator && followCreator.length) ? true : false;
+        // const followCreator = (subscriptions && subscriptions.length) && 
+        //     subscriptions.filter((sub)=> sub.creator_id === story.creator._id);
+        // const is_following_creator = (followCreator && followCreator.length) ? true : false;
 
-        //@ subscribe to creator options
-        //* if not subscribed, offer the opportunity to subscribe
-        (!is_following_creator) && menu.push({
-            title: `Subscribe to ${story?.creator?.name}`,
-            handleClick: handleCreateSubscriptionRequest,
-        });
+        // //@ subscribe to creator options
+        // //* if not subscribed, offer the opportunity to subscribe
+        // (!is_following_creator) && menu.push({
+        //     title: `Subscribe to ${story?.creator?.name}`,
+        //     handleClick: handleCreateSubscriptionRequest,
+        // });
 
-        //* if "subscribed" and not rejected, offer opportunity to cancel request ^_^
-        is_following_creator && (followCreator[0].status !== "rejected") &&menu.push({
-            title: followCreator[0].status === "approved" ? 
-                `Unsubscribe from ${ followCreator[0].creator.name }` :    
-                `Cancel Subscription Request to ${ followCreator[0].creator.name }`,
-            handleClick: handleCreateSubscriptionRequest,
-        }); 
+        // //* if "subscribed" and not rejected, offer opportunity to cancel request ^_^
+        // is_following_creator && (followCreator[0].status !== "rejected") &&menu.push({
+        //     title: followCreator[0].status === "approved" ? 
+        //         `Unsubscribe from ${ followCreator[0].creator.name }` :    
+        //         `Cancel Subscription Request to ${ followCreator[0].creator.name }`,
+        //     handleClick: handleCreateSubscriptionRequest,
+        // }); 
     }
 
     let playlistStarter = [...menu];
@@ -243,8 +243,8 @@ export function subscriberMenu({ nav, loc, axP }, rawSubscriptions = [{}], thisS
         delete_private(axP, nav, loc, 'subscription/', { _id: subscription_id });
     }
     
-    function handleApproveSubscriptionRequest(event, index, { subscription_request_id }){  //* creator
-        post_private(axP, nav, loc, `/request/${subscription_request_id}/approve`);
+    function handleApproveSubscriptionRequest(event, index, { subscription_id }){  //* creator
+        post_private(axP, nav, loc, `subscription/request/${subscription_id}/approve`);
     }
 
     // playlists.sort();

@@ -20,31 +20,66 @@ export default function CreatorProfile(){
     const nav = useNavigate();
     const loc = useLocation();
     const axP = useAxiosPrivate();
-    const goTo = "/";
+
     // const forTheMenu = { nav, loc, axP, goTo }
     const forPlaylistsMenu = { nav, loc, axP };
     const playlistOptions = { creator_mode: false, can_remove_playlist: false, subscribe_option: true };
 
     const { creator_id } = useParams();
-    const [ profile, setProfile ] = useState();
+    const [ creatorProfile, setCreatorProfile ] = useState();
     const [playlists, setPlaylists] = useState([]);
     const [ mySubscriptions, setMySubscriptions ] = useState([]);
     useEffect(()=>{
         // get_private(axP, nav, loc, 'story/creator', { setter: setStories }); //, { _id: "..." }
         get_private(axP, nav, loc, 'subscription/account', { setter: setMySubscriptions });
         get_private(axP, nav, loc, 'playlist/creator', { _id: creator_id, setter: setPlaylists });
-        get_private(axP, nav, loc, `creator/profile/${creator_id}`, { setter: setProfile });
+        get_private(axP, nav, loc, `creator/profile/${creator_id}`, { setter: setCreatorProfile });
     },[nav, loc, axP, creator_id]);
 
-    console.log('profile is: ', profile);
+    console.log('creatorProfile is: ', creatorProfile);
     console.log('playlists is: ', playlists);
     console.log('mySubscriptions is: ', mySubscriptions);
+
+    //@ subscribe to creator options
+    const followCreator = (mySubscriptions && mySubscriptions.length && creator_id) && 
+        mySubscriptions.filter((sub)=> sub.creator_id === creator_id);
+    const is_following_creator = (followCreator && followCreator.length) ? true : false;
+    const subscription_id = is_following_creator ? followCreator[0]._id : "";
+    let title, offer;
+    const goTo = `../../creatorProfile/${ creator_id }`;
+
+    function unsubscribe(subscription_id){
+        delete_private(axP, nav, loc, 'subscription', { _id: subscription_id, goTo });
+    }
+    function subscribe(creator_id){
+        post_private(axP, nav, loc, 'subscription/', { payload: { creator_id }, goTo });
+    }
+    //* if "subscribed" and not rejected, offer opportunity to cancel request ^_^
+    if(is_following_creator){
+        if (followCreator[0].status !== "rejected"){
+            if (followCreator[0].status === "approved"){ //unsubscribe from an approved status
+                title = `Unsubscribe from ${ followCreator[0].creator.name }`
+                offer = "unsubscribe";
+            }
+            else{ //cancel a pending status
+                title  = `Cancel Subscription Request to ${ followCreator[0].creator.name }`;
+                offer = "cancel";
+            } 
+        }
+    }else{ // if not subscribed, offer the opportunity to subscribe
+        title = `Subscribe to ${ creatorProfile?.creator?.name }`;
+        offer = "subscribe";
+    }
 
     return(
         <>
             <h1 className="home">Creator Profile Page</h1>
-            { profile && <ProfileComponent profile = { profile } /> }
-
+            { creatorProfile && <ProfileComponent profile = { creatorProfile } /> }
+            { creatorProfile && <button type="button" onClick = { (e) => {
+                console.log("creator_id: ", creator_id, "subscription_id: ", subscription_id, "offer: ", offer)
+                offer === "subscribe" && subscribe(creator_id);
+                offer !== "subscribe" && unsubscribe(subscription_id);
+            }}>{ title }</button> }
 
             <div>
                 <div className="mainItems">

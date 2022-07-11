@@ -10,7 +10,7 @@ const Subscription = new Schema({
   creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   playlist_id: String,
   status: {
-    type: Boolean,
+    type: String,
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending',
   }
