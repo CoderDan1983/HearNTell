@@ -3,7 +3,7 @@ import { post_private, delete_private } from './useBackendRequest';
 export function playlistsMenu({ nav, loc, axP }, playlist, story, subscriptions, options){
     let menu = [];
 
-    const { creator_mode, can_remove_playlist, subscribe_option } = options;
+    const { can_remove_playlist, subscribe_option } = options;  //creator_mode
     console.log('playlistsMenu, line 5.  rawPlaylists is: ', playlist);
     // rawPlaylists
     //     .sort()
@@ -26,8 +26,8 @@ export function playlistsMenu({ nav, loc, axP }, playlist, story, subscriptions,
     });
 
 
-
-    if((!creator_mode)&&subscribe_option) { //* only listeners have the option to subscribe/unsubscribe :)
+    //(!creator_mode)&&
+    if(subscribe_option) { //* only listeners have the option to subscribe/unsubscribe :)
         //@ subscribe to playlist options.
         //* if a "subscribed" listener with a status of approved or pending, deal with accordingly.
         playlist_subscribed && playlist_subscription[0].status !== "rejected" &&

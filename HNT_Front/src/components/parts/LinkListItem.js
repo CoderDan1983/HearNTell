@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import '../../index.css';
-import ListenerSingleStory from '../pages/listener/ListenerSingleStory';
+// import ListenerSingleStory from '../pages/listener/ListenerSingleStory';
 import BasicMenu from './BasicMenu';
 export default function LinkListItem({ to, name, classy="link", PreIco, Ico, IcoArray, _id, menu }){
     // _id && alert("_id is: ", _id);
@@ -11,6 +11,7 @@ export default function LinkListItem({ to, name, classy="link", PreIco, Ico, Ico
     // alert('url is: ', url);
     // console.log(_id, to);
     // console.log(url);
+
     return(<div className={ PreIco ? "storyItemWithPreIco" : "storyItem" }>
         { PreIco && <PreIco /> }
         <Link to={ url }>

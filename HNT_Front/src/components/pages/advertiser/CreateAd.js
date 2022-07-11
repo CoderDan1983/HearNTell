@@ -1,11 +1,14 @@
 
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useMemo, useEffect, useRef } from 'react';
-import Form from "./Form";
+// import Form from "./Form";
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 // import useAxios from '../../'
 import '../../../index.css'
 import { post_private } from '../../../hooks/useBackendRequest';
+
+import { useContext } from 'react'; //* a)  import useContext and ModelContext
+import { ModalContext } from '../../parts/ModalWrapper';
 
 export default function CreateAd(){
 
@@ -15,8 +18,10 @@ export default function CreateAd(){
     const formRef = useRef();
 
     const [name, setName] = useState('');
-    const [audioUrl, setAudioUrl] = useState('')
+    const [audioUrl, setAudioUrl] = useState('');
 
+     //* b) get the variable(s) you'd like from the context
+    const { setOpen } = useContext(ModalContext);
     function submitFormHandler(e){
         e.preventDefault();
 
@@ -56,9 +61,8 @@ export default function CreateAd(){
                 value = { audioUrl } 
                 onChange={ (e) => setAudioUrl(e.target.value) }
             />
-
-
-
+            {/* c) use it */}
+            <button type="button" onClick = { (e) => setOpen(false) }>Cancel</button>
             <button type="button" onClick={submitFormHandler}>Create Ad</button>
         </form>
     </div>)

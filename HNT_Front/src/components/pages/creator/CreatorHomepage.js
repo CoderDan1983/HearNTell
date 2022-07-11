@@ -26,7 +26,7 @@ export default function CreatorHomepage({ name, imageUrl }){
     const goTo = '../creatorHomepage';
     const forStoryMenu = { nav, loc, axP, goTo };
     const forPlaylistsMenu = { nav, loc, axP };
-    const playlistOptions = { creator_mode: true, can_remove_playlist: true, subscribe_option: false };
+    const playlistOptions = { can_remove_playlist: true, subscribe_option: false }; //creator_mode: true, 
     const [ stories, setStories ] = useState([]);
     const [ subscribers, setSubscribers ] = useState([{}]);
     // const [ selectedIndex, setSelectedIndex ] = useState(-1);

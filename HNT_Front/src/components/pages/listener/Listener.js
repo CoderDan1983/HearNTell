@@ -36,7 +36,7 @@ export default function Listener(){
 
     const [myPlaylists, setMyPlaylists] = useState([]);
     const forPlaylistsMenu = { nav, loc, axP };
-    const playlistOptions = { creator_mode: false, can_remove_playlist: true, subscribe_option: false };
+    const playlistOptions = { can_remove_playlist: true, subscribe_option: false }; //creator_mode: false, 
 
     const [queue, setQueue] = useState({});
     const [queueStories, setQueueStories] = useState([]);
@@ -85,13 +85,14 @@ export default function Listener(){
             <div>
                 People I subscribe to
                 { mySubscriptions && mySubscriptions.map((sub)=>{
-                    return (<LinkListItem 
+                    return (sub.status === "approved" ? 
+                    <LinkListItem 
                         key={ sub.listener_id } 
                         to= "/creatorProfile"
                         name={ sub.creator.name } 
                         Ico={ DeleteForever }
                         _id = { sub.creator_id } 
-                    />)
+                    /> : <></>)
                 })}
             </div>
         </div>

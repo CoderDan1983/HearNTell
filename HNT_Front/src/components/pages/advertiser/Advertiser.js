@@ -1,5 +1,6 @@
 import LinkListItem from "../../parts/LinkListItem";
-
+import ModalWrapper from "../../parts/ModalWrapper";
+import CreateAd from './CreateAd';
 export default function Advertiser(){
     return(
         <>
@@ -12,6 +13,10 @@ export default function Advertiser(){
             <LinkListItem name="List of Ads" to="/ads" />
 
             <LinkListItem name="List of Campaigns" to="/campaigns" />
+
+            <ModalWrapper buttonTitle="Create Ad">
+                <CreateAd />
+            </ModalWrapper>
         </>
     )
 }

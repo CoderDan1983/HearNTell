@@ -46,8 +46,20 @@ export default function CreatorAccessRequests(){
         <h1>Add Creator Access Requests Content here</h1>
         { subscribers.length && subscribers.map((subscriber, i) => {
             let IcoArray = [];
-            subscriber.status !== "approved" && IcoArray.push({ Icon: Done, clickHandler: handleApprove, info: subscriber._id })
-            subscriber.status !== "rejected" && IcoArray.push({ Icon: DoDisturb, clickHandler: handleReject, info: subscriber._id })
+            subscriber.status !== "approved" && 
+            IcoArray.push({ 
+                Icon: Done, 
+                clickHandler: handleApprove, 
+                info: subscriber._id, 
+                class: "approveSurround" 
+            });
+            subscriber.status !== "rejected" && 
+            IcoArray.push({ 
+                Icon: DoDisturb, 
+                clickHandler: handleReject, 
+                info: subscriber._id,
+                class: "rejectSurround", 
+            })
             // alert(subscriber.listener_id);
             return(<LinkListItem 
                 key = { i }

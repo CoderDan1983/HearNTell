@@ -23,7 +23,7 @@ export default function CreatorProfile(){
 
     // const forTheMenu = { nav, loc, axP, goTo }
     const forPlaylistsMenu = { nav, loc, axP };
-    const playlistOptions = { creator_mode: false, can_remove_playlist: false, subscribe_option: true };
+    const playlistOptions = { can_remove_playlist: false, subscribe_option: true }; //creator_mode: false, 
 
     const { creator_id } = useParams();
     const [ creatorProfile, setCreatorProfile ] = useState();

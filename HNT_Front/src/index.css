@@ -342,6 +342,23 @@ li {
     border: 1px black solid;
     margin: 10px;
 }
+
+.approveSurround {
+    background-color: green;
+    border-radius: 4px;
+}
+
+.rejectSurround {
+    background-color: red;
+    border-radius: 4px;
+}
+
+.approveSurround:hover {
+    background-color: lime;
+}
+.rejectSurround:hover {
+    background-color: rgb(255, 116, 116);
+}
 /*
 
 @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
