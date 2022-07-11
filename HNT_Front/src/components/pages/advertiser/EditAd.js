@@ -51,6 +51,7 @@ export default function EditAd(props){
         const url = "api/ad/" + ad_id
         post_private(axP, nav, loc, url, { payload: adData }); 
         nav(`/ads`, { state: { from: loc }, replace: true });
+        setOpen(false); //close this "modal" :D
         
     }
 

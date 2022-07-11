@@ -32,7 +32,8 @@ export default function CreateAd(){
         console.log(adData);
 
         post_private(axP, nav, loc, 'api/ad', { payload: adData }); 
-        nav(`/ads`, { state: { from: loc }, replace: true });
+        // nav(`/ads`, { state: { from: loc }, replace: true });
+        setOpen(false); //close this "modal" :D
         
     }
 
