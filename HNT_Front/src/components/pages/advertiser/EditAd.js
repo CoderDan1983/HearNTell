@@ -1,30 +1,17 @@
-
-import { useNavigate, useLocation } from "react-router-dom";
-import { useState, useMemo, useEffect, useRef } from 'react';
-// import Form from "./Form";
+import { useState, useEffect, } from 'react';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
-// import useAxios from '../../'
 import '../../../index.css'
-import { post_private } from '../../../hooks/useBackendRequest';
-import { axiosPrivate } from '../../../api/axios';
-
-
 import { useContext } from 'react'; 
 import { ModalContext } from '../../parts/ModalWrapper';
 
 export default function EditAd(props){
 
-    const axP = useAxiosPrivate();
-    const nav = useNavigate();
-    const loc = useLocation();
-    const formRef = useRef();
-
+    const axiosPrivate = useAxiosPrivate();
     const [name, setName] = useState('');
     const [audioUrl, setAudioUrl] = useState('');
     const ad_id = props.ad_id;
 
     //* Load the initial ad data into the form.
-
     useEffect(()=>{
         const fetchData = async () => {
             const url = "api/ad/" + ad_id;
@@ -48,16 +35,13 @@ export default function EditAd(props){
             audio_url: audioUrl, 
         }
 
-        console.log(adData);
         const url = "api/ad/" + ad_id;
         axiosPrivate.post(url, adData)
         .then((ad)=>{
-            console.log("edit ad", ad.data);
             props.setter(ad.data);
         }); 
         setOpen(false); //close this "modal" :D
     }
-
 
 
     return(<div>

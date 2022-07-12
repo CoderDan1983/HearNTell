@@ -8,8 +8,8 @@ import { makeAddOneSetter, makeUpdateOneByIdSetter } from '../../../custom_modul
 
 function AdPage(){
     const [ ads, setAds ] = useState();
-    const addAnAdSetter = makeAddOneSetter(ads, setAds); //* For use in CreateAd component
-    const updateAnAdSetter = makeUpdateOneByIdSetter(ads, setAds); //* For use in EditAd component
+    const addAnAdSetter = makeAddOneSetter( ads, setAds ); //* For use in CreateAd component
+    const updateAnAdSetter = makeUpdateOneByIdSetter( ads, setAds ); //* For use in EditAd component
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const location = useLocation();

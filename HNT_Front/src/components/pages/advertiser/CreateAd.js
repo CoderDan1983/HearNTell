@@ -1,18 +1,14 @@
-import { useNavigate, useLocation } from "react-router-dom";
 import { useState} from 'react';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import '../../../index.css'
-import { axiosPrivate } from '../../../api/axios';
 import { useContext } from 'react'; 
 import { ModalContext } from '../../parts/ModalWrapper';
 
 export default function CreateAd(props){
-    const axP = useAxiosPrivate();
-    const nav = useNavigate();
-    const loc = useLocation();
     const [name, setName] = useState('');
     const [audioUrl, setAudioUrl] = useState('');
     const { setOpen } = useContext(ModalContext);
+    const axiosPrivate = useAxiosPrivate();
 
     function submitFormHandler(e){
         e.preventDefault();
