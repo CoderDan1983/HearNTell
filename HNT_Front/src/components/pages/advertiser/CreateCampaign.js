@@ -1,13 +1,9 @@
-//todo copy and pasted from create story. Under construction.
-
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import TagsInput from "../../parts/TagsInput";
 import '../../../index.css';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
-// import { post_private } from '../../../hooks/useBackendRequest';
 
-const fake = require("../../fakeApi/fakeAds_Back") //todo Replae with real api feed after testing.
 export default function CreateCampaign(){
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
@@ -60,11 +56,11 @@ export default function CreateCampaign(){
             tags: tags,
 
         }
-        axiosPrivate.post('api/campaign', campaignData);
-        navigate('/campaigns', { state: { from: location }, replace: true });
-
-        // post_private(axP, nav, loc, 'api/campaign', { payload: campaignData }); //options
-    }
+        axiosPrivate.post('api/campaign', campaignData)
+        .then(()=> {
+            navigate('/campaigns', { state: { from: location }, replace: true });
+        })
+    };
 
     return(<div>
         <h1>Create a Campaign </h1>

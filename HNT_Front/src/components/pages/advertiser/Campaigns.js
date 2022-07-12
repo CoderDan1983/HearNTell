@@ -10,8 +10,8 @@ export default function Campaigns(){
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const location = useLocation();
-    const addACampaignSetter = makeAddOneSetter( campaigns, setCampaigns ); //* For use in CreateAd component
-    const updateACampaignSetter = makeUpdateOneByIdSetter( campaigns, setCampaigns ); //* For use in EditAd component
+    const addACampaignSetter = makeAddOneSetter( campaigns, setCampaigns ); //* For use in CreateCampaign component
+    const updateACampaignSetter = makeUpdateOneByIdSetter( campaigns, setCampaigns ); //* For use in EditCampaign component
 
     useEffect(()=>{
         let isMounted = true;
