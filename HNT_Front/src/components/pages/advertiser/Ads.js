@@ -1,15 +1,10 @@
 import { useState, useEffect } from "react";
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { useNavigate, useLocation } from "react-router-dom";
-import Button from "../../parts/Button";
-import { Link } from 'react-router-dom';
 import EditAd from './EditAd';
 import CreateAd from './CreateAd';
-
 import ModalWrapper from "../../parts/ModalWrapper";
 import { makeAddOneSetter, makeUpdateOneByIdSetter } from '../../../custom_modules_front/utility_front';
-
-
 
 function AdPage(){
     const [ ads, setAds ] = useState();
