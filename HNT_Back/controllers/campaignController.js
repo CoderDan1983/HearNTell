@@ -22,7 +22,7 @@ const create = async (req, res) => {
     name: request_data.name,
     tags: tags, // Expects an array
     ad_audio_url: request_data.ad_audio_url,
-    ad_id: request_data.ad._id,
+    ad_id: request_data.ad_id,
     max_bid: request_data.maximumBid,
     budget: request_data.budget,
     spent_so_far: request_data.spent_so_far,
@@ -72,7 +72,6 @@ const update = async (req, res) => {
     ad_id: request_data.ad_id,
     max_bid: request_data.max_bid,
     budget: request_data.budget,
-    spent_so_far: request_data.spent_so_far,
     active: request_data.active
   }
   let campaign = await Campaign.findOneAndUpdate({_id: campaign_id}, campaign_data, {new: true});
