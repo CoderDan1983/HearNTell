@@ -7,11 +7,13 @@ import EditAd from './EditAd';
 import CreateAd from './CreateAd';
 
 import ModalWrapper from "../../parts/ModalWrapper";
+import { makeAddOneSetter } from '../../../custom_modules_front/utility_front';
 
 
 
 function AdPage(){
     const [ ads, setAds ] = useState();
+    const addAnAdSetter = makeAddOneSetter(ads, setAds);
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const location = useLocation();
@@ -57,7 +59,7 @@ function AdPage(){
             <h1 className="services">Ads Page</h1>
             <h2 className="services">A list of advertiser's Ads</h2>
             <ModalWrapper buttonTitle="Create Ad">
-                                <CreateAd />
+                                <CreateAd setter={addAnAdSetter}/>
                             </ModalWrapper>
             {
                 ads?.length ?

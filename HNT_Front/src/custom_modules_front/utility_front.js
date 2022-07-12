@@ -35,3 +35,19 @@ export function createSetter(state, setter, { property, outerIndex, push } = {})
         return { newState, oldEntry, newEntry } 
     }
 }
+
+//* What if we break these setters out into several setters so we don't have to give them so many parameters and it makes it easier to think about.
+
+//* Creates a setter that adds one to the existing state.
+export function makeAddOneSetter(state, setter){
+    return function (new_item ){
+        console.log("new item in makeAddOneSetter", new_item);
+        setter([...state, new_item]);
+    }
+}
+
+// export function makeUpdateOneSetter(state, setter) {
+//     return function(item_to_update) {
+
+//     }
+// }

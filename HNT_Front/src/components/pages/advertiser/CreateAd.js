@@ -6,11 +6,12 @@ import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 // import useAxios from '../../'
 import '../../../index.css'
 import { post_private } from '../../../hooks/useBackendRequest';
+import { axiosPrivate } from '../../../api/axios';
 
 import { useContext } from 'react'; 
 import { ModalContext } from '../../parts/ModalWrapper';
 
-export default function CreateAd(){
+export default function CreateAd(props){
 
     const axP = useAxiosPrivate();
     const nav = useNavigate();
@@ -31,7 +32,11 @@ export default function CreateAd(){
 
         console.log(adData);
 
-        post_private(axP, nav, loc, 'api/ad', { payload: adData }); 
+        // post_private(axP, nav, loc, 'api/ad', { payload: adData })
+        axiosPrivate.post('api/ad', adData)
+        .then((ad)=>{
+            props.setter(ad.data);
+        }); 
         // nav(`/ads`, { state: { from: loc }, replace: true });
         setOpen(false); //close this "modal" :D
         

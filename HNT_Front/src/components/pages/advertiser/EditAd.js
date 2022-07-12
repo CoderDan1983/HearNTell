@@ -6,7 +6,7 @@ import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 // import useAxios from '../../'
 import '../../../index.css'
 import { post_private } from '../../../hooks/useBackendRequest';
-import axios, { axiosPrivate } from '../../../api/axios';
+import { axiosPrivate } from '../../../api/axios';
 
 
 import { useContext } from 'react'; 
