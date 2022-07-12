@@ -75,7 +75,7 @@ const update = async (req, res) => {
     spent_so_far: request_data.spent_so_far,
     active: request_data.active
   }
-  let campaign = await Campaign.findOneAndUpdate({_id: campaign_id}, campaign_data);
+  let campaign = await Campaign.findOneAndUpdate({_id: campaign_id}, campaign_data, {new: true});
   res.json(campaign);
 };
 

@@ -216,7 +216,7 @@ const update = async (req, res) => {
   const ratings_info = { ...ratings_wo_story_id, story_id }
   console.log('story_info is: ', story_info, ", ratings_info is: ", ratings_info);
 
-  const story = await Story.findOneAndUpdate({ _id: story_id }, { $set: story_info }, {upsert: true})
+  const story = await Story.findOneAndUpdate({ _id: story_id }, { $set: story_info }, {upsert: true, new: true})
 
   //* if upsert inserted a new document, it will return null!  
   //... (if so, create ratings obj and connect it to the story)   

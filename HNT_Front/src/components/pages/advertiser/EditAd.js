@@ -23,7 +23,7 @@ export default function EditAd(props){
     const [audioUrl, setAudioUrl] = useState('');
     const ad_id = props.ad_id;
 
-    //todo Load the initial ad data into the form.
+    //* Load the initial ad data into the form.
 
     useEffect(()=>{
         const fetchData = async () => {
@@ -43,16 +43,19 @@ export default function EditAd(props){
         e.preventDefault();
 
         let adData = {
+            _id: ad_id,
             name: name, 
             audio_url: audioUrl, 
         }
 
         console.log(adData);
-        const url = "api/ad/" + ad_id
-        post_private(axP, nav, loc, url, { payload: adData }); 
-        nav(`/ads`, { state: { from: loc }, replace: true });
+        const url = "api/ad/" + ad_id;
+        axiosPrivate.post(url, adData)
+        .then((ad)=>{
+            console.log("edit ad", ad.data);
+            props.setter(ad.data);
+        }); 
         setOpen(false); //close this "modal" :D
-        
     }
 
 

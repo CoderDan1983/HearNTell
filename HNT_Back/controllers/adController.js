@@ -55,7 +55,8 @@ const update = async (req, res) => {
     file_size: request_data.file_size
   }
   console.log("Made it to ad update");
-  let ad = await Ad.findOneAndUpdate({_id: ad_id}, ad_data);
+  let ad = await Ad.findOneAndUpdate({_id: ad_id}, ad_data, {new: true});
+  console.log("ad from update controller", ad);
   res.json(ad);
 };
 

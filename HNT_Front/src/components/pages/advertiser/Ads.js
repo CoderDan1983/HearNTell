@@ -7,13 +7,14 @@ import EditAd from './EditAd';
 import CreateAd from './CreateAd';
 
 import ModalWrapper from "../../parts/ModalWrapper";
-import { makeAddOneSetter } from '../../../custom_modules_front/utility_front';
+import { makeAddOneSetter, makeUpdateOneByIdSetter } from '../../../custom_modules_front/utility_front';
 
 
 
 function AdPage(){
     const [ ads, setAds ] = useState();
-    const addAnAdSetter = makeAddOneSetter(ads, setAds);
+    const addAnAdSetter = makeAddOneSetter(ads, setAds); //* For use in CreateAd component
+    const updateAnAdSetter = makeUpdateOneByIdSetter(ads, setAds); //* For use in EditAd component
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const location = useLocation();
@@ -67,7 +68,7 @@ function AdPage(){
                    <ul>
                         { ads.map((ad, i) => <li key={i}>{ad.name}             
                             <ModalWrapper buttonTitle="Edit">
-                                <EditAd ad_id={ad._id}/>
+                                <EditAd ad_id={ad._id} setter={updateAnAdSetter}/>
                             </ModalWrapper>
                         <button data-id={ad._id} onClick={removeAd}>Remove</button></li>) }
                    </ul> 

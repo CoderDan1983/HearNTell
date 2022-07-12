@@ -71,7 +71,7 @@ const update = async (req, res) => {
     highest_bid: req.body.highest_bid,
     highest_bidder_id: req.body.highest_bidder_id,
   };
-  let tag = await Tag.findOneAndUpdate({_id: tag_id}, tag_data, {upsert: true});
+  let tag = await Tag.findOneAndUpdate({_id: tag_id}, tag_data, {upsert: true, new: true});
   res.json(tag);
 };
 

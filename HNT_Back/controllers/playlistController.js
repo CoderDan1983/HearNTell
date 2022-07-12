@@ -172,7 +172,7 @@ const update = async (req, res) => {
     description: request_data.description,
     is_queue: request_data.is_queue,
   };
-  let playlist = await Playlist.findOneAndUpdate({_id: playlist_id}, playlist_data);
+  let playlist = await Playlist.findOneAndUpdate({_id: playlist_id}, playlist_data, {new: true});
   res.json(playlist);
 };
 

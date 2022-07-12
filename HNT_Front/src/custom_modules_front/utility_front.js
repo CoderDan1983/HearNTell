@@ -41,13 +41,23 @@ export function createSetter(state, setter, { property, outerIndex, push } = {})
 //* Creates a setter that adds one to the existing state.
 export function makeAddOneSetter(state, setter){
     return function (new_item ){
-        console.log("new item in makeAddOneSetter", new_item);
+      
         setter([...state, new_item]);
     }
 }
 
-// export function makeUpdateOneSetter(state, setter) {
-//     return function(item_to_update) {
+//* Creates a setter that updates on item in the existing state by ID
+export function makeUpdateOneByIdSetter(state, setter) {
+    return function(item_to_update) {
+        const newState = state.map(obj => {
+            if (obj._id === item_to_update._id) {
+                return item_to_update;
+            }
 
-//     }
-// }
+            return obj;
+        })
+        console.log("Item to update", item_to_update);
+        console.log(newState)
+        setter(newState);
+    };
+}

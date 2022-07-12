@@ -41,7 +41,7 @@ const update = async (req, res) => {
     advertiser: request_data.advertiser
   }
 
-  let account = await Account.findOneAndUpdate({_id: user_id}, account_data);
+  let account = await Account.findOneAndUpdate({_id: user_id}, account_data, {new: true});
   res.json(account);
 };
 

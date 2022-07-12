@@ -56,7 +56,7 @@ const update = async (req, res) => {
   };
   console.log('subscriptionController, update.  params is: ', req.params);
 
-  let subscription = await Subscription.findOneAndUpdate({_id: subscription_id }, subscription_data, { upsert: true });
+  let subscription = await Subscription.findOneAndUpdate({_id: subscription_id }, subscription_data, { upsert: true, new: true });
   console.log('returning: ', subscription)
 
   res.json(subscription);

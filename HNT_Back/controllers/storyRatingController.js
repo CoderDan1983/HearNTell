@@ -53,7 +53,7 @@ const update = async (req, res) => {
     not_suitable_for_children_rating: req.body.not_suitable_for_children_rating
   };
 
-  let rating = await StoryRating.findOneAndUpdate({_id: story_rating_id}, rating_data, {upsert: true});
+  let rating = await StoryRating.findOneAndUpdate({_id: story_rating_id}, rating_data, {upsert: true, new: true});
 
   res.json(rating);
 };
