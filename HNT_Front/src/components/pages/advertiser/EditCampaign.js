@@ -106,6 +106,16 @@ export default function CreateCampaign(){
         })
     };
 
+    //* Remove ad and refreash the Ad state.
+    const removeHandler = async (e) => {
+        e.preventDefault();
+        axiosPrivate.delete(`/api/campaign/${campaign_id}`, { 
+        })
+        .then(()=>{
+            navigate('/campaigns', { state: { from: location }, replace: true });
+        })
+    }
+
     return(<div>
         <h1>Edit Campaign </h1>
         <form >
@@ -168,7 +178,8 @@ export default function CreateCampaign(){
 
             </div>
 
-            <button type="button" onClick={submitFormHandler}>Submit</button>
+            <button type="button" class="" onClick={submitFormHandler}>Update</button>
+            <button type="button" class="btn danger" onClick={removeHandler}>Remove Campaign</button>
         </form>
     </div>)
 }
