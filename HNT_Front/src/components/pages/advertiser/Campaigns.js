@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { useNavigate, useLocation } from "react-router-dom";
-
+import { makeAddOneSetter, makeUpdateOneByIdSetter } from '../../../custom_modules_front/utility_front';
+import CampaignListItem, {campaignListItem} from './CampaignListItem';
 
 
 export default function Campaigns(){
@@ -9,6 +10,8 @@ export default function Campaigns(){
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const location = useLocation();
+    const addACampaignSetter = makeAddOneSetter( campaigns, setCampaigns ); //* For use in CreateAd component
+    const updateACampaignSetter = makeUpdateOneByIdSetter( campaigns, setCampaigns ); //* For use in EditAd component
 
     useEffect(()=>{
         let isMounted = true;
@@ -29,6 +32,7 @@ export default function Campaigns(){
             }
         }
         getCampaigns();
+        
 
         return () =>{ //* cleanup function ^_^
             isMounted = false;
@@ -43,9 +47,7 @@ export default function Campaigns(){
             {
                 campaigns?.length ?
                 (
-                   <ul>
-                        { campaigns.map((campaign, i) => <li key={i}>{campaign.name}</li>) }
-                   </ul> 
+                    campaigns.map((campaign, i) => <CampaignListItem key={i} campaign={campaign}/> )
                 )
                 : <p>No campaigns to display</p>
             }

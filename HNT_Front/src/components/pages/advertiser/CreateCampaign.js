@@ -1,37 +1,55 @@
 //todo copy and pasted from create story. Under construction.
 
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState, useMemo, useEffect, useRef } from 'react';
-
+import { useState, useEffect } from 'react';
 import TagsInput from "../../parts/TagsInput";
 import '../../../index.css';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
-// import useAxios from '../../'
-import '../../../index.css'
-import { post_private } from '../../../hooks/useBackendRequest';
+// import { post_private } from '../../../hooks/useBackendRequest';
 
 const fake = require("../../fakeApi/fakeAds_Back") //todo Replae with real api feed after testing.
 export default function CreateCampaign(){
-    // const selectedTags = tags => { console.log(tags) };
-    // console.log('selectedTags is (10): ', selectedTags)
-    const axP = useAxiosPrivate();
-    const nav = useNavigate();
-    const loc = useLocation();
-    const formRef = useRef();
-
+    const axiosPrivate = useAxiosPrivate();
+    const navigate = useNavigate();
+    const location = useLocation();
     const [name, setName] = useState('');
-    const [ad, setAd] = useState('')
+    const [ad, setAd] = useState('');
+    const [ads, setAds] = useState([]); //* A list of ads to link to campaign.
     const [maximumBid, setMaximumBid] = useState('');
     const [budget, setBudget] = useState('');
     const [targetAudienceAll, setTargetAudienceAll] = useState(true);
     const [campaignActive, setCampaignActive] = useState(false);
     const [tags, setTags] = useState([]);
 
+    useEffect(()=>{
+        let isMounted = true;
+        const controller = new AbortController();
+
+        const getAds = async () => {
+            try {
+                const response = await axiosPrivate.get('/api/ad/user', { // ./users
+                    signal: controller.signal
+                });
+      
+                isMounted && setAds(response.data) //if isMounted, then 
+            }
+            catch (err){
+                console.log("I'm gonna log an error!")
+                console.error(err);
+                navigate('/login', { state: { from: location }, replace: true })
+            }
+        }
+        getAds();
+
+        return () =>{ //* cleanup function ^_^
+            isMounted = false;
+            controller.abort();
+        }
+    }, [])
 
     function submitFormHandler(e){
         e.preventDefault();
 
-        // const storyForm = document.getElementById("storyForm")
         let campaignData = {
             name: name, 
             ad: ad, 
@@ -42,22 +60,15 @@ export default function CreateCampaign(){
             tags: tags,
 
         }
-        // const formData = new FormData();
-        // const options = { headers: { "Content-Type" : "x-www-form-urlencoded" } }
-        // const options = { headers: {
-        //     'Content-Type': 'multipart/form-data'
-        //   }
-        // }
-        console.log(campaignData);
+        axiosPrivate.post('api/campaign', campaignData);
+        navigate('/campaigns', { state: { from: location }, replace: true });
 
-        post_private(axP, nav, loc, 'api/campaign', { payload: campaignData }); //options
+        // post_private(axP, nav, loc, 'api/campaign', { payload: campaignData }); //options
     }
-
-
 
     return(<div>
         <h1>Create a Campaign </h1>
-        <form id="campaignForm" ref= { formRef }>
+        <form >
             <label htmlFor="Name">Name of Campaign: </label>
             <input 
                 id="name" 
@@ -70,7 +81,7 @@ export default function CreateCampaign(){
 
             <label htmlFor="ad">Select Ad: </label>
             <select onChange={ (e) => setAd(e.target.value)}>
-            {fake.fakeAds.map(ad => (
+            {ads.map(ad => (
               <option key={ad._id} value={ad}>
                 {ad.name}
               </option>

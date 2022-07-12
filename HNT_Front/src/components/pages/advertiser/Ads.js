@@ -24,7 +24,7 @@ function AdPage(){
                     signal: controller.signal
                 });
       
-                isMounted && setAds(response.data) //if isMounted, then setUsers :D
+                isMounted && setAds(response.data) //if isMounted, then 
             }
             catch (err){
                 console.log("I'm gonna log an error!")
@@ -55,8 +55,8 @@ function AdPage(){
             <h1 className="services">Ads Page</h1>
             <h2 className="services">A list of advertiser's Ads</h2>
             <ModalWrapper buttonTitle="Create Ad">
-                                <CreateAd setter={addAnAdSetter}/>
-                            </ModalWrapper>
+                <CreateAd setter={addAnAdSetter}/>
+            </ModalWrapper>
             {
                 ads?.length ?
                 (
