@@ -1,7 +1,8 @@
 const Campaign = require('../model/Campaign');
 const AdRun = require('../model/AdRun');
 const User = require('../model/User');
-const { properlyUppercased } = require('../custom_modules/utilities') 
+const { properlyUppercased } = require('../custom_modules/utilities');
+
 
 //* Create an campaign
 const create = async (req, res) => {
@@ -14,7 +15,7 @@ const create = async (req, res) => {
   
   // console.log('jsonnedTags: ', jsonnedTags, typeof(jsonnedTags));
   const tags = jsonnedTags.map((tag)=> properlyUppercased(tag));
-
+  updateTags(tags);
   let user = User.findOne({ username: req.user});
   
   let campaign_data = {
@@ -64,10 +65,14 @@ const show = async (req, res) => {
 const update = async (req, res) => {
   const campaign_id = req.params.campaign_id;
   const request_data = req.body;
+  const { tags: jsonnedTags } = req.body;
+  const tags = jsonnedTags.map((tag)=> properlyUppercased(tag));
+  updateTags(tags);
+
   let campaign_data = {
     user_id: request_data.user_id,
     name: request_data.name,
-    tags: request_data.tags, // Expects an array
+    tags: tags, // Expects an array
     ad_audio_url: request_data.ad_audio_url,
     ad_id: request_data.ad_id,
     max_bid: request_data.max_bid,
@@ -91,6 +96,14 @@ const adRunsPerCampaign = async (req, res) => {
   let ad_runs = await AdRun.find({ad_campaign_id: campaign_id});
   res.json(ad_runs);
 };
+
+//* Makes sure any new tags are added to the Tag database.
+async function updateTags(tags){
+
+  tags.map(async (tag) => { //@ b) saving tags to tags collection (?)
+      await Tag.findOneAndUpdate({ name: tag }, { name: tag }, { upsert: true});
+  });
+}
 
 
 
