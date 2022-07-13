@@ -1,6 +1,8 @@
 const Campaign = require('../model/Campaign');
 const AdRun = require('../model/AdRun');
 const User = require('../model/User');
+const Tag = require('../model/Tag');
+
 const { properlyUppercased } = require('../custom_modules/utilities');
 
 
@@ -98,14 +100,17 @@ const adRunsPerCampaign = async (req, res) => {
 };
 
 //* Makes sure any new tags are added to the Tag database.
-async function updateTags(tags){
+function updateTags(tags){
 
   tags.map(async (tag) => { //@ b) saving tags to tags collection (?)
-      await Tag.findOneAndUpdate({ name: tag }, { name: tag }, { upsert: true});
+    // console.log("tag in update before update", tag);
+      Tag.findOneAndUpdate({ name: tag }, { name: tag }, { upsert: true, new: true})
+      .then((tag) => {
+        // console.log("tag in update", tag);
+      });
   });
+  
 }
-
-
 
 module.exports = {
   create,

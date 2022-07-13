@@ -178,8 +178,8 @@ export default function CreateCampaign(){
 
             </div>
 
-            <button type="button" class="" onClick={submitFormHandler}>Update</button>
-            <button type="button" class="btn danger" onClick={removeHandler}>Remove Campaign</button>
+            <button type="button"  onClick={submitFormHandler}>Update</button>
+            <button type="button" className="btn danger" onClick={removeHandler}>Remove Campaign</button>
         </form>
     </div>)
 }
