@@ -6,6 +6,10 @@ import EditTag from './EditTag';
 import CreateTag from './CreateTag';
 import ModalWrapper from "../../parts/ModalWrapper";
 import { makeAddOneSetter, makeUpdateOneByIdSetter } from '../../../custom_modules_front/utility_front';
+import TagLinkItem from '../../parts/TagLinkItem';
+
+import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 
 function AdminManageTags(){
     const [ tags, setTags ] = useState();
@@ -14,6 +18,28 @@ function AdminManageTags(){
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const tagBodyEx = { 
+        name: "runner",
+        cost: 99,
+        highestBidder: 105,
+        storyNum: 10,
+    }
+    const IcoArray = [
+        // {
+        //     Icon: EditIcon,
+        //     pre: "Edit",
+        //     class: "approveSurround",
+        // },
+        { childHere: true, class: "approveSurround" },
+        {
+            Icon: CloseIcon,
+            pre: "Remove",
+            class: "rejectSurround",
+        },
+    ]
+
+    console.log('tags are : ', tags);
 
     useEffect(()=>{
         let isMounted = true;
@@ -59,15 +85,19 @@ function AdminManageTags(){
             </ModalWrapper>
             {
                 tags?.length ?
-                (
-                   <ul>
-                        { tags.map((tag, i) => <li key={i}>{tag.name}             
-                            <ModalWrapper buttonTitle="Edit">
-                                <EditTag tag_id={tag._id} setter={updateATagSetter}/>
-                            </ModalWrapper>
-                        <button data-id={tag._id} onClick={removeTag}>Remove</button></li>) }
-                   </ul> 
-                )
+
+                    tags.map((tag, i) =>         
+                    <TagLinkItem 
+                        tag= { { ...tagBodyEx, name: tag.name } }
+                        IcoArray = { IcoArray } 
+                        wrapperClass="tagItem" 
+                        classy="tagLine"
+                        key= { i }
+                    >
+                        <ModalWrapper buttonTitle="Edit" Ico= { EditIcon }>
+                            <EditTag tag_id={tag._id} setter={updateATagSetter}/>
+                        </ModalWrapper>
+                    </TagLinkItem>)
                 : <p>No tags to display</p>
             }
         </>
@@ -81,3 +111,37 @@ function AdminManageTags(){
 export default AdminManageTags;
 
 
+
+
+
+
+
+// {
+//     tags?.length ?
+//     (
+//     //    <ul>
+//             { tags.map((tag, i) =>         
+//                 // console.log('tag is: ', tag);
+                
+//                 <TagLinkItem 
+//                     tag= { tagBodyEx } 
+//                     IcoArray = { IcoArray } 
+//                     wrapperClass="tagItem" 
+//                     classy="tagLine"
+//                 >
+//                     <ModalWrapper buttonTitle="Edit" Ico= { EditIcon }>
+//                         <EditTag tag_id={tag._id} setter={updateATagSetter}/>
+//                     </ModalWrapper>
+//                 </TagLinkItem> 
+//             }
+//             // <li key={i}>{tag.name}
+//                 {/* <ModalWrapper buttonTitle="Edit" Ico= { EditIcon }>
+//                     <EditTag tag_id={tag._id} setter={updateATagSetter}/>
+//                 </ModalWrapper> */}
+                
+//             {/* <button data-id={tag._id} onClick={removeTag}>Remove</button></li>)  */}
+        
+//     //    </ul> 
+//     )
+//     : <p>No tags to display</p>
+// }

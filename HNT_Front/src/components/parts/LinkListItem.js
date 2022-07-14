@@ -12,6 +12,8 @@ export default function LinkListItem({ to, name, classy="link", PreIco, Ico, Ico
     // console.log(_id, to);
     // console.log(url);
 
+    //name of tag, cost of tag, highest bidder, number of stories.
+
     return(<div className={ PreIco ? "storyItemWithPreIco" : "storyItem" }>
         { PreIco && <PreIco /> }
         <Link to={ url }>

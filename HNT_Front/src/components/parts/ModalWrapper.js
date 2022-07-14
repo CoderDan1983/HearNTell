@@ -4,7 +4,7 @@ import '../../index.css';
 
 export const ModalContext = createContext();
 
-export default function ModalWrapper({ children, className, buttonTitle }) {
+export default function ModalWrapper({ children, className, buttonTitle, Ico }) {
     const [open, setOpen] = useState(false);
     const openClicked = useRef(false); //* I ended up adding the openClicked variable to make the code work! 
     const modalRef = useRef();
@@ -23,7 +23,10 @@ export default function ModalWrapper({ children, className, buttonTitle }) {
 
     return (
         <ModalContext.Provider value={{ setOpen }}>
-            <button onClick={ handleOpen }>{ buttonTitle ? buttonTitle : "Open" }</button>
+            { Ico ? 
+                <button onClick={ handleOpen } >{ buttonTitle } <Ico /> </button>: 
+                <button onClick={ handleOpen }>{ buttonTitle ? buttonTitle : "Open" }</button>
+            }
             <div
                 ref={modalRef}
                 // className = { open ? "modal" : "hide" }
