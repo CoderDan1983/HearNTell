@@ -27,7 +27,7 @@ function AdminManageTags(){
 
         const getTags = async () => {
             try {
-                const response = await axiosPrivate.get('/api/tag', { 
+                const response = await axiosPrivate.get('/api/tag/admin_index', { 
                     signal: controller.signal
                 });
                 const tags = response.data;
