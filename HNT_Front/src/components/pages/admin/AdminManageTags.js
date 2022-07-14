@@ -19,26 +19,6 @@ function AdminManageTags(){
     const navigate = useNavigate();
     const location = useLocation();
 
-    const tagBodyEx = { 
-        name: "runner",
-        cost: 99,
-        highestBidder: 105,
-        storyNum: 10,
-    }
-    const IcoArray = [
-        // {
-        //     Icon: EditIcon,
-        //     pre: "Edit",
-        //     class: "approveSurround",
-        // },
-        { childHere: true, class: "approveSurround" },
-        {
-            Icon: CloseIcon,
-            pre: "Remove",
-            class: "rejectSurround",
-        },
-    ]
-
     console.log('tags are : ', tags);
 
     useEffect(()=>{
@@ -67,9 +47,10 @@ function AdminManageTags(){
         }
     }, [])
 
-    //* Remove ad and refreash the Ad state.
-    const removeTag = async (e) => {
+    //* Remove tag and refreash the Tag state.
+    const removeTag = async (e, i, info) => {
         e.preventDefault();
+        console.log('removeTag.  info is: ', info);
         const tag_id = e.target.dataset.id;
         const deleted_tag = await axiosPrivate.delete(`/api/tag/${tag_id}`, { 
         });
@@ -77,22 +58,96 @@ function AdminManageTags(){
         setTags(newTags);
     }
 
+    //* Block tag in database and update local page state.
+    const blockTag = async (e, i, info) => {
+        e.preventDefault();
+        console.log('blockTag.  info is: ', info);
+        const tag_id = e.target.dataset.id;
+        const blocked_tag = await axiosPrivate.post(`/api/tag/${tag_id}/block`, { 
+        });
+        updateATagSetter(blocked_tag.data._id);
+    }
+
+    //* Unblock tag in database and update local page state.
+    const unblockTag = async (e, i, info) => {
+        e.preventDefault();
+        console.log('unblockTag.  info is: ', info);
+
+        const tag_id = e.target.dataset.id;
+        const unblocked_tag = await axiosPrivate.post(`/api/tag/${tag_id}/unblock`, { 
+        });
+        updateATagSetter(unblocked_tag.data._id);
+    }
+
+
+    const IcoArray = [
+        { childHere: true, class: "approveSurround" },
+        {
+            Icon: CloseIcon,
+            pre: "Remove",
+            class: "rejectSurround",
+        },
+        {
+            Icon: CloseIcon,
+            pre: "Block",
+            class: "rejectSurround",
+            clickHandler: blockTag,
+        },
+    ]
+
+    const IcoArrayBlocked = [
+        { childHere: true, class: "approveSurround" },
+        {
+            Icon: CloseIcon,
+            pre: "Remove",
+            class: "rejectSurround",
+        },
+        {
+            Icon: CloseIcon,
+            pre: "Unblock",
+            class: "rejectSurround",
+            clickHandler: unblockTag,
+        },
+    ]
+
     return(
         <>
             <h1 className="services">Manage Tags</h1>
             <ModalWrapper buttonTitle="Create Tag">
                 <CreateTag setter={addATagSetter}/>
             </ModalWrapper>
-            {
+            {   
+                //* Render non blocked tags.
                 tags?.length ?
-
-                    tags.map((tag, i) =>         
+                    tags.filter(tag => !tag.is_blocked).map((tag, i) =>         
                     <TagLinkItem 
-                        tag= { { ...tagBodyEx, name: tag.name } }
+                        tag= { tag }
                         IcoArray = { IcoArray } 
                         wrapperClass="tagItem" 
                         classy="tagLine"
                         key= { i }
+                        info = { { "data-id": tag._id } }
+                    >
+                        <ModalWrapper buttonTitle="Edit" Ico= { EditIcon }>
+                            <EditTag tag_id={tag._id} setter={updateATagSetter}/>
+                        </ModalWrapper>
+                    </TagLinkItem>)
+                : <p>No tags to display</p>
+            }
+
+            <h2>Blocked Tags</h2>
+            {
+                //* Render blocked tags.
+                tags?.length ?
+                    tags.filter(tag => tag.is_blocked).map((tag, i) =>         
+                    <TagLinkItem 
+                        tag= { tag }
+                        IcoArray = { IcoArrayBlocked } 
+                        wrapperClass="tagItem" 
+                        classy="tagLine"
+                        key= { i }
+                        // data-id = { tag._id }
+                        info = { { "data-id": tag._id } }
                     >
                         <ModalWrapper buttonTitle="Edit" Ico= { EditIcon }>
                             <EditTag tag_id={tag._id} setter={updateATagSetter}/>
@@ -106,9 +161,43 @@ function AdminManageTags(){
 
 
 
-
-
 export default AdminManageTags;
+
+
+
+// (
+//     <ul>
+//          { tags.filter(tag => tag.is_blocked === false).map((tag, i) => {
+//              return (
+//                  <li key={i}>{tag.name}             
+//                      <ModalWrapper buttonTitle="Edit">
+//                          <EditTag tag_id={tag._id} setter={updateATagSetter}/>
+//                      </ModalWrapper>
+//                  <button data-id={tag._id} onClick={removeTag}>Remove</button>
+//                  <button data-id={tag._id} onClick={blockTag}>Block</button></li>
+//              )
+//          })}
+//     </ul> 
+//  )
+
+
+
+
+// (
+//     <ul>
+//          { tags.filter(tag => !tag.is_blocked).map((tag, i) =>  { 
+//              return (
+//                  <li key={i}>{tag.name} 
+//                  <ModalWrapper buttonTitle="Edit">
+//                      <EditTag tag_id={tag._id} setter={updateATagSetter}/>
+//                  </ModalWrapper>
+//                  <button data-id={tag._id} onClick={removeTag}>Remove</button>
+//                  <button data-id={tag._id} onClick={unblockTag}>unblock</button></li>
+//          )
+//          })}
+//     </ul> 
+//  )
+
 
 
 

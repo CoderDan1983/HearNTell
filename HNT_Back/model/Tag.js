@@ -10,7 +10,11 @@ const Tag = new Schema({
   name: String,
   highest_bid: Number,
   highest_bidder: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  number_of_stories_with_tag: Number //* filled in with the static method of this model.
+  number_of_stories_with_tag: Number, //* filled in with the static method of this model.
+  is_blocked: {
+    type: Boolean,
+    default: false
+  }
 }, 
 { 
   timestamps: true 

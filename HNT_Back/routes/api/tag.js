@@ -23,6 +23,14 @@ router.route('/story/:story_id')
 router.route('/popular')
     .get(verifyRoles(ROLES_LIST.Member), tagController.popular);
 
+//     Block a tag                                POST /api/tag/{tag_id}/block
+router.route('/:tag_id/block')
+.post(verifyRoles(ROLES_LIST.Member), tagController.block);
+
+//     Unblock a tag                                POST /api/tag/{tag_id}/unblock
+router.route('/:tag_id/unblock')
+.post(verifyRoles(ROLES_LIST.Member), tagController.unblock);
+
 //     Get single tag                              GET /api/tag/{tag_id}
 router.route('/:tag_id')
     .get(verifyRoles(ROLES_LIST.Member), tagController.getTag);
@@ -34,6 +42,7 @@ router.route('/:tag_id')
 //     Delete a tag                                DELETE /api/tag/{tag_id}
 router.route('/:tag_id')
     .delete(verifyRoles(ROLES_LIST.Member), tagController.remove);
+
 
 //    Common tags for creator                     GET /api/tag/common_tags/{creator_id}
 router.route('/common_tags/creator_id')
