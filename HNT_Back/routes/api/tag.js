@@ -15,6 +15,10 @@ router.route('/')
 router.route('/')
     .get(verifyRoles(ROLES_LIST.Member), tagController.index);
 
+//     Get a list of all tags including blocked                     GET /api/tag/admin_index
+router.route('/admin_index')
+.get(verifyRoles(ROLES_LIST.Member), tagController.adminIndex);
+
 //     Get tags for a story                        GET /api/tag/story/{story_id}
 router.route('/story/:story_id')
     .get(verifyRoles(ROLES_LIST.Member), tagController.tagsForStory);

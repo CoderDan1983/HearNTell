@@ -30,6 +30,14 @@ const index = async (req, res) => {
   res.json(tags);
 };
 
+//* Get a list of all tags including blocked
+const adminIndex = async (req, res) => {
+  console.log("Got to tag index");
+  let tags = await Tag.find({})
+  .populate('highest_bidder');
+  res.json(tags);
+};
+
 //* Get all the tags for a specific story
 const tagsForStory = async (req, res) => {
   let story_tags = [];
@@ -101,6 +109,7 @@ const unblock = async (req, res) => {
 module.exports = {
   create,
   index,
+  adminIndex,
   tagsForStory,
   popular,
   getTag,
