@@ -8,9 +8,9 @@ const Admin = () => {
         <section>
             <h1>Admin Home Page</h1>
             <br />
-            <Users />
+            <Link to="../adminManageUsers">Manage Users</Link>
             <br />
-            <TagsAdmin />
+            <Link to="../adminManageTags">Manage Tags</Link>
           
         </section>
     )
