@@ -26,8 +26,19 @@ async function prepareStoryAndSetTags(req){
 
   // console.log('tags are: ', tags);
 
-  tags.map(async (tag) => { //@ b) saving tags to tags collection (?)
-      await Tag.findOneAndUpdate({ name: tag }, { name: tag }, { upsert: true});
+  tags = tags.map(async (tag) => { //@ b) saving tags to tags collection (?)
+
+    //* If tag is blocked, remove it from the list and don't save it.
+      let foundTag = await Tag.findOne( {name: tag}) || false;
+      if (foundTag) {
+        if (!foundTag.is_blocked) {
+          return tag;
+        }
+      } else {
+        await Tag.create({ name: tag });
+        return tag;
+      }
+      
   });
 
     // if(playlist_id){ //* story_id as well as playlist_id would be needed here!!!

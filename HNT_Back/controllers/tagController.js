@@ -25,7 +25,7 @@ const create = async (req, res) => {
 //* Get a list of all tags
 const index = async (req, res) => {
   console.log("Got to tag index");
-  let tags = await Tag.find({})
+  let tags = await Tag.find({is_blocked: false})
   .populate('highest_bidder');
   res.json(tags);
 };
@@ -74,6 +74,27 @@ const remove = async (req, res) => {
   res.json(tag);
 };
 
+//* Block a tag and remove it from stories and campaigns
+const block = async (req, res) => {
+  const tag_id = req.params.tag_id;
+  let tag = await Tag.findOneAndUpdate({_id: tag_id}, {is_blocked: true});
+  console.log("Tag in controller", tag.name);
+  //todo Find all stories with the tag and remove the tag from the story
+  let stories = await Story.updateMany({}, { $pull: { tags: { $in: tag.name } }}); 
+  console.log("Stories updated", stories);
+  //todo Find all campaigns with the tag and remove the tag from the campaigns
+  let campaigns = await Campaign.updateMany({}, { $pull: { tags: { $in: tag.name } }}); 
+  res.json(tag);
+};
+
+//* Block a tag and remove it from stories and campaigns
+const unblock = async (req, res) => {
+  const tag_id = req.params.tag_id;
+  let tag = await Tag.findOneAndUpdate({_id: tag_id}, {is_blocked: false});
+  res.json(tag);
+};
+
+
 
 
 
@@ -84,5 +105,7 @@ module.exports = {
   popular,
   getTag,
   update,
-  remove
+  remove,
+  block,
+  unblock
 }
