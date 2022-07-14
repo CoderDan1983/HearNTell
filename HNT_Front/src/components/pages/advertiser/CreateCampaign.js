@@ -9,7 +9,7 @@ export default function CreateCampaign(){
     const navigate = useNavigate();
     const location = useLocation();
     const [name, setName] = useState('');
-    const [ad, setAd] = useState('');
+    const [ad_id, setAdId] = useState('');
     const [ads, setAds] = useState([]); //* A list of ads to link to campaign.
     const [maximumBid, setMaximumBid] = useState('');
     const [budget, setBudget] = useState('');
@@ -48,7 +48,7 @@ export default function CreateCampaign(){
 
         let campaignData = {
             name: name, 
-            ad: ad, 
+            ad_id: ad_id, 
             maximumBid: maximumBid,
             budget: budget, 
             targetAudienceAll: targetAudienceAll,
@@ -76,9 +76,9 @@ export default function CreateCampaign(){
             />
 
             <label htmlFor="ad">Select Ad: </label>
-            <select onChange={ (e) => setAd(e.target.value)}>
+            <select onChange={ (e) => setAdId(e.target.value)}>
             {ads.map(ad => (
-              <option key={ad._id} value={ad}>
+              <option key={ad._id} value={ad._id}>
                 {ad.name}
               </option>
             ))}

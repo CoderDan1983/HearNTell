@@ -9,7 +9,7 @@ const { properlyUppercased } = require("../custom_modules/utilities");
 const Tag = new Schema({
   name: String,
   highest_bid: Number,
-  highest_bidder_id: String,
+  highest_bidder: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   number_of_stories_with_tag: Number //* filled in with the static method of this model.
 }, 
 { 

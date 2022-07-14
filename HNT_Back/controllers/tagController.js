@@ -1,28 +1,13 @@
 const Tag = require('../model/Tag');
 const Story = require('../model/Story');
-
-
-const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back")
-// import { fakeStories, fakeStories1,  fakeTags, fakeSearches, fakeSubList, fakeBaskets, fakeQueue,
-// } from '../../HNT_Front/src/components/fakeApi/fakeStories';
+const Campaign = require('../model/Campaign');
 
 //* Get a single tag
 const getTag = async (req, res) => {
   console.log('getTag backend!')
   const tag_id = req.params.tag_id;
-  //we are recieving the story_id :)
-  // console.log(tag_id);
-  // const story_id = req.body.story_id;
-  // const story = await Story.findOne({_id: story_id});
-  // if (!story) return res.status(204).json({ 'message': 'No story found' });
-  // // res.json(story);
-  const tags = fake.fakeTags.filter((tag)=>{
-    return tag._id === tag_id;
-  });
-  
-  // console.log('tags matching _id of ' + tag_id + " are: ");
-  // console.log(tags)
-  res.json(tags);
+  const tag = await Tag.findOne({_id: tag_id})
+  res.json(tag);
 }
 
 
@@ -40,7 +25,8 @@ const create = async (req, res) => {
 //* Get a list of all tags
 const index = async (req, res) => {
   console.log("Got to tag index");
-  let tags = await Tag.find({});
+  let tags = await Tag.find({})
+  .populate('highest_bidder');
   res.json(tags);
 };
 
@@ -79,6 +65,16 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
   const tag_id = req.params.tag_id;
   let tag = await Tag.findOneAndDelete({_id: tag_id});
+  console.log("Tag in controller", tag.name);
+  //todo Find all stories with the tag and remove the tag from the story
+  let stories = await Story.updateMany({}, { $pull: { tags: { $in: tag.name } }}); 
+  console.log("Stories updated", stories);
+  //todo Find all campaigns with the tag and remove the tag from the campaigns
+  Campaign.updateMany({}, { $pull: { tags: { $in: tag.name } }}); 
+
+  //todo Block the tag from being used again. ???
+
+  //todo Remove the actual tag from the database
   res.json(tag);
 };
 

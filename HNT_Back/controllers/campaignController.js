@@ -1,7 +1,10 @@
 const Campaign = require('../model/Campaign');
 const AdRun = require('../model/AdRun');
 const User = require('../model/User');
-const { properlyUppercased } = require('../custom_modules/utilities') 
+const Tag = require('../model/Tag');
+
+const { properlyUppercased } = require('../custom_modules/utilities');
+
 
 //* Create an campaign
 const create = async (req, res) => {
@@ -14,7 +17,7 @@ const create = async (req, res) => {
   
   // console.log('jsonnedTags: ', jsonnedTags, typeof(jsonnedTags));
   const tags = jsonnedTags.map((tag)=> properlyUppercased(tag));
-
+  updateTags(tags);
   let user = User.findOne({ username: req.user});
   
   let campaign_data = {
@@ -22,7 +25,7 @@ const create = async (req, res) => {
     name: request_data.name,
     tags: tags, // Expects an array
     ad_audio_url: request_data.ad_audio_url,
-    ad_id: request_data.ad._id,
+    ad_id: request_data.ad_id,
     max_bid: request_data.maximumBid,
     budget: request_data.budget,
     spent_so_far: request_data.spent_so_far,
@@ -64,15 +67,18 @@ const show = async (req, res) => {
 const update = async (req, res) => {
   const campaign_id = req.params.campaign_id;
   const request_data = req.body;
+  const { tags: jsonnedTags } = req.body;
+  const tags = jsonnedTags.map((tag)=> properlyUppercased(tag));
+  updateTags(tags);
+
   let campaign_data = {
     user_id: request_data.user_id,
     name: request_data.name,
-    tags: request_data.tags, // Expects an array
+    tags: tags, // Expects an array
     ad_audio_url: request_data.ad_audio_url,
     ad_id: request_data.ad_id,
     max_bid: request_data.max_bid,
     budget: request_data.budget,
-    spent_so_far: request_data.spent_so_far,
     active: request_data.active
   }
   let campaign = await Campaign.findOneAndUpdate({_id: campaign_id}, campaign_data, {new: true});
@@ -93,7 +99,18 @@ const adRunsPerCampaign = async (req, res) => {
   res.json(ad_runs);
 };
 
+//* Makes sure any new tags are added to the Tag database.
+function updateTags(tags){
 
+  tags.map(async (tag) => { //@ b) saving tags to tags collection (?)
+    // console.log("tag in update before update", tag);
+      Tag.findOneAndUpdate({ name: tag }, { name: tag }, { upsert: true, new: true})
+      .then((tag) => {
+        // console.log("tag in update", tag);
+      });
+  });
+  
+}
 
 module.exports = {
   create,

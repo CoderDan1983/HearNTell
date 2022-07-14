@@ -11,7 +11,7 @@ export default function CreateCampaign(){
     const navigate = useNavigate();
     const location = useLocation();
     const [name, setName] = useState('');
-    const [ad, setAd] = useState('');
+    const [ad_id, setAdId] = useState('');
     const [ads, setAds] = useState([]); //* A list of ads to link to campaign.
     const [maximumBid, setMaximumBid] = useState('');
     const [budget, setBudget] = useState('');
@@ -61,11 +61,11 @@ export default function CreateCampaign(){
                 //todo Set the initial state of everything
                 if(isMounted) {
                     setName(response.data.name);
-                    setAd(response.data.ad);
-                    setMaximumBid(response.data.maximumBid);
+                    setAdId(response.data.ad_id);
+                    setMaximumBid(response.data.max_bid);
                     setBudget(response.data.budget);
                     setTargetAudienceAll(response.data.targetAudienceAll);
-                    setCampaignActive(response.data.campaignActive);
+                    setCampaignActive(response.data.active);
                     setTags(response.data.tags);
                 }
 
@@ -89,11 +89,11 @@ export default function CreateCampaign(){
 
         let campaignData = {
             name: name, 
-            ad: ad, 
-            maximumBid: maximumBid,
+            ad_id: ad_id, 
+            max_bid: maximumBid,
             budget: budget, 
             targetAudienceAll: targetAudienceAll,
-            campaignActive: campaignActive, 
+            active: campaignActive, 
             tags: tags,
 
         };
@@ -105,6 +105,16 @@ export default function CreateCampaign(){
             navigate('/campaigns', { state: { from: location }, replace: true });
         })
     };
+
+    //* Remove ad and refreash the Ad state.
+    const removeHandler = async (e) => {
+        e.preventDefault();
+        axiosPrivate.delete(`/api/campaign/${campaign_id}`, { 
+        })
+        .then(()=>{
+            navigate('/campaigns', { state: { from: location }, replace: true });
+        })
+    }
 
     return(<div>
         <h1>Edit Campaign </h1>
@@ -120,9 +130,9 @@ export default function CreateCampaign(){
             />
 
             <label htmlFor="ad">Select Ad: </label>
-            <select onChange={ (e) => setAd(e.target.value)}>
+            <select onChange={ (e) => setAdId(e.target.value)} value={ad_id} >
             {ads.map(ad => (
-              <option key={ad._id} value={ad}>
+              <option key={ad._id} value={ad._id}>
                 {ad.name}
               </option>
             ))}
@@ -158,7 +168,7 @@ export default function CreateCampaign(){
                   id="campaignActive" 
                   name="campaignActive" 
                   type="checkbox"
-                  value={ campaignActive }
+                  checked= {campaignActive }
                   onChange = { (e) => setCampaignActive(e.target.checked) }
               />
              
@@ -168,7 +178,8 @@ export default function CreateCampaign(){
 
             </div>
 
-            <button type="button" onClick={submitFormHandler}>Submit</button>
+            <button type="button"  onClick={submitFormHandler}>Update</button>
+            <button type="button" className="btn danger" onClick={removeHandler}>Remove Campaign</button>
         </form>
     </div>)
 }

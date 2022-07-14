@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { useNavigate, useLocation } from "react-router-dom";
-import { makeAddOneSetter, makeUpdateOneByIdSetter } from '../../../custom_modules_front/utility_front';
 import CampaignListItem, {campaignListItem} from './CampaignListItem';
+import LinkListItem from "../../parts/LinkListItem";
 
 
 export default function Campaigns(){
@@ -10,8 +10,6 @@ export default function Campaigns(){
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const location = useLocation();
-    const addACampaignSetter = makeAddOneSetter( campaigns, setCampaigns ); //* For use in CreateCampaign component
-    const updateACampaignSetter = makeUpdateOneByIdSetter( campaigns, setCampaigns ); //* For use in EditCampaign component
 
     useEffect(()=>{
         let isMounted = true;
@@ -44,6 +42,7 @@ export default function Campaigns(){
         <>
             <h1 className="products">Campaign Page</h1>
             <h2 className="products">A list of advertiser's campaigns</h2>
+            <LinkListItem name="Create Campaign" to="/createCampaign" />
             {
                 campaigns?.length ?
                 (

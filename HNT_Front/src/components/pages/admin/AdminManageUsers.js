@@ -1,3 +1,6 @@
+import Users from '../../parts/Users';
+
+
 export default function AdminManageUsers(){
-    return(<div>AdminManageUsers</div>)
+    return(<Users />)
 }
