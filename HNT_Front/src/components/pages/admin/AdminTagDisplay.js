@@ -1,4 +1,4 @@
-import TagLinkItem from '../../parts/TagLinkItem';
+import LinkCapsule from '../../parts/LinkCapsule';
 import ModalComponent from '../../parts/ModalComponent';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 
@@ -71,7 +71,7 @@ export default function AdminTagDisplay({ tags, setTags, blocked: blockState }){
         //* Render non blocked state.
         tags?.length ?
             tags.filter(tag => tag.is_blocked === blockState).map((tag, i) =>         
-            <TagLinkItem 
+            <LinkCapsule 
                 entry= { tag }
                 IcoArray = { IcoArray } 
                 wrapperClass="tagItem" 
@@ -84,7 +84,7 @@ export default function AdminTagDisplay({ tags, setTags, blocked: blockState }){
                     <p>Highest Bidder: { tag.highestBidder }</p>
                     <p># of Stories { tag.storyNum }</p>
                 </>
-            </TagLinkItem>)
+            </LinkCapsule>)
         : <p>No tags to display</p>
     )
 }

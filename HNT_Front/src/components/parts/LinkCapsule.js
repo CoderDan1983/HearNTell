@@ -15,7 +15,7 @@ import ModalComponent from './ModalComponent';
 
 // 
 
-export default function TagLinkItem({ to, entry, classy="link", wrapperClass="storyItem", 
+export default function LinkCapsule({ to, entry, classy="link", wrapperClass="storyItem", 
 IcoArray, _id, menu, children }){
     const url = _id ? `${to}/${_id}` : to;
 

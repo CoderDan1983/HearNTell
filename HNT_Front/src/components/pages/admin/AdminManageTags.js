@@ -65,7 +65,7 @@ function AdminManageTags(){
             <AdminTagDisplay tags = { tags } setTags = { setTags } blocked = { false } />
 
             <h2>Blocked Tags</h2>
-                <AdminTagDisplay tags = { tags } setTags = { setTags }  blocked = { true } />
+            <AdminTagDisplay tags = { tags } setTags = { setTags }  blocked = { true } />
         </>
     )
 }
@@ -134,7 +134,7 @@ export default AdminManageTags;
 //             { tags.map((tag, i) =>         
 //                 // console.log('tag is: ', tag);
                 
-//                 <TagLinkItem 
+//                 <LinkCapsule 
 //                     tag= { tagBodyEx } 
 //                     IcoArray = { IcoArray } 
 //                     wrapperClass="tagItem" 
@@ -143,7 +143,7 @@ export default AdminManageTags;
 //                     <ModalWrapper buttonTitle="Edit" Ico= { EditIcon }>
 //                         <EditTag tag_id={tag._id} setter={updateATagSetter}/>
 //                     </ModalWrapper>
-//                 </TagLinkItem> 
+//                 </LinkCapsule> 
 //             }
 //             // <li key={i}>{tag.name}
 //                 {/* <ModalWrapper buttonTitle="Edit" Ico= { EditIcon }>
