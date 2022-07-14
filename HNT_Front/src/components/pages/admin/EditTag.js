@@ -5,10 +5,10 @@ import { useContext } from 'react';
 import { ModalContext } from '../../parts/ModalWrapper';
 
 export default function EditTag(props){
-
+    console.log('got to EditTag.  These are the props: ', props)
     const axiosPrivate = useAxiosPrivate();
     const [name, setName] = useState('');
-    const tag_id = props.tag_id;
+    const tag_id = props._id;
 
     //* Load the initial ad data into the form.
     useEffect(()=>{

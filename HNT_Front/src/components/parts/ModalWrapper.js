@@ -21,6 +21,8 @@ export default function ModalWrapper({ children, className, buttonTitle, Ico }) 
         setOpen(true); //* if open has been set to true, openClicked.current has too!
     };
 
+    
+
     return (
         <ModalContext.Provider value={{ setOpen }}>
             { Ico ? 
@@ -29,7 +31,6 @@ export default function ModalWrapper({ children, className, buttonTitle, Ico }) 
             }
             <div
                 ref={modalRef}
-                // className = { open ? "modal" : "hide" }
                 className = { open ? (className ? className : "modal") : "hide" }
             >
                 { open && children }
