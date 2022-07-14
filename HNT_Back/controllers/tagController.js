@@ -70,11 +70,7 @@ const remove = async (req, res) => {
   let stories = await Story.updateMany({}, { $pull: { tags: { $in: tag.name } }}); 
   console.log("Stories updated", stories);
   //todo Find all campaigns with the tag and remove the tag from the campaigns
-  Campaign.updateMany({}, { $pull: { tags: { $in: tag.name } }}); 
-
-  //todo Block the tag from being used again. ???
-
-  //todo Remove the actual tag from the database
+  let campaigns = await Campaign.updateMany({}, { $pull: { tags: { $in: tag.name } }}); 
   res.json(tag);
 };
 
