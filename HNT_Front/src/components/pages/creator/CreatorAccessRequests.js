@@ -61,10 +61,13 @@ export default function CreatorAccessRequests(){
                 class: "rejectSurround", 
             })
             // alert(subscriber.listener_id);
+            const name = subscriber.playlist_id ? 
+                `${subscriber.listener.name} for playlist:  ${subscriber?.playlist?.title}` : 
+                subscriber.listener.name;
             return(<LinkListItem 
                 key = { i }
                 to = { `../../creatorProfile/${ subscriber.listener_id }` }
-                name = { `${ subscriber.listener.name }`}
+                name = { name }
                 IcoArray = { IcoArray }
             />);
         })}

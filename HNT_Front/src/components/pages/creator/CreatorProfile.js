@@ -15,17 +15,17 @@ import LinkListItem from "../../parts/LinkListItem";
 import { storyMenu, playlistsMenu } from '../../../hooks/useMenus';
 import { get_private, post_private, delete_private } from '../../../hooks/useBackendRequest';
 
-
 export default function CreatorProfile(){    
     const nav = useNavigate();
     const loc = useLocation();
     const axP = useAxiosPrivate();
 
     // const forTheMenu = { nav, loc, axP, goTo }
-    const forPlaylistsMenu = { nav, loc, axP };
-    const playlistOptions = { can_remove_playlist: false, subscribe_option: true }; //creator_mode: false, 
-
     const { creator_id } = useParams();
+    const goTo = `../../creatorProfile/${ creator_id }`; //* essentially
+    const forPlaylistsMenu = { nav, loc, axP, goTo };
+    const playlistOptions = { can_remove_playlist: false, subscribe_option: true }; //creator_mode: false, 
+    
     const [ creatorProfile, setCreatorProfile ] = useState();
     const [playlists, setPlaylists] = useState([]);
     const [ mySubscriptions, setMySubscriptions ] = useState([]);
@@ -41,12 +41,13 @@ export default function CreatorProfile(){
     console.log('mySubscriptions is: ', mySubscriptions);
 
     //@ subscribe to creator options
+    //* note this followCreator is checking not only if we are subscribed, but if we are subscribed to the author themselves!
     const followCreator = (mySubscriptions && mySubscriptions.length && creator_id) && 
-        mySubscriptions.filter((sub)=> sub.creator_id === creator_id);
+        mySubscriptions.filter((sub)=> (sub.creator_id === creator_id)&&(!sub.playlist_id));
     const is_following_creator = (followCreator && followCreator.length) ? true : false;
     const subscription_id = is_following_creator ? followCreator[0]._id : "";
     let title, offer;
-    const goTo = `../../creatorProfile/${ creator_id }`;
+    
 
     function unsubscribe(subscription_id){
         delete_private(axP, nav, loc, 'subscription', { _id: subscription_id, goTo });
@@ -87,6 +88,7 @@ export default function CreatorProfile(){
                     { console.log('playlists is: ', playlists)}
                     { playlists && playlists.map((playlist, i)=>{ //story is currently 'null' ^_^
                         //* I count is_creator_playlist as 'false' because it's "listener style" here
+                        console.log('89.  playlist is: ', playlist)
                         const playlistMenu = { 
                             general: playlistsMenu(forPlaylistsMenu, playlist, null, mySubscriptions, playlistOptions),
                         }

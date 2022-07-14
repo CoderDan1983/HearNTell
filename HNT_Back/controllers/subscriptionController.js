@@ -1,5 +1,6 @@
 const Subscription = require('../model/Subscription');
 const User = require('../model/User');
+const Playlist = require('../model/Playlist');
 // const SubscriptionRequest = require('../model/SubscriptionRequest');
 
 
@@ -8,7 +9,10 @@ const index = async (req, res) => {
   const { _id: listener_id } = await User.findOne({ username: req.user });
   console.log('subscriptionController, index.  user_id is: ', listener_id);
 
-  let subscriptions = listener_id && await Subscription.find({ listener_id }).populate("creator", "name").populate("listener", "name");
+  let subscriptions = listener_id && await Subscription.find({ listener_id })
+    .populate("creator", "name")
+    .populate("listener", "name")
+    .populate("playlist", "title");
   console.log('line 12.  subscriptions is: ', subscriptions);
   // subscriptions && subscriptions.length && subscriptions;
 
@@ -23,7 +27,7 @@ const subscribers = async (req, res) => {
   console.log('subscriptionController, subscribers.  creator_id is: ', creator_id);
 
   let subscriptions = creator_id && await Subscription.find({ creator_id })
-    .populate("creator", "name").populate("listener", "name");
+    .populate("creator", "name").populate("listener", "name").populate("playlist", "title");
   console.log('line 25.  subscriptions are: ', subscriptions);
   // subscriptions && subscriptions.length && subscriptions;
   console.log('returning the following subscriptions: ', subscriptions);
@@ -52,6 +56,10 @@ const update = async (req, res) => {
   const subscription_data = {
     listener_id: req.body.listener_id,
     creator_id: req.body.creator_id,
+    playlist_id: req.body.playlist_id,
+    listener: req.body.listener_id,
+    creator: req.body.creator_id,
+    playlist: req.body.playlist_id,
     status: req.body.status,
   };
   console.log('subscriptionController, update.  params is: ', req.params);
@@ -84,8 +92,10 @@ const create = async (req, res) => { //createRequest //* only listeners can crea
     creator_id: req.body.creator_id,
     creator: req.body.creator_id,
     playlist_id: req.body.playlist_id,
+    playlist: req.body.playlist_id,
   };
-  console.log('subscriptionController, createRequest.  body is: ', req.body, ', listener_id is: ', listener_id);
+  console.log('body is: ', req.body, 'subcription_request_data is: ', subscription_request_data);
+  //console.log('subscriptionController, createRequest.  body is: ', req.body, ', listener_id is: ', listener_id);
   // let request = await SubscriptionRequest.create(subscription_request_data);
   let request = await Subscription.create(subscription_request_data);
   console.log('returning: ', request)
@@ -106,7 +116,8 @@ const approve_request = async (req, res) => {
   res.json(request); //returns non-updated version :)
 };
 
-//* Delete subscription request
+//* Delete subscription request.  
+//? do I ever use this!?!
 const remove_request = async (req, res) => {
   // const { _id: user_id } = await User.findOne({ username: req.user });
   const subscription_id = req.params.subscription_id;
@@ -115,6 +126,7 @@ const remove_request = async (req, res) => {
   let request = await Subscription.findOneAndDelete({ _id: subscription_id });
   console.log('returning: ', request)
   res.json(request);
+  // res.json({ testing: "1, 2, 3.  ^_^"})
 };
 
 module.exports = {

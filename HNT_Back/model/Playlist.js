@@ -21,7 +21,7 @@ const Playlist = new Schema({
   timestamps: true 
 });
 
-module.exports = mongoose.model('playlist', Playlist);
+module.exports = mongoose.model('Playlist', Playlist);
 
 //* Function to move the elements of an array around. Used to reorder the stories in a playlist.
 function arraymove(arr, fromIndex, toIndex) {

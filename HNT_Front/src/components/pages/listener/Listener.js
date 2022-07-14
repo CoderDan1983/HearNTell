@@ -35,7 +35,8 @@ export default function Listener(){
     const [ mySubscriptions, setMySubscriptions ] = useState([]);
 
     const [myPlaylists, setMyPlaylists] = useState([]);
-    const forPlaylistsMenu = { nav, loc, axP };
+    const goTo = "../listener";
+    const forPlaylistsMenu = { nav, loc, axP, goTo };
     const playlistOptions = { can_remove_playlist: true, subscribe_option: false }; //creator_mode: false, 
 
     const [queue, setQueue] = useState({});
@@ -75,6 +76,11 @@ export default function Listener(){
 
     // console.log(queryParamString(query))
     // console.log('queue is: ', queue, queue.story_ids);
+
+    const playlistSubscriptions = mySubscriptions.filter((sub)=> sub.playlist_id);
+    const creatorSubscriptions = mySubscriptions.filter((sub)=> !sub.playlist_id);
+    
+
     return(<div className='main'>
         <div className="hearAStory">
         <h1 className="consulting">Hear a Story</h1>
@@ -84,15 +90,41 @@ export default function Listener(){
         <div className="mainItems">
             <div>
                 People I subscribe to
-                { mySubscriptions && mySubscriptions.map((sub)=>{
+                { creatorSubscriptions && creatorSubscriptions.map((sub, i)=>{
+                    
+                    const name = sub.playlist_id ? 
+                    `${sub.creator.name} - ${ sub.playlist.title }` : 
+                    sub.creator.name;
                     return (sub.status === "approved" ? 
                     <LinkListItem 
-                        key={ sub.listener_id } 
+                        key={ `${sub.listener_id}_${i}` } 
                         to= "/creatorProfile"
-                        name={ sub.creator.name } 
+                        name={ name } 
                         Ico={ DeleteForever }
                         _id = { sub.creator_id } 
-                    /> : <></>)
+                    /> : <div key={ `${sub.listener_id}_${i}` } ></div>)
+                })}
+            </div>
+        </div>
+        <div className="mainItems">
+            <div>
+                Playlists I subscribe to
+                { playlistSubscriptions && playlistSubscriptions.map((sub, i)=>{
+                    const menu = { 
+                        general: playlistsMenu(forPlaylistsMenu, sub.playlist, null, playlistSubscriptions, { subscribe_option: true }),
+                    }
+                    const name = sub.playlist_id ? 
+                    `${sub.creator.name} - ${ sub.playlist.title }` : 
+                    sub.creator.name;
+                    return (sub.status === "approved" ? 
+                    <LinkListItem 
+                        key={ `${sub.listener_id}_${i}` } 
+                        to= "/creatorProfile"
+                        name={ name } 
+                        // Ico={ DeleteForever }
+                        menu = { menu }
+                        _id = { sub.creator_id } 
+                    /> : <div key={ `${sub.listener_id}_${i}` } ></div>)
                 })}
             </div>
         </div>
@@ -100,20 +132,20 @@ export default function Listener(){
             <div>
                 My Playlists
                 { console.log('myPlaylists is: ', myPlaylists)}
-                { myPlaylists && myPlaylists.map((playlist)=>{
+                { myPlaylists && myPlaylists.map((playlist, i)=>{
                     const playlistMenu = { 
                         general: playlistsMenu(forPlaylistsMenu, playlist, null, mySubscriptions, playlistOptions),
                     }
                     return (
                         !playlist.is_creator_list ? 
                         <LinkListItem 
-                            key={ playlist._id } 
+                            key={ `${ playlist._id }_${i}` } 
                             to= "/listenerPlaylist"
                             name={ playlist.title }
                             _id = { playlist._id } 
                             menu = { playlistMenu }
                         /> : 
-                        <div key={ playlist._id }></div>
+                        <div key={ `${ playlist._id }_${i}` }></div>
                     ) 
                 })}
             </div>
@@ -127,9 +159,9 @@ export default function Listener(){
                 MyQueue <br />
                 (Where does this go?)
             </div>
-            { queueStories && queueStories.length && queueStories.map((story)=>{
+            { queueStories && queueStories.length && queueStories.map((story, i)=>{
                 return (<LinkListItem 
-                    key={ story._id } 
+                    key={ `${ story._id }_${i}` } 
                     to= "/listenerSingleStory" 
                     name={ story.title } 
                     _id = { story._id }

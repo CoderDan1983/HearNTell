@@ -1,6 +1,6 @@
 import { post_private, delete_private } from './useBackendRequest';
 
-export function playlistsMenu({ nav, loc, axP }, playlist, story, subscriptions, options){
+export function playlistsMenu({ nav, loc, axP, goTo }, playlist, story, subscriptions, options){
     let menu = [];
 
     const { can_remove_playlist, subscribe_option } = options;  //creator_mode
@@ -30,6 +30,7 @@ export function playlistsMenu({ nav, loc, axP }, playlist, story, subscriptions,
     if(subscribe_option) { //* only listeners have the option to subscribe/unsubscribe :)
         //@ subscribe to playlist options.
         //* if a "subscribed" listener with a status of approved or pending, deal with accordingly.
+        playlist_subscribed && console.log('useMenus, line 33.  subscription_id is: ', playlist_subscription[0]._id)
         playlist_subscribed && playlist_subscription[0].status !== "rejected" &&
         menu.push({ //*listener
             title: playlist_subscription[0].status === "approved" ? 
@@ -43,7 +44,7 @@ export function playlistsMenu({ nav, loc, axP }, playlist, story, subscriptions,
         !playlist_subscribed && menu.push({ //*listener
             title: `Subscribe to playlist: ${ playlist.title }`,
             //* req.user will be available on server ^_^ 
-            info: { creator_id: playlist.creator_id, playlist_id: playlist._id, }, //playlist
+            info: { creator_id: playlist.user_id, playlist_id: playlist._id, }, //playlist
             handleClick: handleCreateSubscriptionRequest,
         });
 
@@ -69,12 +70,16 @@ export function playlistsMenu({ nav, loc, axP }, playlist, story, subscriptions,
 
     let playlistStarter = [...menu];
 
-    function handleCreateSubscriptionRequest(event, index, payload){ //user_id, creator_id, playlist_id
-        post_private(axP, nav, loc, 'subscription/', { payload }); //* listener
+    function handleCreateSubscriptionRequest(event, index, obj){ //user_id, creator_id, playlist_id
+        const payload = obj["general"][index]["info"]; //0 or index (?)
+        //console.log('handleCreateSubscriptionRequest, playload is: ', payload, 'index is: ', index)
+        post_private(axP, nav, loc, 'subscription/', { payload, goTo }); //* listener
     }
 
-    function handleDeleteSubscription(event, index, { subscription_id }){ //* creator, listener
-        delete_private(axP, nav, loc, 'subscription/', { _id: subscription_id });
+    function handleDeleteSubscription(event, index, obj){ //* creator, listener
+        const subscription_id = obj["general"][index]["info"]["subscription_id"];
+
+        delete_private(axP, nav, loc, 'subscription/', { _id: subscription_id, goTo });
     }
 
     function handleRemovePlaylist(event, index, { playlist_id }){
@@ -83,7 +88,7 @@ export function playlistsMenu({ nav, loc, axP }, playlist, story, subscriptions,
         delete_private(axP, nav, loc, `playlist/${ playlist_id }`, { });
     }
 
-    function followingPlaylist(playlist, subscriptions){
+    function followingPlaylist(playlist, subscriptions){ //should only return 1
         return subscriptions.filter((sub) => sub.playlist_id === playlist._id);
     }
 
