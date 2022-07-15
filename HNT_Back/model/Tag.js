@@ -10,7 +10,7 @@ const Tag = new Schema({
   name: {
     type: String,
     unique: true,
-  }
+  },
   highest_bid: Number,
   highest_bidder: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   number_of_stories_with_tag: Number, //* filled in with the static method of this model.

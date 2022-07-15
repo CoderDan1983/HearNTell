@@ -369,6 +369,21 @@ li {
 .rejectSurround:hover {
     background-color: rgb(255, 116, 116);
 }
+
+.focused {
+    opacity: 1.0;
+    border: 1px black solid;
+}
+
+.blurred {
+    opacity: 0.7;
+    border: 1px gray solid;
+}
+
+.focused, .blurred {
+    border-radius: 4px;
+    background-color:rgb(226, 226, 251)
+}
 /*
 
 @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');

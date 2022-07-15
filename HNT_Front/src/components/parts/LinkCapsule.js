@@ -38,33 +38,45 @@ IcoArray, _id, menu, children }){
                 pre, post //optional text to go before/after icon
             },
             { //* to control a modal
-                Component (required for modal).  
+                ModalComponent (required for modal).  
                     Contains the component that will go inside the modal, and indicates we will be using a modal)
                 Ico (optional) - the icon this modal will use,
-                cProps (optional) - the props that will be passed into the Component, along with the "entry"!
+                cProps (optional) - the props that will be passed into the ModalComponent, along with the "entry"!
                 buttonTitle (optional) - the text for the 'open modal button'
                 class (see above)
-            }
-
+            },
+            { //* to control a Component
+                Component (required).  
+                    Contains the component that will go inside the modal, and indicates we will be using a modal)                
+                cProps (optional) - the props that will be passed into the Component, along with the "entry"!
+                class (see above)
+            },
         */}
         
         { IcoArray && IcoArray.length && IcoArray.map((ico, i)=>{
             const icoClass = ico.class ? ico.class : "inherit";
             return (
-                ico.Component ? //* For Modals
+                ico.ComponentForModal ? //* For Modals
                 <div key = { i } className = { icoClass }>
                     <ModalComponent 
                         buttonTitle= { ico.buttonTitle } 
                         Ico= { ico.Ico } 
                         cProps = { {...ico.cProps, ...entry } }
+                        Component = { ico.ComponentForModal }
+                    />
+                </div> :
+                ico.Component ? //* For passed in Components            
+                    < ico.Component
+                        key = { i } 
+                        className = { icoClass }
+                        cProps = { {...ico.cProps, ...entry } }
                         Component = { ico.Component }
                     />
-                </div> 
                 : //* for icons
                 <div key = { i } className = { icoClass }> 
                     { ico.pre }  {/* optional text that goes before */}
                     <ico.Icon 
-                        onClick= { (e) => ico.clickHandler && ico.clickHandler(e, i, ico.info) } 
+                        onClick= { (e) => ico.clickHandler && ico.clickHandler(e, i, ico.info, entry) } 
                     />
                     { ico.post }  {/* optional text that goes after */}
                 </div>

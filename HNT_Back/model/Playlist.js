@@ -7,7 +7,7 @@ const Playlist = new Schema({
   user_id: String,
   story_ids: [String], //* Use the arraymove function reorder the ids when story order is changed by the user
   title: String,
-  description: String,
+    
   is_queue: { //* Denotes a special queue playlist
     type: Boolean,
     default: false

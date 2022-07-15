@@ -26,7 +26,7 @@ export default function ModalWrapper({ children, className, buttonTitle, Ico }) 
     return (
         <ModalContext.Provider value={{ setOpen }}>
             { Ico ? 
-                <div onClick={ handleOpen } >{ buttonTitle } <Ico /> </div>: 
+                <button type="button" onClick={ handleOpen } >{ buttonTitle } <Ico /> </button>: 
                 <button onClick={ handleOpen }>{ buttonTitle ? buttonTitle : "Open" }</button>
             }
             <div

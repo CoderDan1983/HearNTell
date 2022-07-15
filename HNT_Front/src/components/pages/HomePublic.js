@@ -12,6 +12,7 @@ export default function HomePublic(){
 
     const [stories, setStories] = useState([]);
     const [searches, setSearches] = useState([]);
+    const [ search, setSearch ] = useState([]);
 
     // const { story_id } = useParams();
 
@@ -28,7 +29,7 @@ export default function HomePublic(){
         <div>
             <div className="flexWrapper mainItems center">
                 <h2>Top Stories this Week:</h2>
-                <SearchComponent options={ searches }/>
+                <SearchComponent options={ searches } value = { search } setValue = { setSearch } />
             </div>
             {/* <div className="flexWrapper mainItems">
                 { stories && stories.map((story, i)=>{

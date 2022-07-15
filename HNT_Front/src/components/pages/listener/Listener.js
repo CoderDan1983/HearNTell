@@ -8,6 +8,7 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 
 // import { Link } from 'react-router-dom';
 import SearchComponent from '../../parts/SearchComponent';
+import SearchInterface from '../../parts/SearchInterface';
 import LinkListItem from '../../parts/LinkListItem';
 import ModalWrapper from '../../parts/ModalWrapper';
 import CreatePlaylist from './CreatePlaylist';
@@ -84,7 +85,9 @@ export default function Listener(){
     return(<div className='main'>
         <div className="hearAStory">
         <h1 className="consulting">Hear a Story</h1>
-        <SearchComponent options={ searches } />
+        {/* <SearchComponent options={ searches } /> */}
+
+        <SearchInterface options={ searches }/>
     </div>
     <div className="listenerGroups">
         <div className="mainItems">

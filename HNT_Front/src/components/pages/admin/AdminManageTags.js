@@ -50,7 +50,7 @@ function AdminManageTags(){
     const createModalInfo = {
         Ico: EditIcon, buttonTitle: "Create Tag",
         Component: CreateTag,
-        cProps: { setter: addATagSetter }
+        cProps: { setter: addATagSetter, className: "a" },
     }
 
     return(

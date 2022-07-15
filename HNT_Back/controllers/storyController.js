@@ -130,28 +130,71 @@ const popularByTag = async (req, res) => {
 const search = async (req, res) => {
   const search_string = req.params.search_string;
 
-  //? Get tags that match
+  //@ Search Author pages
+  let stories_by_author = [];
+  let author_page_by_name = await User.find({ name: search_string })
+    .collation({ locale: "en", strength: 1 })
+
+  //@ Search Stories
+  //* by author
+  if(author_page_by_name && author_page_by_name.length){ 
+    const author_id = author_page_by_name[0]._id; //.toString()
+    stories_by_author = await Story.find({ creator: author_id }) 
+      .populate('creator', "username name _id")
+      .populate("ratings");
+    // console.log('156: ', stories_by_author);
+  }
+
+  //* by story tag
   const search_tags = [search_string]; //# search_string.split(",").trim();
   console.log('search_tags are: ', search_tags);
-  let tag_stories = await Story.find({ tags: { $in: search_tags } })
+  let stories_by_tag = await Story.find({ tags: { $in: search_tags } }) //"Congo"
+    .collation({ locale: "en", strength: 1 })
     .populate('creator', "username name")
     .populate("ratings");
-  console.log('tag_stories are: ', tag_stories);
-  // .findOne( { topics : {$in: ['voyage', 'nautical']} }, { title: 1 } )
-  //? Get creator accounts that match name
-  //? there is no Creator model.  Did you mean User or Profile?
-  let creator_accounts = await User.find({ name: search_string }); //Creator
 
-  //? get titles that match
-  let title_stories = await Story.find({ title: search_string })
+  //* by title
+  let stories_by_title = await Story.find({ title: search_string })
+    .collation({ locale: "en", strength: 1 })
     .populate('creator', "username name")
     .populate("ratings");
+
+  //@ Search playlists
+  //* by title
+  const playlists_by_title = await Playlist.find({ title: search_string }) 
+    .collation({ locale: "en", strength: 1 })
+    .populate('creator', "username name _id")
+    .populate("ratings");
+
+  const stories_by_description = await Story.find({ "description": { "$regex": search_string, "$options": "i" } })
+  // .collation({ locale: "en", strength: 1 })
+  .populate('creator', "username name _id")
+  .populate("ratings");
+
+
+  // Books.find({
+  //   "authors": {
+  //     "$regex": "Alex",
+  //     "$options": "i"
+  //   }
+  // },
+
+  console.log('stories_by_description: ', stories_by_description)
+  
+
+
 
   let search_results = {
-    tag_matched_stories: tag_stories,
-    creator_account_matches: creator_accounts,
-    title_matched_stories: title_stories
+    tag: stories_by_tag,
+    author: stories_by_author,
+    title: stories_by_title
   }
+
+
+  
+//suggest common/popular tags(?) for search (?)  Suggest tags paid for by advertisers?  show tags advertisers paid for 
+//...at top of search page (?)
+  console.log('search_results are: ', search_results)
   res.json(search_results);
 };
 
@@ -332,6 +375,75 @@ module.exports = {
   update,
   remove
 }
+
+
+
+
+
+
+
+
+
+
+
+//* from search :D
+
+  // let author = await User.aggregate([
+  //     {$match: { name: search_string }},
+  //     { $lookup: { from: 'Story', localField: '_id', foreignField: 'creator', as: 'bob' } }
+  //   ]); //Creator
+
+    // .collation({ locale: "en", strength: 1 })
+
+    
+    // console.log('author is: ', author)
+    // //* lookup example
+    // async function lookup() {
+    //   const times = [];
+      
+    //   for (let i = 0; i < 10; ++i) {
+    //     let startTime = Date.now();
+    //     const orders = await Order.aggregate([
+    //       {$match: {completed: true}},
+    //       { $lookup: { from: 'users', localField: 'user', foreignField: '_id', as: 'user' } }
+    //     ])
+    //     times.push(Date.now() - startTime);
+    //   }
+    //   return times;
+    // }
+    // //* populate (example)
+    
+    // async function populate() {
+    //   const times = [];
+    //   for (let i = 0; i < 10; ++i) {
+    //     let startTime = Date.now();
+    //     const orders = await Order.find({completed: true}).populate('user');
+    //     times.push(Date.now() - startTime);
+    //   }
+    //   return times;
+    // }
+
+  // const user = await User.findOne({ username: req.user });
+  // const author = await User.findOne({ name: search_string });
+  // const author_id = author._id;
+  
+
+  // let stories = await Story.find({ creator: author_id })
+  //   .populate('creator', "username name")
+  //   .populate("ratings");
+
+  // console.log('stories are: ', stories);
+
+  // const deesBoys = await Story.find({ title : "Re Mitt"});
+  // console.log('deesBoys has: ', deesBoys[0])
+  // console.log('195: ', author[0]._id === deesBoys[0].creator);
+  // console.log('196: ', author[0]._id == deesBoys[0].creator);
+  // console.log('197: ', author[0]._id, " vs ", deesBoys[0].creator);
+  // console.log('198: ', 1 === 1);
+  // console.log('156')
+// db.InspirationalWomen.find({first_name: { $regex: /Harriet/i} })
+  // await User.find({ name: { $regex: /Harriet/i} })
+  // let stories_by_author = await Story.find({ creator.name: search_string }).populate('creator', "username name")
 
 
 //* How should we calculate the most popular stories?
