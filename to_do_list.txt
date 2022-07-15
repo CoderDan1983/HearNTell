@@ -1,0 +1,7 @@
+Build:
+
+Upload ads
+Upload stories
+Play stories with ads
+Change password and email
+Stripe hookup for payments

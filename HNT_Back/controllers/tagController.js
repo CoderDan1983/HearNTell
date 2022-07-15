@@ -85,7 +85,7 @@ const remove = async (req, res) => {
 //* Block a tag and remove it from stories and campaigns
 const block = async (req, res) => {
   const tag_id = req.params.tag_id;
-  let tag = await Tag.findOneAndUpdate({_id: tag_id}, {is_blocked: true});
+  let tag = await Tag.findOneAndUpdate({_id: tag_id}, {is_blocked: true}, {new: true});
   console.log("Tag in controller", tag.name);
   //todo Find all stories with the tag and remove the tag from the story
   let stories = await Story.updateMany({}, { $pull: { tags: { $in: tag.name } }}); 
@@ -98,7 +98,7 @@ const block = async (req, res) => {
 //* Block a tag and remove it from stories and campaigns
 const unblock = async (req, res) => {
   const tag_id = req.params.tag_id;
-  let tag = await Tag.findOneAndUpdate({_id: tag_id}, {is_blocked: false});
+  let tag = await Tag.findOneAndUpdate({_id: tag_id}, {is_blocked: false}, {new: true});
   res.json(tag);
 };
 

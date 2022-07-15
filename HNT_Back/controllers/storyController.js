@@ -4,7 +4,7 @@ const Profile = require('../model/Profile')
 const StoryRating = require('../model/StoryRating');
 const Tag = require('../model/Tag');
 const Playlist = require('../model/Playlist');
-const { properlyUppercased } = require('../custom_modules/utilities') 
+const { properlyUppercased } = require('../custom_modules/utilities');
 const fake = require("../../HNT_Front/src/components/fakeApi/fakeStories_Back");
 
 // import { fakeStories, fakeStories1,  fakeTags, fakeSearches, fakeSubList, fakeBaskets, fakeQueue,
@@ -19,27 +19,8 @@ async function prepareStoryAndSetTags(req){
     title, description, isPrivate, tags: rawTags, selectedFile, audioLink } = req.body;
   const duration = 1000; //todo later we'll get this value from the file length or whatnot.
   
-  // console.log('body: ', body, ', the user is: ', user, ", user_id is: ", user_id);
-  // console.log('the name of the file is: ', req.files.file.name); //okay
   let jsonnedTags = JSON.parse(rawTags);
-  const tags = jsonnedTags.map((tag)=> properlyUppercased(tag));
-
-  // console.log('tags are: ', tags);
-
-  tags = tags.map(async (tag) => { //@ b) saving tags to tags collection (?)
-
-    //* If tag is blocked, remove it from the list and don't save it.
-      let foundTag = await Tag.findOne( {name: tag}) || false;
-      if (foundTag) {
-        if (!foundTag.is_blocked) {
-          return tag;
-        }
-      } else {
-        await Tag.create({ name: tag });
-        return tag;
-      }
-      
-  });
+  let filteredTags = await Tag.processTagArray(jsonnedTags);
 
     // if(playlist_id){ //* story_id as well as playlist_id would be needed here!!!
   //   let { story_ids } = await Playlist.findOne({ playlist_id });
@@ -48,7 +29,7 @@ async function prepareStoryAndSetTags(req){
   // }  
 
   const story_info = { //@ c) create new_story_info object.
-    creator: user_id, title, description, isPrivate, tags, audioLink, duration, 
+    creator: user_id, title, description, isPrivate, tags: filteredTags, audioLink, duration, 
   };
 
   const ratings_wo_story_id = {  //@ d) create the ratings object without the story id
