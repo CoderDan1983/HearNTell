@@ -64,7 +64,7 @@ IcoArray, _id, menu, children }){
                 <div key = { i } className = { icoClass }> 
                     { ico.pre }  {/* optional text that goes before */}
                     <ico.Icon 
-                        onClick= { (e) => ico.clickHandler && ico.clickHandler(e, i, ico.info) } 
+                        onClick= { (e) => ico.clickHandler && ico.clickHandler(e, i, ico.info, entry) } 
                     />
                     { ico.post }  {/* optional text that goes after */}
                 </div>

@@ -6,6 +6,7 @@ const StoryRating = require('./StoryRating');
 const Schema = mongoose.Schema;
 const { properlyUppercased } = require("../custom_modules/utilities");
 
+
 const Tag = new Schema({
   name: {
     type: String,
@@ -33,6 +34,33 @@ const Tag = new Schema({
 //   console.log('Tag.js, 18, this.name is: ', this.name)
 //   next();
 // });
+
+//* Gets an array of tags ready for saving or updating. Checks properly uppercased, filters blocked tags, and saves any new tags.
+Tag.statics.processTagArray = async function (tag_array){
+
+  let tags = tag_array.map((tag)=> properlyUppercased(tag));
+
+  let filteredTags = await Promise.all(tags.map(async (tag) => { //@ b) saving tags to tags collection (?)
+
+    //* If tag is blocked, remove it from the list and don't save it.
+      let foundTag = await this.findOne( {name: tag}) || false;
+      if (foundTag) {
+        if (!foundTag.is_blocked) {
+          return tag;
+        }
+      } else {
+        await this.create({ name: tag });
+        return tag;
+      }
+  }));
+  console.log("filtered tags",filteredTags);
+  filteredTags = filteredTags.filter(function(tag) {
+    return tag !== undefined;
+  })
+  console.log("filtered tags",filteredTags);
+  return filteredTags;
+}
+
 
 //* Gets all the tag_names from every story, then adds up how many times each tag is used and stores it in the Tag.
 Tag.statics.countStoriesForEachTag = async function() {

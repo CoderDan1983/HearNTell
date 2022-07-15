@@ -14,7 +14,6 @@ import AdminTagDisplay from './AdminTagDisplay';
 function AdminManageTags(){
     const [ tags, setTags ] = useState();
     const addATagSetter = makeAddOneSetter( tags, setTags ); //* For use in CreateTag component
-    const updateATagSetter = makeUpdateOneByIdSetter( tags, setTags ); //* For use in EditTag component
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const location = useLocation();

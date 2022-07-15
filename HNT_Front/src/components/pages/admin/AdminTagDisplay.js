@@ -7,17 +7,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import DoneIcon from '@mui/icons-material/Done';
 
 import EditTag from './EditTag';
-import { makeAddOneSetter, makeUpdateOneByIdSetter } from '../../../custom_modules_front/utility_front';
+import { makeUpdateOneByIdSetter } from '../../../custom_modules_front/utility_front';
 
 export default function AdminTagDisplay({ tags, setTags, blocked: blockState }){
     const axiosPrivate = useAxiosPrivate();
     const updateATagSetter = makeUpdateOneByIdSetter(tags, setTags ); //* For use in EditTag component
 
     //* Remove tag and refreash the Tag state.
-    const removeTag = async (e, i, info) => {
+    const removeTag = async (e, i, info, tag) => {
         e.preventDefault();
-        console.log('removeTag.  info is: ', info);
-        const tag_id = e.target.dataset.id;
+        const tag_id = tag._id;
         const deleted_tag = await axiosPrivate.delete(`/api/tag/${tag_id}`, { 
         });
         const newTags = tags.filter((tag) => tag._id !== deleted_tag.data._id);
@@ -25,24 +24,24 @@ export default function AdminTagDisplay({ tags, setTags, blocked: blockState }){
     }
 
     //* Block tag in database and update local page state.
-    const blockTag = async (e, i, info) => {
+    const blockTag = async (e, i, info, tag) => {
         e.preventDefault();
-        console.log('blockTag.  info is: ', info);
-        const tag_id = e.target.dataset.id;
+        const tag_id = tag._id;
         const blocked_tag = await axiosPrivate.post(`/api/tag/${tag_id}/block`, { 
         });
-        updateATagSetter(blocked_tag.data._id);
+        console.log("blocked data: ",blocked_tag.data)
+
+        updateATagSetter(blocked_tag.data);
     }
 
     //* Unblock tag in database and update local page state.
-    const unblockTag = async (e, i, info) => {
+    const unblockTag = async (e, i, info, tag) => {
         e.preventDefault();
-        console.log('unblockTag.  info is: ', info);
-
-        const tag_id = e.target.dataset.id;
+        const tag_id = tag._id;
         const unblocked_tag = await axiosPrivate.post(`/api/tag/${tag_id}/unblock`, { 
         });
-        updateATagSetter(unblocked_tag.data._id);
+        console.log("Unblocked data: ",unblocked_tag.data)
+        updateATagSetter(unblocked_tag.data);
     }
 
     const IcoArray = [
@@ -58,6 +57,7 @@ export default function AdminTagDisplay({ tags, setTags, blocked: blockState }){
             Icon: CloseIcon,
             pre: "Remove",
             class: "rejectSurround",
+            clickHandler: removeTag,
         },
         {
             Icon: blockState ? DoneIcon : CloseIcon,
@@ -80,9 +80,9 @@ export default function AdminTagDisplay({ tags, setTags, blocked: blockState }){
             >
                 <>
                     <p>Name: { tag.name }</p>
-                    <p>Cost: { tag.cost }</p>
-                    <p>Highest Bidder: { tag.highestBidder }</p>
-                    <p># of Stories { tag.storyNum }</p>
+                    <p>Highest: { tag.highest_bid }</p>
+                    <p>Highest Bidder: { tag.highest_bidder }</p>
+                    <p># of Stories { tag.number_of_stories_with_tag }</p>
                 </>
             </LinkCapsule>)
         : <p>No tags to display</p>

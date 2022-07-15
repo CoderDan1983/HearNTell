@@ -8,22 +8,18 @@ const { properlyUppercased } = require('../custom_modules/utilities');
 
 //* Create an campaign
 const create = async (req, res) => {
-  console.log('campaignController, line 7!')
-  // console.log(req.user);
-  // console.log(req.body);
   const request_data = req.body;
 
   const { tags: jsonnedTags } = req.body;
   
-  // console.log('jsonnedTags: ', jsonnedTags, typeof(jsonnedTags));
-  const tags = jsonnedTags.map((tag)=> properlyUppercased(tag));
-  updateTags(tags);
+  let filteredTags = await Tag.processTagArray(jsonnedTags);
+
   let user = User.findOne({ username: req.user});
   
   let campaign_data = {
     user_id: user._id,
     name: request_data.name,
-    tags: tags, // Expects an array
+    tags: filteredTags, // Expects an array
     ad_audio_url: request_data.ad_audio_url,
     ad_id: request_data.ad_id,
     max_bid: request_data.maximumBid,
@@ -68,13 +64,13 @@ const update = async (req, res) => {
   const campaign_id = req.params.campaign_id;
   const request_data = req.body;
   const { tags: jsonnedTags } = req.body;
-  const tags = jsonnedTags.map((tag)=> properlyUppercased(tag));
-  updateTags(tags);
+  let filteredTags = await Tag.processTagArray(jsonnedTags);
+
 
   let campaign_data = {
     user_id: request_data.user_id,
     name: request_data.name,
-    tags: tags, // Expects an array
+    tags: filteredTags, // Expects an array
     ad_audio_url: request_data.ad_audio_url,
     ad_id: request_data.ad_id,
     max_bid: request_data.max_bid,
@@ -111,6 +107,7 @@ function updateTags(tags){
   });
   
 }
+
 
 module.exports = {
   create,
