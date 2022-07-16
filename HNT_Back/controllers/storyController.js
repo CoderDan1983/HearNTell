@@ -109,74 +109,121 @@ const popularByTag = async (req, res) => {
 
 //Search stories (tag, author, title)
 const search = async (req, res) => {
-  const search_string = req.params.search_string;
+  const { search_string } = req.params;
+  const search_tags = [search_string]; //# search_string.split(",").trim();
+  const search_regex = { "$regex": search_string, "$options": "i" };
+  const { returnStories, returnProfiles, returnPlaylists, returnDescriptions } = req.query;
 
+  console.log('req.query is: ', req.query);
+  console.log('req.params is: ', req.params);
+
+  let stories_by_author; //* initialize raw variables
+  let rPkg = { search_string } //* return package initialization :)
+  if (returnStories === "true") rPkg.stories = {};
+  if (returnProfiles === "true") rPkg.profiles = {};
+  if (returnPlaylists === "true") rPkg.playlists = {};
+  if (returnDescriptions === "true") rPkg.description = {}; //what is this used for!?!?!
+  // stories, playlists, profiles, 
+
+  function markIt(doc, type, type1, compareProp, searchString){ //* this will (hopefully help order searches clientside :) )
+    let newArr = [];
+    for(let d=0; d < doc.length; d++){
+      const entry = doc[d]._doc;
+      let precise = false;
+      if(typeof(compareProp) === "string"){
+        if(entry[compareProp].toLowerCase() === searchString.toLowerCase()){
+          precise = true;
+        }
+      }
+      else{
+        console.log('compareProp is: ', compareProp)
+        precise = compareProp;
+      }
+      
+      newArr.push({ type, type1, precise, ...entry })
+    }
+    // console.log('markIt.  newArr: ', newArr);
+    return newArr;
+  }
+
+//   items.find({}).then(function(documents) {
+      
+//     documents.forEach(function(u) {
+//         exampleEmbed.addField(`${u.ItemName}`, `Price: ${u.Price}`)
+
+//     });
+// })
   //@ Search Author pages
-  let stories_by_author = [];
-  let author_page_by_name = await User.find({ name: search_string })
-    .collation({ locale: "en", strength: 1 })
+  //* by name
+  
+  const author_page_by_name = await User.find({ name: search_regex }) //?   search_string
+  console.log('author_page_by_name', author_page_by_name)
+  const author_name_precise = (author_page_by_name && author_page_by_name[0] &&
+     (author_page_by_name[0].name.toLowerCase() === search_string.toLowerCase())) ?
+  true : false;
+
+  if(author_page_by_name){
+    console.log('165')
+    if(author_page_by_name[0]){
+      console.log('167')
+      console.log(author_page_by_name[0].name.toLowerCase(), ' vs ', search_string.toLowerCase())
+    }
+  }
+  console.log('author_name_precise', author_name_precise)
+
+
+  
+  const author_id = (author_page_by_name && author_page_by_name.length) ? author_page_by_name[0]._id : undefined;
+  if(author_id && rPkg.profiles) rPkg.profiles.author =  await Profile.find({ creator: author_id })
+    .populate('creator', "username name _id")
+    .then((doc)=> markIt(doc, "profile", "author", author_name_precise, search_string) );
+    // .then((doc)=>{ doc?.length ? markIt(doc, "profile", "author", null, search_string) : doc });
+                                  
+  //@ Search playlists
+  //* by title
+  if(rPkg.playlists) rPkg.playlists.title = await Playlist.find({ title: search_regex })
+  // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "title", "title", search_string) : doc }); 
+  .then((doc)=> markIt(doc, "playlist", "title", "title", search_string) ); 
+
+  //* by author
+  if(author_id && rPkg.playlists) rPkg.playlists.author = await Playlist.find({ user_id: author_id })
+  .then((doc)=> markIt(doc, "playlist", "author", author_name_precise, search_string) );
+  // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "author", null, search_string) : doc });
 
   //@ Search Stories
   //* by author
-  if(author_page_by_name && author_page_by_name.length){ 
-    const author_id = author_page_by_name[0]._id; //.toString()
-    stories_by_author = await Story.find({ creator: author_id }) 
+  if(author_id && rPkg.stories) rPkg.stories.author = await Story.find({ creator: author_id }) 
       .populate('creator', "username name _id")
-      .populate("ratings");
-    // console.log('156: ', stories_by_author);
-  }
+      .populate("ratings")
+      // .then((doc)=>{ doc?.length ? markIt(doc, "story", "author", null, search_string) : doc });
+      .then((doc)=> markIt(doc, "story", "author", author_name_precise, search_string) );
 
   //* by story tag
-  const search_tags = [search_string]; //# search_string.split(",").trim();
-  console.log('search_tags are: ', search_tags);
-  let stories_by_tag = await Story.find({ tags: { $in: search_tags } }) //"Congo"
+  //console.log('search_tags are: ', search_tags); //^ THIS IS THE ONLY "EXACT ONE"!!! (?)
+  if(rPkg.stories) rPkg.stories.tag = await Story.find({ tags: { $in: search_tags } }) //"Congo"
     .collation({ locale: "en", strength: 1 })
     .populate('creator', "username name")
-    .populate("ratings");
+    .populate("ratings")
+    .then((doc)=> markIt(doc, "story", "tag", "tags", search_string) );
+    // .then((doc)=>{ doc?.length ? markIt(doc, "story", "tag", "tags", search_string) : doc });
 
   //* by title
-  let stories_by_title = await Story.find({ title: search_string })
-    .collation({ locale: "en", strength: 1 })
+  if(rPkg.stories) rPkg.stories.title = await Story.find({ title: search_regex })
     .populate('creator', "username name")
-    .populate("ratings");
+    .populate("ratings")
+    .then((doc)=> markIt(doc, "story", "title", "title", search_string) );
+    // .then((doc)=>{ doc?.length ? markIt(doc, "story", "title", "title", search_string) : doc });
 
-  //@ Search playlists
-  //* by title
-  const playlists_by_title = await Playlist.find({ title: search_string }) 
-    .collation({ locale: "en", strength: 1 })
+  //* by description
+  if(rPkg.stories) rPkg.stories.description = await Story.find({ description: search_regex })
+    //# .collation({ locale: "en", strength: 1 })
     .populate('creator', "username name _id")
-    .populate("ratings");
-
-  const stories_by_description = await Story.find({ "description": { "$regex": search_string, "$options": "i" } })
-  // .collation({ locale: "en", strength: 1 })
-  .populate('creator', "username name _id")
-  .populate("ratings");
-
-
-  // Books.find({
-  //   "authors": {
-  //     "$regex": "Alex",
-  //     "$options": "i"
-  //   }
-  // },
-
-  console.log('stories_by_description: ', stories_by_description)
+    .populate("ratings")
+    .then((doc)=> markIt(doc, "story", "description", "description", search_string) );
+    // .then((doc)=>{ doc?.length ? markIt(doc, "story", "description", "description", search_string) : doc });
   
-
-
-
-  let search_results = {
-    tag: stories_by_tag,
-    author: stories_by_author,
-    title: stories_by_title
-  }
-
-
-  
-//suggest common/popular tags(?) for search (?)  Suggest tags paid for by advertisers?  show tags advertisers paid for 
-//...at top of search page (?)
-  console.log('search_results are: ', search_results)
-  res.json(search_results);
+  console.log('rPkg is: ', rPkg)
+  res.json(rPkg);
 };
 
 
@@ -359,10 +406,108 @@ module.exports = {
 
 
 
+//* from search :D
+
+// //Search stories (tag, author, title)
+// const search = async (req, res) => {
+//   const { search_string } = req.params;
+//   const search_tags = [search_string]; //# search_string.split(",").trim();
+//   const search_regex = { "$regex": search_string, "$options": "i" };
+//   const { returnStories, returnProfiles, returnPlaylists, returnDescriptions } = req.query;
+
+//   console.log('req.query is: ', req.query);
+//   console.log('req.params is: ', req.params);
+
+//   let stories_by_author; //* initialize raw variables
+//   let rPkg = { search_string } //* return package initialization :)
+//   if (returnStories === "true") rPkg.stories = {};
+//   if (returnProfiles === "true") rPkg.profiles = {};
+//   if (returnPlaylists === "true") rPkg.playlists = {};
+//   if (returnDescriptions === "true") rPkg.descriptions = {};
+//   // stories, playlists, profiles, 
+//   const profiles = {
+//     author: profile_by_author //author_page_by_name,
+//   }
+
+//   const playlists = {
+//     title: playlists_by_title,
+//     author: playlists_by_author,
+//   }
+
+//   const stories = {
+//     title: stories_by_title,
+//     author: stories_by_author,    
+//     tag: stories_by_tag,
+//     description: stories_by_description,    
+//   }
+
+//   //@ Search Author pages
+//   //* by name
+  
+//   const author_page_by_name = await User.find({ name: search_regex }) //?   search_string
+//   const author_id = (author_page_by_name && author_page_by_name.length) ? author_page_by_name[0]._id : undefined;
+//   rPkg.profiles && author_id && const profile_by_author = author_id && await Profile.find({ creator: author_id })
+//     .populate('creator', "username name _id");
+
+//   //@ Search playlists
+//   //* by title
+//   const playlists_by_title = await Playlist.find({ title: search_regex }) 
+//   //#   .collation({ locale: "en", strength: 1 })
+
+//   //* by author
+//   const playlists_by_author = author_id && await Playlist.find({ user_id: author_id }) 
+//     .collation({ locale: "en", strength: 1 })
+
+//   //@ Search Stories
+//   //* by author
+//   if(author_page_by_name && author_page_by_name.length){ 
+//     stories_by_author = author_id && await Story.find({ creator: author_id }) 
+//       .populate('creator', "username name _id")
+//       .populate("ratings");
+//     // console.log('156: ', stories_by_author);
+//   }
+
+//   //* by story tag
+//   //console.log('search_tags are: ', search_tags); //^ THIS IS THE ONLY "EXACT ONE"!!! (?)
+//   let stories_by_tag = await Story.find({ tags: { $in: search_tags } }) //"Congo"
+//     .collation({ locale: "en", strength: 1 })
+//     .populate('creator', "username name")
+//     .populate("ratings");
+
+//   //* by title
+//   let stories_by_title = await Story.find({ title: search_regex })
+//     //# .collation({ locale: "en", strength: 1 })
+//     .populate('creator', "username name")
+//     .populate("ratings");
+
+//   //* by description
+//   const stories_by_description = await Story.find({ "description": search_regex })
+//     //# .collation({ locale: "en", strength: 1 })
+//     .populate('creator', "username name _id")
+//     .populate("ratings");
+
+//   // Books.find({
+//   //   "authors": {
+//   //     "$regex": "Alex",
+//   //     "$options": "i"
+//   //   }
+//   // },
+
+//   console.log('stories_by_description: ', stories_by_description)
+  
 
 
 
 
+// // tag: stories_by_tag,
+// // author: stories_by_author,
+// // title: stories_by_title
+  
+// //suggest common/popular tags(?) for search (?)  Suggest tags paid for by advertisers?  show tags advertisers paid for 
+// //...at top of search page (?)
+//   console.log('the rPkg is: ', rPkg)
+//   res.json(rPkg);
+// };
 
 
 

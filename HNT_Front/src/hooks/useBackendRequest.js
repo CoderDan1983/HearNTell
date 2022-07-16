@@ -18,7 +18,8 @@ function queryParamString(obj){
     const objLength = Object.keys(obj).length;
     let count = 0;
     for(let key in obj){
-        returnString += (`${key}=${obj[key]}`);
+        const val = obj[key];
+        returnString += (`${key}=${val}`);
         if(count + 1 < objLength) returnString += "&";
         count++;
     }
@@ -52,7 +53,7 @@ export function lumpDig(lump, keys) {
 export const get_private = (axiosPrivate, navigate, location, path, { _id, queries, dig, options, setter, goTo } = {})=>{
     const url = createFullURL(path, { _id, queries });
 
-    // console.log('url is: ', url);
+    console.log('url is: ', url);
     let isMounted = true;
     const controller = new AbortController();
 
@@ -238,7 +239,11 @@ export const get_public = (path, { _id, queries, dig, options, setter } = {}) =>
     }
 }
 
-
+// const rawVal = obj[key];
+// const val = typeof(rawVal) === 'string' ? rawVal : 
+//     typeof(rawVal) === 'boolean' ? (rawVal === true) ? 'true' : 'false' :
+//     typeof(rawVal) === 'number' ? rawVal.toString() :
+//     JSON.stringify(rawVal); //* if neither a string, boolean, or number, we assume it's an object :D
 
 // export async function getThenSet_public(setter, path, { _id } = {}){
 //     const url = _id ? `/${path}/${_id}` : `/${path}/`
