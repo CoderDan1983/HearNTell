@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import '../../index.css';
 
-import BuildOutIcoArray from './BuildOutIcoArray';
+import BuildOutIco from './BuildOutIco';
 import BasicMenu from './BasicMenu';
 
 
@@ -18,12 +18,14 @@ import BasicMenu from './BasicMenu';
 // 
 
 export default function LinkCapsule({ to, IcoArray, menu, classy="link", _id, 
-entry, wrapperClass="storyItem", children }){
+entry = {}, wrapperClass="storyItem", children }){
+    console.log('LinkCapsule 22.  entry is: ', entry);
+    console.log('also, IcoArray is: ', IcoArray);
     const url = _id ? `${to}/${_id}` : to;
 
     return(<div className={ wrapperClass ? wrapperClass : "storyItem" }>
-        { IcoArray && IcoArray.length && 
-        <BuildOutIcoArray IcoArray = { IcoArray } entry = { entry } pre = { true } /> }
+        {/* { IcoArray && IcoArray.length && 
+        <BuildOutIcoArray IcoArray = { IcoArray } entry = { entry } pre = { true } /> } */}
         {/* //@This Link element holds ALL the non-icon interface! */}
         { to ? 
             <Link className= { classy } to = { url } >
@@ -34,9 +36,11 @@ entry, wrapperClass="storyItem", children }){
                 { children }
             </div>
         }
-        { IcoArray && IcoArray.length && 
-        <BuildOutIcoArray IcoArray = { IcoArray } entry = { entry }/> }
-
+        { IcoArray && IcoArray.length && IcoArray.map((ico, i)=>{
+            return <BuildOutIco ico = { ico } i = { i } entry = { entry }/>
+        })}
+         {/*  */}
+        {/* <div>Khan Ewe Sea Mi</div> */}
         {/* optional.  pass in a menu to have a menu */}
         { menu && <BasicMenu menu= { menu } /> }
     </div>)

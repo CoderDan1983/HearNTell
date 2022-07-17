@@ -47,7 +47,6 @@ export default function AdminTagDisplay({ tags, setTags, blocked: blockState }){
 
     const IcoArray = [
         {
-            // Modal: ModalComponent,
             ComponentForModal: EditTag,
             Ico: EditIcon, 
             buttonTitle: "Edit",

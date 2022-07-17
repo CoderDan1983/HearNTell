@@ -5,8 +5,8 @@ export default function StoryItem({ to, IcoArray, menu, story }){
     const { title, tags, popularity_rating, author, duration,  } = story; //private //* unused: account_id, audio_url, description
     // const tags = story.tags.map((tag) => tag.tag);
     console.log('menu is: ', menu);
-
-    return(<LinkCapsule to = { to } IcoArray = { IcoArray } menu = { menu } classy = "link" >
+    console.log('storyItem 8.  story is: ', story);
+    return(<LinkCapsule to = { to } IcoArray = { IcoArray } menu = { menu } classy = "link" entry = { story }>
         <>
             <div className='storyItemTop' >
                 <span className="storyItemTitle">{title}</span> {/* no grid */}
