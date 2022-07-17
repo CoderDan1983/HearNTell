@@ -109,7 +109,11 @@ const popularByTag = async (req, res) => {
 
 //Search stories (tag, author, title)
 const search = async (req, res) => {
-  const { search_string } = req.params;
+  const { search_string } = req.params; 
+  //const is_creator_list = false; //? how shall we send this (!?!).  Is it safe to send in req.param or req.query?
+  let is_creator_list = req.body.is_creator_list;
+  if (!is_creator_list) is_creator_list = false; //* is_creator_list is not actually being sent!
+  
   const search_tags = [search_string]; //# search_string.split(",").trim();
   const search_regex = { "$regex": search_string, "$options": "i" };
   const { returnStories, returnProfiles, returnPlaylists, returnDescriptions } = req.query;
@@ -163,10 +167,8 @@ const search = async (req, res) => {
   true : false;
 
   if(author_page_by_name){
-    console.log('165')
     if(author_page_by_name[0]){
-      console.log('167')
-      console.log(author_page_by_name[0].name.toLowerCase(), ' vs ', search_string.toLowerCase())
+      //console.log(author_page_by_name[0].name.toLowerCase(), ' vs ', search_string.toLowerCase())
     }
   }
   console.log('author_name_precise', author_name_precise)
@@ -181,18 +183,18 @@ const search = async (req, res) => {
                                   
   //@ Search playlists
   //* by title
-  if(rPkg.playlists) rPkg.playlists.title = await Playlist.find({ title: search_regex })
+  if(rPkg.playlists) rPkg.playlists.title = await Playlist.find({ title: search_regex, is_creator_list })
   // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "title", "title", search_string) : doc }); 
   .then((doc)=> markIt(doc, "playlist", "title", "title", search_string) ); 
 
   //* by author
-  if(author_id && rPkg.playlists) rPkg.playlists.author = await Playlist.find({ user_id: author_id })
+  if(author_id && rPkg.playlists) rPkg.playlists.author = await Playlist.find({ user_id: author_id, is_creator_list })
   .then((doc)=> markIt(doc, "playlist", "author", author_name_precise, search_string) );
   // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "author", null, search_string) : doc });
 
   //@ Search Stories
   //* by author
-  if(author_id && rPkg.stories) rPkg.stories.author = await Story.find({ creator: author_id }) 
+  if(author_id && rPkg.stories) rPkg.stories.author = await Story.find({ creator: author_id, is_creator_list }) 
       .populate('creator', "username name _id")
       .populate("ratings")
       // .then((doc)=>{ doc?.length ? markIt(doc, "story", "author", null, search_string) : doc });
@@ -200,7 +202,7 @@ const search = async (req, res) => {
 
   //* by story tag
   //console.log('search_tags are: ', search_tags); //^ THIS IS THE ONLY "EXACT ONE"!!! (?)
-  if(rPkg.stories) rPkg.stories.tag = await Story.find({ tags: { $in: search_tags } }) //"Congo"
+  if(rPkg.stories) rPkg.stories.tag = await Story.find({ tags: { $in: search_tags }, is_creator_list }) //"Congo"
     .collation({ locale: "en", strength: 1 })
     .populate('creator', "username name")
     .populate("ratings")
@@ -208,14 +210,14 @@ const search = async (req, res) => {
     // .then((doc)=>{ doc?.length ? markIt(doc, "story", "tag", "tags", search_string) : doc });
 
   //* by title
-  if(rPkg.stories) rPkg.stories.title = await Story.find({ title: search_regex })
+  if(rPkg.stories) rPkg.stories.title = await Story.find({ title: search_regex, is_creator_list })
     .populate('creator', "username name")
     .populate("ratings")
     .then((doc)=> markIt(doc, "story", "title", "title", search_string) );
     // .then((doc)=>{ doc?.length ? markIt(doc, "story", "title", "title", search_string) : doc });
 
   //* by description
-  if(rPkg.stories) rPkg.stories.description = await Story.find({ description: search_regex })
+  if(rPkg.stories) rPkg.stories.description = await Story.find({ description: search_regex, is_creator_list })
     //# .collation({ locale: "en", strength: 1 })
     .populate('creator', "username name _id")
     .populate("ratings")

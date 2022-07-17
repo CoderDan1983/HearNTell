@@ -1,5 +1,5 @@
 import LinkCapsule from '../../parts/LinkCapsule';
-import ModalComponent from '../../parts/ModalComponent';
+// import ModalComponent from '../../parts/ModalComponent';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 
 import CloseIcon from '@mui/icons-material/Close';
@@ -56,13 +56,13 @@ export default function AdminTagDisplay({ tags, setTags, blocked: blockState }){
         },
         {
             Icon: CloseIcon,
-            pre: "Remove",
+            preText: "Remove",
             class: "rejectSurround",
             clickHandler: removeTag,
         },
         {
             Icon: blockState ? DoneIcon : CloseIcon,
-            pre: blockState ? "Unblock" : "Block",
+            preText: blockState ? "Unblock" : "Block",
             class: blockState ? "approveSurround" : "rejectSurround",
             info: {},
             clickHandler: (blockState ? unblockTag : blockTag),

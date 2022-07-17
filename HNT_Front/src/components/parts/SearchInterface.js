@@ -79,14 +79,14 @@ export default function SearchInterface({ options }){
     //     })
     // }
 
-    function markup(arr, prop){
-        for(let a=0; a < arr.length; a++){
-            if(arr[a].about_me !== undefined) arr[a].type = "profile"; //* mark the type
-            else if(arr[a].description !== undefined) arr[a].type = "story";
-            else arr[a].type = "playlist";
-        }
-        return(arr);
-    }
+    // function markup(arr, prop){
+    //     for(let a=0; a < arr.length; a++){
+    //         if(arr[a].about_me !== undefined) arr[a].type = "profile"; //* mark the type
+    //         else if(arr[a].description !== undefined) arr[a].type = "story";
+    //         else arr[a].type = "playlist";
+    //     }
+    //     return(arr);
+    // }
     function processResults(resp){
         setResults(resp);
         prepareDisplayResults(null, resp, style);
@@ -104,9 +104,14 @@ export default function SearchInterface({ options }){
                 returnPlaylists, 
                 returnDescriptions 
             };
-            setSearched(true); 
             // `story/search/${search}`
-            get_private(axP, nav, loc, 'story/search', { _id: search, queries, setter: processResults });
+            if(search){
+                setSearched(true); 
+                get_private(axP, nav, loc, 'story/search', { _id: search.trim(), queries, setter: processResults });
+            }
+            else{
+                alert('please input a search!')
+            }
         } }>Search</button>
         <div id="searchFilters" className = { searched ? "" : "hide" }>
             <h3>Search By: </h3>
@@ -233,8 +238,8 @@ export default function SearchInterface({ options }){
             </button> */}
         </div>
         <div id="resultsDisplay">
-            { shownResults && shownResults.length && shownResults.map((result)=>{
-                return <div>{ result.title }</div>
+            { shownResults && shownResults.length && shownResults.map((result, i)=>{
+                return <div key= { `result_${i}` }>{ result.title }</div>
             })}
         </div>
     </div>)

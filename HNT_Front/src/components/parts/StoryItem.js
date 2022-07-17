@@ -1,8 +1,8 @@
 import '../../index.css';
 import { Link } from "react-router-dom";
-import RatingComponent from './RatingComponent';
+import RatingComponent from './RatingComponent'; //* special
 import BasicMenu from './BasicMenu';
-import { inputClasses } from '@mui/material';
+// import { inputClasses } from '@mui/material';
 
 // IcoArray = [
 //     { Icon, clickHandler }

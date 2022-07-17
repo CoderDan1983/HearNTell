@@ -23,20 +23,20 @@ export default function LinkListItem({ to, name, classy="link", PreIco, Ico, Ico
         </Link>
         { Ico && <Ico /> }
         { IcoArray && IcoArray.length && IcoArray.map((ico, i)=>{
-            return ((!ico.pre && !ico.post) ? 
+            return ((!ico.preText && !ico.postText) ? 
                 <ico.Icon 
                     className = { ico.class ? ico.class : "inherit" } 
                     key = { i } 
                     onClick= { (e) => ico.clickHandler && ico.clickHandler(e, i, ico.info) } 
                 /> :
-                ico.pre ? 
+                ico.preText ? 
                 <div key = { i } className = { ico.class ? ico.class : "inherit" }>
-                    {ico.pre} 
+                    {ico.preText} 
                     <ico.Icon onClick= { (e) => ico.clickHandler && ico.clickHandler(e, i, ico.info) } />
                 </div> : 
                 <div key = { i } className = { ico.class ? ico.class : "inherit" }>
                     <ico.Icon onClick= { (e) => ico.clickHandler && ico.clickHandler(e, i, ico.info) } />
-                    {ico.post}
+                    {ico.postText}
                 </div> 
             );
         })}

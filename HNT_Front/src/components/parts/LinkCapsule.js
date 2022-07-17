@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import '../../index.css';
 
+import BuildOutIcoArray from './BuildOutIcoArray';
 import BasicMenu from './BasicMenu';
-import ModalComponent from './ModalComponent';
+
 
 //@ entry (required) takes an object that will be referred to to display the "main info".
 //* to (optional) where to go when clicked, 
@@ -20,6 +21,8 @@ IcoArray, _id, menu, children }){
     const url = _id ? `${to}/${_id}` : to;
 
     return(<div className={ wrapperClass ? wrapperClass : "storyItem" }>
+        { IcoArray && IcoArray.length && 
+        <BuildOutIcoArray IcoArray = { IcoArray } entry = { entry } pre = { true } /> }
         {/* //@This Link element holds ALL the non-icon interface! */}
         { to ? 
             <Link className= { classy } to = { url } >
@@ -30,58 +33,10 @@ IcoArray, _id, menu, children }){
                 { children }
             </div>
         }
-
-        {/* //@The IcoArray is an object array of objects such as these, for the icons.
-            {   //* to control an "icon"
-                clickHandler, Icon, //required
-                class, info, //optional class.  optional info to be passed into clickHandler
-                pre, post //optional text to go before/after icon
-            },
-            { //* to control a modal
-                ModalComponent (required for modal).  
-                    Contains the component that will go inside the modal, and indicates we will be using a modal)
-                Ico (optional) - the icon this modal will use,
-                cProps (optional) - the props that will be passed into the ModalComponent, along with the "entry"!
-                buttonTitle (optional) - the text for the 'open modal button'
-                class (see above)
-            },
-            { //* to control a Component
-                Component (required).  
-                    Contains the component that will go inside the modal, and indicates we will be using a modal)                
-                cProps (optional) - the props that will be passed into the Component, along with the "entry"!
-                class (see above)
-            },
-        */}
         
-        { IcoArray && IcoArray.length && IcoArray.map((ico, i)=>{
-            const icoClass = ico.class ? ico.class : "inherit";
-            return (
-                ico.ComponentForModal ? //* For Modals
-                <div key = { i } className = { icoClass }>
-                    <ModalComponent 
-                        buttonTitle= { ico.buttonTitle } 
-                        Ico= { ico.Ico } 
-                        cProps = { {...ico.cProps, ...entry } }
-                        Component = { ico.ComponentForModal }
-                    />
-                </div> :
-                ico.Component ? //* For passed in Components            
-                    < ico.Component
-                        key = { i } 
-                        className = { icoClass }
-                        cProps = { {...ico.cProps, ...entry } }
-                        Component = { ico.Component }
-                    />
-                : //* for icons
-                <div key = { i } className = { icoClass }> 
-                    { ico.pre }  {/* optional text that goes before */}
-                    <ico.Icon 
-                        onClick= { (e) => ico.clickHandler && ico.clickHandler(e, i, ico.info, entry) } 
-                    />
-                    { ico.post }  {/* optional text that goes after */}
-                </div>
-            );
-        })}
+        { IcoArray && IcoArray.length && 
+        <BuildOutIcoArray IcoArray = { IcoArray } entry = { entry }/> }
+
         {/* optional.  pass in a menu to have a menu */}
         { menu && <BasicMenu menu= { menu } /> }
     </div>)
