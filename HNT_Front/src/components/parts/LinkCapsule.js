@@ -13,11 +13,12 @@ import BasicMenu from './BasicMenu';
 //* ... the icons the appear after the main "body".
 //* _id: optional.  can be used to help control where we go when we click TagLinkList.
 //* childHere.  Optional.  If true and you have children, will place them here instead of Icon!
+//* Ico.  Optional (legacy?) that allows for an icon to be simply placed.
 
 // 
 
-export default function LinkCapsule({ to, entry, classy="link", wrapperClass="storyItem", 
-IcoArray, _id, menu, children }){
+export default function LinkCapsule({ to, IcoArray, menu, classy="link", _id, 
+entry, wrapperClass="storyItem", children }){
     const url = _id ? `${to}/${_id}` : to;
 
     return(<div className={ wrapperClass ? wrapperClass : "storyItem" }>
@@ -33,7 +34,6 @@ IcoArray, _id, menu, children }){
                 { children }
             </div>
         }
-        
         { IcoArray && IcoArray.length && 
         <BuildOutIcoArray IcoArray = { IcoArray } entry = { entry }/> }
 

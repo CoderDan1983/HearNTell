@@ -103,7 +103,7 @@ export default function Listener(){
                         key={ `${sub.listener_id}_${i}` } 
                         to= "/creatorProfile"
                         name={ name } 
-                        Ico={ DeleteForever }
+                        // Ico={ DeleteForever } //$ will this cause a problem!?!
                         _id = { sub.creator_id } 
                     /> : <div key={ `${sub.listener_id}_${i}` } ></div>)
                 })}
@@ -124,7 +124,6 @@ export default function Listener(){
                         key={ `${sub.listener_id}_${i}` } 
                         to= "/creatorProfile"
                         name={ name } 
-                        // Ico={ DeleteForever }
                         menu = { menu }
                         _id = { sub.creator_id } 
                     /> : <div key={ `${sub.listener_id}_${i}` } ></div>)

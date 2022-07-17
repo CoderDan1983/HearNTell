@@ -1,22 +1,13 @@
-import '../../index.css';
-import { Link } from "react-router-dom";
+import LinkCapsule from './LinkCapsule';
 import RatingComponent from './RatingComponent'; //* special
-import BasicMenu from './BasicMenu';
-// import { inputClasses } from '@mui/material';
 
-// IcoArray = [
-//     { Icon, clickHandler }
-// ]
-export default function StoryItem({ story, to, IcoArray, pre, menu }){
+export default function StoryItem({ to, IcoArray, menu, story }){
     const { title, tags, popularity_rating, author, duration,  } = story; //private //* unused: account_id, audio_url, description
     // const tags = story.tags.map((tag) => tag.tag);
     console.log('menu is: ', menu);
-    return(<div className={ pre ? "storyItemWithPreIco" : "storyItem" }> 
-        {/* { IcoArray && IcoArray.length && IcoArray.map((ico)=>{
-            return ico.pre ? (<ico.Icon onClick= { ico.clickHandler && ico.clickHandler } />) : <div></div>;
-        })} */}
-        { pre && menu && <BasicMenu story= { story } menu = { menu } /> }
-        <Link to= { to } className="link"> {/* no grid */}
+
+    return(<LinkCapsule to = { to } IcoArray = { IcoArray } menu = { menu } classy = "link" >
+        <>
             <div className='storyItemTop' >
                 <span className="storyItemTitle">{title}</span> {/* no grid */}
                 <span className="storyItemAuthor"> {/* no grid */}
@@ -31,12 +22,8 @@ export default function StoryItem({ story, to, IcoArray, pre, menu }){
                     return <span key={ i } >{ displayVal }</span>
                 })}
             </div>
-        </Link>
-        { IcoArray && IcoArray.length && IcoArray.map((ico, i)=>{
-            return (<ico.Icon key = { i } onClick= { ico.clickHandler && ico.clickHandler } />);
-        })}
-        { !pre && menu && <BasicMenu menu = { menu } /> }
-    </div>)
+        </>
+    </LinkCapsule>);
 }
 
 //* helper function(s): :)
@@ -56,3 +43,48 @@ function showTime(sec){
 
     return returnVal;  
 }
+
+
+
+
+//* old version
+// import '../../index.css';
+// import { Link } from "react-router-dom";
+// import RatingComponent from './RatingComponent'; //* special
+// import BasicMenu from './BasicMenu';
+
+// IcoArray = [
+//     { Icon, clickHandler }
+// ]
+
+// export default function StoryItem({ to, IcoArray, menu, story, pre }){
+//     const { title, tags, popularity_rating, author, duration,  } = story; //private //* unused: account_id, audio_url, description
+//     // const tags = story.tags.map((tag) => tag.tag);
+//     console.log('menu is: ', menu);
+//     return(<div className={ pre ? "storyItemWithPreIco" : "storyItem" }> 
+//         {/* { IcoArray && IcoArray.length && IcoArray.map((ico)=>{
+//             return ico.pre ? (<ico.Icon onClick= { ico.clickHandler && ico.clickHandler } />) : <div></div>;
+//         })} */}
+//         { pre && menu && <BasicMenu story= { story } menu = { menu } /> }
+//         <Link to= { to } className="link"> {/* no grid */}
+//             <div className='storyItemTop' >
+//                 <span className="storyItemTitle">{title}</span> {/* no grid */}
+//                 <span className="storyItemAuthor"> {/* no grid */}
+//                     <RatingComponent readOnly={ true } state ={ popularity_rating } />
+//                 </span>
+//                 <span className="storyItemAuthor">{author}</span> {/* no grid */}
+//                 <span className="storyItemAuthor">{ showTime(duration) }</span> {/* no grid */}
+//             </div>
+//             <div className="storyItemTags"> {/* no grid */}
+//                 {tags.map((tag, i)=>{
+//                     const displayVal = (i < tags.length - 1) ? `${tag}, ` : tag;
+//                     return <span key={ i } >{ displayVal }</span>
+//                 })}
+//             </div>
+//         </Link>
+//         { IcoArray && IcoArray.length && IcoArray.map((ico, i)=>{
+//             return (<ico.Icon key = { i } onClick= { ico.clickHandler && ico.clickHandler } />);
+//         })}
+//         { !pre && menu && <BasicMenu menu = { menu } /> }
+//     </div>)
+// }

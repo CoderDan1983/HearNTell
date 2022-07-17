@@ -6,7 +6,6 @@ export default function BuildOutIcoArray({ IcoArray, entry, pre }){
         return (
             ico.pre != pre ?
             <></> :
-            //  <div key = { i }></div>
             ico.ComponentForModal ? //* For Modals
             <div key = { i } className = { icoClass }>
                 <ModalComponent 
@@ -39,7 +38,8 @@ export default function BuildOutIcoArray({ IcoArray, entry, pre }){
     {   //* to control an "icon"
         clickHandler, Icon, //required
         class, info, //optional class.  optional info to be passed into clickHandler
-        preText, postText //optional text to go before/after icon
+        preText, postText, //optional text to go before/after icon
+        pre, //optional.  if true, icon will go before the main link capsule "body"
     },
     { //* to control a modal
         ModalComponent (required for modal).  
@@ -47,12 +47,12 @@ export default function BuildOutIcoArray({ IcoArray, entry, pre }){
         Ico (optional) - the icon this modal will use,
         cProps (optional) - the props that will be passed into the ModalComponent, along with the "entry"!
         buttonTitle (optional) - the text for the 'open modal button'
-        class (see above)
+        class, pre (for both, see above)
     },
     { //* to control a Component
         Component (required).  
             Contains the component that will go inside the modal, and indicates we will be using a modal)                
         cProps (optional) - the props that will be passed into the Component, along with the "entry"!
-        class (see above)
+        class, pre (for both, see above)
     },
 */
