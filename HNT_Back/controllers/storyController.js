@@ -111,8 +111,11 @@ const popularByTag = async (req, res) => {
 const search = async (req, res) => {
   const { search_string } = req.params; 
   //const is_creator_list = false; //? how shall we send this (!?!).  Is it safe to send in req.param or req.query?
-  let is_creator_list = req.body.is_creator_list;
-  if (!is_creator_list) is_creator_list = false; //* is_creator_list is not actually being sent!
+  const is_creator_list = true;
+  // let is_creator_list = req.body.is_creator_list;
+  // if (!is_creator_list) is_creator_list = false; //* is_creator_list is not actually being sent!
+  let is_queue = req.body.is_queue;
+  if (!is_queue) is_queue = false; //* is_creator_list is not actually being sent!
   
   const search_tags = [search_string]; //# search_string.split(",").trim();
   const search_regex = { "$regex": search_string, "$options": "i" };
@@ -183,13 +186,15 @@ const search = async (req, res) => {
                                   
   //@ Search playlists
   //* by title
-  if(rPkg.playlists) rPkg.playlists.title = await Playlist.find({ title: search_regex, is_creator_list })
-  // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "title", "title", search_string) : doc }); 
-  .then((doc)=> markIt(doc, "playlist", "title", "title", search_string) ); 
+  if(rPkg.playlists) rPkg.playlists.title = await Playlist.find({ title: search_regex, is_creator_list, is_queue })
+    .populate('creator', "username name _id")
+    // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "title", "title", search_string) : doc }); 
+    .then((doc)=> markIt(doc, "playlist", "title", "title", search_string) ); 
 
   //* by author
-  if(author_id && rPkg.playlists) rPkg.playlists.author = await Playlist.find({ user_id: author_id, is_creator_list })
-  .then((doc)=> markIt(doc, "playlist", "author", author_name_precise, search_string) );
+  if(author_id && rPkg.playlists) rPkg.playlists.author = await Playlist.find({ user_id: author_id, is_creator_list, is_queue })
+    .populate('creator', "username name _id")
+    .then((doc)=> markIt(doc, "playlist", "author", author_name_precise, search_string) );
   // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "author", null, search_string) : doc });
 
   //@ Search Stories

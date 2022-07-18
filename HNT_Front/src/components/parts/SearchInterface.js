@@ -1,11 +1,19 @@
 import { useState } from 'react';
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
-import { get_private, queryParamString } from '../../hooks/useBackendRequest';
-import SearchComponent from "./SearchComponent"
-import '../../index.css'
+import { get_private } from '../../hooks/useBackendRequest';
+import { storyMenu, playlistsMenu } from '../../hooks/useMenus';
+// import useAuth from "../../hooks/useAuth";
+import { useGetRoles, useGetUserInfo } from '../../hooks/useRoles'
 
-export default function SearchInterface({ options }){
+import '../../index.css';
+
+import SearchComponent from "./SearchComponent"
+import StoryItem from './StoryItem';
+import PlaylistItem from './PlaylistItem';
+import ProfileItem from './ProfileItem';
+
+export default function SearchInterface({ options, playlists, goTo, subscriptions }){
     const axP = useAxiosPrivate();
     const nav = useNavigate();
     const loc = useLocation();
@@ -24,13 +32,22 @@ export default function SearchInterface({ options }){
     console.log('returnStories is; ', returnStories);
 
     const [ style, setStyle ] = useState("all");
-    console.log('start', '------------>')
-    // console.log('options are: ', options);
-    console.log('results are: ', results);
-    console.log('searched is: ', searched);
+    console.log('start', '------------>');
+    // console.log('results are: ', results);
+    // console.log('searched is: ', searched);
+    // console.log('style is: ', style);
     console.log('shownResults is: ', shownResults);
-    console.log('style is: ', style);
     console.log('end', '.................');
+
+    const { userInfo } = useGetUserInfo();
+    const user_id = userInfo ? userInfo.user_id : "";
+    console.log('user_id is: ', user_id);
+
+    const playlistSubscriptions = subscriptions.filter((sub)=> sub.playlist_id);
+    const creatorSubscriptions = subscriptions.filter((sub)=> !sub.playlist_id);
+    
+    const forPlaylistsMenu = { nav, loc, axP, goTo };
+    const forStoryMenu = { nav, loc, axP, goTo };
 
     function prepareDisplayResults(e, results, style){
         
@@ -95,7 +112,7 @@ export default function SearchInterface({ options }){
     console.log('results are: ', results)
 
     return(<div>
-        <SearchComponent options = { options } value = { search } setValue = { setSearch } />
+        <SearchComponent options = { options } value = { search } setValue = { setSearch }/>
         <button type="button" onClick={ (e)=>  {
             //* notice that returnAll is actually NOT sent! ^_^
             const queries = { 
@@ -210,36 +227,30 @@ export default function SearchInterface({ options }){
                 checked={ returnDescriptions } //# persist
             />
             <label htmlFor="returnDescriptions">Descriptions</label>
-
-            {/* <button 
-                type="button" 
-                name="searchButton" 
-                value="tag" className = "blurred"
-                onClick={ (e) => prepareDisplayResults(e, results, "tag") }
-            >
-                Tag
-            </button>
-            <button 
-                type="button" 
-                name="searchButton" 
-                value="author" 
-                className="blurred" 
-                onClick={ (e) => prepareDisplayResults(e, results, "author") }
-            >
-                Author
-            </button>
-            <button 
-                type="button" 
-                name="searchButton" 
-                value="title" className="blurred"
-                onClick={ (e) => prepareDisplayResults(e, results, "title") }
-            >
-                Title
-            </button> */}
         </div>
         <div id="resultsDisplay">
             { shownResults && shownResults.length && shownResults.map((result, i)=>{
-                return <div key= { `result_${i}` }>{ result.title }</div>
+                switch(result.type){
+                    case "profile":
+                        //const status = (matchedSub && matchedSub.length) ? matchedSub.status === "approved" ? "subscribed" : "pending" : ""
+                        return (<ProfileItem to = { `../../creatorProfile/${ result.creator._id }` } 
+                            key = { result._id } entry = { result } options = {{ subscriptions }}/>)
+                    case "playlist":
+                        
+                        const pMenu = {
+                            general: playlistsMenu(forPlaylistsMenu, result, null, playlistSubscriptions, { subscribe_option: true })
+                        }
+                        return (<PlaylistItem to = { `../../creatorProfile/${ result.user_id }` } 
+                            key = { result._id } entry = { result } menu = { pMenu }  options = {{ subscriptions }}/>)
+                    case "story":
+                        const menu = {
+                            general: storyMenu(forStoryMenu, playlists, result, false)
+                        }
+                        return (<StoryItem to = {`/listenerSingleStory/${result._id}` } key = { result._id } story = { result } menu = { menu } />)
+                    default:
+                        return <div key= { `result_${i}` }>{ result.title }</div>
+                }
+                
             })}
         </div>
     </div>)

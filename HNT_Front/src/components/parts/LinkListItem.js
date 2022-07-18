@@ -1,8 +1,9 @@
 import LinkCapsule from './LinkCapsule';
 
-export default function LinkListItem({ to, IcoArray, menu, classy="link", _id, name }){
-    console.log('LinkListItem, line 4.  IcoArray is: ', IcoArray);
-    return(<LinkCapsule to = { to } IcoArray = { IcoArray } menu = { menu } classy = { classy } _id = { _id }>
+export default function LinkListItem({ to, IcoArray, menu, classy="link", _id, options, name }){
+    // console.log('LinkListItem, line 4.  IcoArray is: ', IcoArray);
+    return(<LinkCapsule to = { to } IcoArray = { IcoArray } menu = { menu } 
+    classy = { classy } _id = { _id } options = { options }>
         <>
             { name }
         </>

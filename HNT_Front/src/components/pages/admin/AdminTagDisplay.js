@@ -75,7 +75,7 @@ export default function AdminTagDisplay({ tags, setTags, blocked: blockState }){
             <LinkCapsule 
                 entry= { tag }
                 IcoArray = { IcoArray } 
-                wrapperClass="tagItem" 
+                options= { {wrapperClass: "tagItem"} } 
                 classy="tagLine"
                 key= { i }
             >

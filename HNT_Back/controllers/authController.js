@@ -21,7 +21,7 @@ const handleLogin = async (req, res) => {
             {
                 "UserInfo": {
                     "username": foundUser.username,
-                    "name" : foundUser.name,
+                    "user_id" : foundUser._id,
                     "roles": roles
                 }
             },

@@ -266,7 +266,7 @@ li {
     margin-top: 0;
 }
 
-.storyItemWithPreIco, .storyItem, .tagItem {
+.storyItemWithPreIco, .profileItemWithPre, .playlistItemWithPre, .storyItem, .tagItem {
     display: grid;
     grid-template-columns: 32px 1fr; 
     grid-auto-columns: 32px;
@@ -276,6 +276,17 @@ li {
     background-color: rgb(69, 119, 185);
     border-radius: 12px;
 }
+.storyItemWithPreIco, .profileItemWithPre, .playlistItemWithPre {
+    gap: 4px;
+    padding: 0px 4px;
+}
+.playlistItemWithPre {
+    background-color: rgb(25, 149, 108);
+}
+.profileItemWithPre {
+    background-color: rgb(220, 117, 26);
+}
+
 .storyItem {
     grid-template-columns: 1fr;
     background-color: chartreuse;

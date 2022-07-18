@@ -17,5 +17,15 @@ export function useGetRoles(){
     console.log(roles);
     return { decoded, roles };
 }
+export function useGetUserInfo(){
+    const { auth } = useAuth();
+    const decoded = auth?.accessToken ?
+    jwt_decode(auth.accessToken)
+    : undefined;
+    const userInfo = decoded?.UserInfo || [];
+    console.log('info is : ');
+    console.log(userInfo);
+    return { decoded, userInfo };
+}
 
 ////'RestrictedMember': 1354,

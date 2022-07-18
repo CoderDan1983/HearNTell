@@ -27,7 +27,7 @@ export default function BuildOutIcoArray({ ico, i, entry, pre }){
             />
         : //* for icons
         <div key = { i } className = { icoClass }> 
-        { console.log('ico.info: ', ico.info, ', entry: ', entry) }
+        {/* { console.log('ico.info: ', ico.info, ', entry: ', entry) } */}
             { ico.preText }  {/* optional text that goes before */}
             <ico.Icon 
                 onClick= { (e) => ico.clickHandler && ico.clickHandler(e, i, ico.info, entry) } 

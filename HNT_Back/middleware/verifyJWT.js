@@ -14,7 +14,8 @@ const verifyJWT = (req, res, next) => {
         (err, decoded) => {
             if (err) return res.sendStatus(403); //invalid token
             req.user = decoded.UserInfo.username;
-            req.roles = decoded.UserInfo.roles.filter((role)=> role !== null);
+            req.user_id = decoded.UserInfo.user_id;
+            req.roles = decoded.UserInfo.roles.filter((role)=> role);
             // console.log('reckoning: ', req.user, req.roles);
             next();
         }

@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 
 const Playlist = new Schema({
   user_id: String,
+  creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   story_ids: [String], //* Use the arraymove function reorder the ids when story order is changed by the user
   title: String,
     

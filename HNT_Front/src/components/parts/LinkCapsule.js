@@ -18,14 +18,20 @@ import BasicMenu from './BasicMenu';
 // 
 
 export default function LinkCapsule({ to, IcoArray, menu, classy="link", _id, 
-entry = {}, wrapperClass="storyItem", children }){
-    console.log('LinkCapsule 22.  entry is: ', entry);
-    console.log('also, IcoArray is: ', IcoArray);
+entry = {}, options, children }){
+    const defaultWrapClass = (IcoArray && IcoArray.length && IcoArray.some((ico)=> { return ico.pre === true })) ? "storyItemWithPreIco" : "storyItem";
+    // const defaultWrapClass = "storyItem"
+    const wrapperClass = (options && options.wrapperClass) ? options.wrapperClass : defaultWrapClass;
+    // console.log('LinkCapsule 22.  entry is: ', entry);
+    // console.log('also, IcoArray is: ', IcoArray);
     const url = _id ? `${to}/${_id}` : to;
 
-    return(<div className={ wrapperClass ? wrapperClass : "storyItem" }>
+    return(<div className={ wrapperClass }>
         {/* { IcoArray && IcoArray.length && 
         <BuildOutIcoArray IcoArray = { IcoArray } entry = { entry } pre = { true } /> } */}
+        { IcoArray && IcoArray.length && IcoArray.map((ico, i)=>{
+            return <BuildOutIco entry = { entry } ico = { ico } i = { i } key= { i } pre = { true }/>
+        })}
         {/* //@This Link element holds ALL the non-icon interface! */}
         { to ? 
             <Link className= { classy } to = { url } >
@@ -37,7 +43,7 @@ entry = {}, wrapperClass="storyItem", children }){
             </div>
         }
         { IcoArray && IcoArray.length && IcoArray.map((ico, i)=>{
-            return <BuildOutIco ico = { ico } i = { i } entry = { entry }/>
+            return <BuildOutIco entry = { entry } ico = { ico } i = { i } key= { i }/>
         })}
          {/*  */}
         {/* <div>Khan Ewe Sea Mi</div> */}

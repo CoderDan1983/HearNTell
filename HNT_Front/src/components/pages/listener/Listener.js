@@ -2,7 +2,7 @@
 import '../../../index.css';
 import { useState, useEffect } from 'react';
 import useAuth from "../../../hooks/useAuth";
-import { useGetRoles } from '../../../hooks/useRoles'
+import { useGetRoles, useGetUserInfo } from '../../../hooks/useRoles'
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 
@@ -45,7 +45,7 @@ export default function Listener(){
     const addPlaylistSetter = createSetter(myPlaylists, setMyPlaylists, { push: true });
     // console.log('addPlaylistSetter: ', addPlaylistSetter);
     // const [loading, setLoading] = useState(false);
-
+    console.log('myPlaylists (48) is: ', myPlaylists);  
     function queueSetter(info){
         const { queue: queueI, stories: storiesI } = info;
         setQueue(queueI);
@@ -87,7 +87,7 @@ export default function Listener(){
         <h1 className="consulting">Hear a Story</h1>
         {/* <SearchComponent options={ searches } /> */}
 
-        <SearchInterface options={ searches }/>
+        <SearchInterface options={ searches } playlists = { myPlaylists } goTo = { goTo } subscriptions = { mySubscriptions }/>
     </div>
     <div className="listenerGroups">
         <div className="mainItems">
