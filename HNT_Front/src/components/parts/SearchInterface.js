@@ -79,6 +79,7 @@ export default function SearchInterface({ options, playlists, goTo, subscription
         }
         else {
             const section = results[style];
+            console.log('82.  section is: ', section);
             if(section && section["author"]) displayArr = displayArr.concat(section["author"]);
             if(section && section["title"]) displayArr = displayArr.concat(section["title"]);
             if(section && section["tag"]) displayArr = displayArr.concat(section["tag"]);

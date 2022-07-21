@@ -1,5 +1,4 @@
 import LinkCapsule from './LinkCapsule';
-import RatingComponent from './RatingComponent'; //* special
 import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
 
 export default function PlaylistItem({ options = {}, to, IcoArray = [], menu, entry }){
@@ -36,24 +35,6 @@ export default function PlaylistItem({ options = {}, to, IcoArray = [], menu, en
             </div> */}
         </>
     </LinkCapsule>);
-}
-
-//* helper function(s): :)
-function showTime(sec){
-    let time = sec;
-    const hours = Math.floor(sec / 3600);
-    time -= (hours * 3600);
-    
-    const minutes = Math.floor(time / 60);
-    const minInsert = (minutes < 10) ? "0" : "";
-    time -= (minutes * 60);
-    const seconds = time;
-    const secInsert = (seconds < 10) ? "0" : "";
-
-    const returnVal = hours ? `${hours}:${minInsert}${minutes}:${secInsert}${seconds}` :
-    `${minInsert}${minutes}:${secInsert}${seconds}`;
-
-    return returnVal;  
 }
 
 

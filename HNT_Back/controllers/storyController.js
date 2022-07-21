@@ -111,7 +111,7 @@ const popularByTag = async (req, res) => {
 const search = async (req, res) => {
   const { search_string } = req.params; 
   //const is_creator_list = false; //? how shall we send this (!?!).  Is it safe to send in req.param or req.query?
-  const is_creator_list = true;
+  const is_creator_list = false;
   // let is_creator_list = req.body.is_creator_list;
   // if (!is_creator_list) is_creator_list = false; //* is_creator_list is not actually being sent!
   let is_queue = req.body.is_queue;
@@ -169,11 +169,11 @@ const search = async (req, res) => {
      (author_page_by_name[0].name.toLowerCase() === search_string.toLowerCase())) ?
   true : false;
 
-  if(author_page_by_name){
-    if(author_page_by_name[0]){
-      //console.log(author_page_by_name[0].name.toLowerCase(), ' vs ', search_string.toLowerCase())
-    }
-  }
+  // if(author_page_by_name){
+  //   if(author_page_by_name[0]){
+  //     //console.log(author_page_by_name[0].name.toLowerCase(), ' vs ', search_string.toLowerCase())
+  //   }
+  // }
   console.log('author_name_precise', author_name_precise)
 
 
@@ -205,6 +205,14 @@ const search = async (req, res) => {
       // .then((doc)=>{ doc?.length ? markIt(doc, "story", "author", null, search_string) : doc });
       .then((doc)=> markIt(doc, "story", "author", author_name_precise, search_string) );
 
+      //* by title
+  if(rPkg.stories) rPkg.stories.title = await Story.find({ title: search_regex, is_creator_list })
+    .populate('creator', "username name")
+    .populate("ratings")
+    .then((doc)=> markIt(doc, "story", "title", "title", search_string) );
+    // .then((doc)=>{ doc?.length ? markIt(doc, "story", "title", "title", search_string) : doc });
+
+  
   //* by story tag
   //console.log('search_tags are: ', search_tags); //^ THIS IS THE ONLY "EXACT ONE"!!! (?)
   if(rPkg.stories) rPkg.stories.tag = await Story.find({ tags: { $in: search_tags }, is_creator_list }) //"Congo"
@@ -214,13 +222,7 @@ const search = async (req, res) => {
     .then((doc)=> markIt(doc, "story", "tag", "tags", search_string) );
     // .then((doc)=>{ doc?.length ? markIt(doc, "story", "tag", "tags", search_string) : doc });
 
-  //* by title
-  if(rPkg.stories) rPkg.stories.title = await Story.find({ title: search_regex, is_creator_list })
-    .populate('creator', "username name")
-    .populate("ratings")
-    .then((doc)=> markIt(doc, "story", "title", "title", search_string) );
-    // .then((doc)=>{ doc?.length ? markIt(doc, "story", "title", "title", search_string) : doc });
-
+  
   //* by description
   if(rPkg.stories) rPkg.stories.description = await Story.find({ description: search_regex, is_creator_list })
     //# .collation({ locale: "en", strength: 1 })
