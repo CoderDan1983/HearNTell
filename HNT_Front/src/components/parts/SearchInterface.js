@@ -28,7 +28,12 @@ export default function SearchInterface({ options, playlists, goTo, subscription
     const [ returnStories , setReturnStories ] = useState(true);
     const [ returnProfiles , setReturnProfiles ] = useState(true);
     const [ returnPlaylists , setReturnPlaylists ] = useState(true);
-    const [ returnDescriptions , setReturnDescriptions ] = useState(true);
+    // const [ returnDescriptions , setReturnDescriptions ] = useState(true);
+
+    const [ sections, setSections ] = useState(1);
+    const [ sectionStart, setSectionStart ] = useState(0);
+    const [ sectionSize, setSectionSize ] = useState(10);
+
     console.log('returnStories is; ', returnStories);
 
     const [ style, setStyle ] = useState("all");
@@ -116,12 +121,21 @@ export default function SearchInterface({ options, playlists, goTo, subscription
         <SearchComponent options = { options } value = { search } setValue = { setSearch }/>
         <button type="button" onClick={ (e)=>  {
             //* notice that returnAll is actually NOT sent! ^_^
-            const queries = { 
-                returnStories, 
-                returnProfiles, 
-                returnPlaylists, 
-                returnDescriptions 
-            };
+            // const queries = { 
+            //     returnStories, 
+            //     returnProfiles, 
+            //     returnPlaylists, 
+            //     returnDescriptions 
+            // };
+
+            // const is_queue: 
+            let queries = {
+                // is_q: is_queue, is_cl: is_creator_list,
+                searchIn: style, //* all, tag, author, title, description
+                r_st: returnStories, r_pro: returnProfiles, r_play: returnPlaylists, 
+                // r_des: returnDescriptions, //? keep ?
+                sc_size: sectionSize, sc_start: sectionStart, sc: sections,  
+            }
             // `story/search/${search}`
             if(search){
                 setSearched(true); 
@@ -167,6 +181,14 @@ export default function SearchInterface({ options, playlists, goTo, subscription
             >
                 Title
             </button>
+            <button 
+                type="button" 
+                name="searchButton" 
+                value="description" className="blurred"
+                onClick={ (e) => prepareDisplayResults(e, results, "description") }
+            >
+                Title
+            </button>
             <button type="button" onClick = { (e) => setViewReturnOptions(!viewReturnOptions) } >
                 Options
             </button>
@@ -183,7 +205,7 @@ export default function SearchInterface({ options, playlists, goTo, subscription
                     setReturnStories(!returnAll)
                     setReturnProfiles(!returnAll)
                     setReturnPlaylists(!returnAll)
-                    setReturnDescriptions(!returnAll)
+                    //# setReturnDescriptions(!returnAll)
                 }} //# togglePersist
                 checked={ returnAll } //# persist
             />
@@ -218,16 +240,6 @@ export default function SearchInterface({ options, playlists, goTo, subscription
                 checked={ returnPlaylists } //# persist
             />
             <label htmlFor="returnPlaylists">Playlists</label>
-
-            <input 
-                type="checkbox"
-                id="returnDescriptions"
-                name="searchCheck" 
-                value="descriptions"
-                onChange={ (e) => setReturnDescriptions(!returnDescriptions) } //# togglePersist
-                checked={ returnDescriptions } //# persist
-            />
-            <label htmlFor="returnDescriptions">Descriptions</label>
         </div>
         <div id="resultsDisplay">
             { shownResults && shownResults.length && shownResults.map((result, i)=>{

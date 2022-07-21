@@ -109,49 +109,216 @@ const popularByTag = async (req, res) => {
 
 //Search stories (tag, author, title)
 const search = async (req, res) => {
-  const { search_string } = req.params; 
-  //const is_creator_list = false; //? how shall we send this (!?!).  Is it safe to send in req.param or req.query?
-  const is_creator_list = false;
-  // let is_creator_list = req.body.is_creator_list;
-  // if (!is_creator_list) is_creator_list = false; //* is_creator_list is not actually being sent!
-  let is_queue = req.body.is_queue;
-  if (!is_queue) is_queue = false; //* is_creator_list is not actually being sent!
-  
+  //todo new system goals: 
+  // a) shorten variable names (options) being passed back.
+  // b) only pass back values that are true for options
+  // c) pass values for skip and limit!
+  // d) 
+
+
+    //? how shall we send this (!?!).  Is it safe to send in req.param or req.query?
+
+  const { search_string } = req.params; //* get initial variables, so to speak :)
+  let { 
+    is_q: is_queue, is_cl: is_creator_list,
+    searchIn, //* all, tag, author, title, description
+    r_st: returnStories, r_pro: returnProfiles, r_play: returnPlaylists, 
+    r_des: returnDescriptions, //? keep ?
+    sc_size: sectionSize, sc_start: sectionStart, sc: sections,
+  } = req.query;
+
+  //* fill in missing variables ^_^
+  if (!is_creator_list) is_creator_list = false;
+  if (!is_queue) is_queue = false;
+  if (sectionSize === undefined) sectionSize = 10;
+  if (sectionStart === undefined) sectionStart = 0;
+  if (sections === undefined) sections = 1;
+
+  //* create "special searchers" :)
   const search_tags = [search_string]; //# search_string.split(",").trim();
+  const search_chunks = search_string.trim().split(" "); //?.trim();
   const search_regex = { "$regex": search_string, "$options": "i" };
-  const { returnStories, returnProfiles, returnPlaylists, returnDescriptions } = req.query;
-
-  console.log('req.query is: ', req.query);
-  console.log('req.params is: ', req.params);
-
-  let stories_by_author; //* initialize raw variables
   let rPkg = { search_string } //* return package initialization :)
-  if (returnStories === "true") rPkg.stories = {};
-  if (returnProfiles === "true") rPkg.profiles = {};
-  if (returnPlaylists === "true") rPkg.playlists = {};
-  if (returnDescriptions === "true") rPkg.description = {}; //what is this used for!?!?!
-  // stories, playlists, profiles, 
+  // let multiSearch = { $or: [] };
+  // if((searchIn === "all")||(searchIn === "author")) multiSearch.$or.push({  })
+  // //* all, tag, author, title, description (This is what we search by)
+  
+  // user - null, name, null, null, //* this is where we'll search
+  // profile - null, creator.name, null, null,
+  // playlist - null, creator.name, title, null
+  // story - tag, creator.name, title, description
 
-  function markIt(doc, type, type1, compareProp, searchString){ //* this will (hopefully help order searches clientside :) )
+  //* when we search by author, we search by author and anything that the author created.  
+  //It doesn't determine determine what we return.  that's determined by returnby variables!
+  // let preciseAuthors = await User.find({ name: search_string }).
+  // let preciseAuthors = await User.find({ $where: function(){ //My atlas version to not high enough to use this :D
+  //   return this.name.toLowerCase === search_string.toLowerCase();
+  // }});
+  // console.log('preciseAuthors is: ', preciseAuthors);
+
+  
+
+
+ //, (err, result)=>{
+//   console.log('googoo, gaga')
+//  }
+  // let allAuthors = [ ...authors, ...preciseAuthors];
+  function markIt(doc, searchIn, returnA, compareProp, searchString){ //* this will (hopefully help order searches clientside :) )
     let newArr = [];
     for(let d=0; d < doc.length; d++){
       const entry = doc[d]._doc;
-      let precise = false;
-      if(typeof(compareProp) === "string"){
+      let precision = 0;
+      if((typeof(compareProp) === "string")&&(entry[compareProp])){
+        // console.log('entry is: ', entry, ', compareProp is: ', compareProp);
         if(entry[compareProp].toLowerCase() === searchString.toLowerCase()){
-          precise = true;
+          precision = 1; //* check for precise match
+        }
+        else{ //* check for a percentage of words matched.
+          const search_array = searchString.trim().toLowerCase().split(" ");
+          const entry_string = entry[compareProp].trim().toLowerCase();
+          const entry_array = entry_string.split(" ");
+          let foundNum = 0;
+          for(let s=0; s < search_array.length; s++){
+            for(let e=0; e < entry_array.length; e++){
+              if(search_array[s] === entry_array[e]) { //* if a word matches, give it kudos
+                foundNum++;
+              }
+              else{ //* if part of a word matches, give it partial kudos
+                let matchy0 = 0; let matchy1 = 0;
+                if (entry_array[e].includes(search_array[s])) matchy0 = (search_array[s].length / entry_array[e].length);
+                if (search_array[s].includes(entry_array[e])) matchy1 = (entry_array[e].length / search_array[s].length);
+                if(matchy0 > matchy1) foundNum += matchy0;
+                else foundNum += matchy1;
+              }
+            }
+          }
+          precision = foundNum / (search_array.length * entry_array.length);
         }
       }
-      else{
-        console.log('compareProp is: ', compareProp)
-        precise = compareProp;
+      else if(typeof(compareProp) === "number"){
+        precision = compareProp; //* recieve precision from outside source :)
       }
-      
-      newArr.push({ type, type1, precise, ...entry })
+      precision && newArr.push({ searchIn, returnA, precision, ...entry })
     }
-    // console.log('markIt.  newArr: ', newArr);
     return newArr;
   }
+
+  async function returnASearch(search_string, searchIn, returnA, property, compareProp, Modal){
+    // const search_tags = [search_string]; //@ a) make search variables.
+    // const search_regex = { "$regex": search_string, "$options": "i" };
+    const search_chunks = search_string.trim().split(" "); //?.trim();
+
+    const orRegex = {
+      $or: search_chunks.map((chunk)=> { 
+        const regex = new RegExp(chunk, 'i');
+        return { name: { "$regex": regex } } 
+      }) 
+    };  
+
+    function uniqueIdsOnly(entry, avoidArray){ //$ appears to be working correctly :)
+      return !avoidArray.some((preciseM)=>  preciseM._id.toString() === entry._id.toString());
+    }
+
+    //@ b) search in mongoose for matches :)
+    let preciseMatch = await Modal.find({ [property]: search_string }) //find the exact matches... except not case sensitive :)
+      .collation({ locale: "en", strength: 1 }) //$ appears to be working correctly :)
+      .then((doc)=> markIt(doc, searchIn, returnA, 1, search_string) );
+    
+    let wordMatch = await Modal.find({ [property]: { $in: search_chunks } }) //$ appears to be working correctly :)
+      .collation({ locale: "en", strength: 1 })//matches any word of a single search string.
+      .then((doc)=> markIt(doc, searchIn, returnA, compareProp, search_string) );
+
+    wordMatch = wordMatch.filter((word)=> uniqueIdsOnly(word, preciseMatch));
+    
+    let anywhereMatch = await Modal.find({ orRegex })
+      .collation({ locale: "en", strength: 1 })//matches any word of a single search string.
+      .then((doc)=> {
+        return markIt(doc, searchIn, returnA, compareProp, search_string) 
+      });
+    anywhereMatch = anywhereMatch.filter((word)=> uniqueIdsOnly(word, wordMatch));
+
+    // console.log('orRegex is: ', orRegex);
+    // console.log('property is: ', property, ', search_string is: ', search_string);
+    // console.log('preciseMatch is: ', preciseMatch);
+    // console.log('wordMatch is: ', wordMatch);
+    //console.log('anywhereMatch is: ', anywhereMatch);
+
+    // //@ c) prepare and return matches :)
+    const returnArr = [...preciseMatch, ...wordMatch, ...anywhereMatch];
+    returnArr.sort((a,b)=> b.precision - a.precision);
+    console.log('returnArray is: ', returnArray);
+    // return returnArr;
+
+      // .then(function (err, doc) {
+      //     console.log("the doc is: ", doc);
+      //     return doc;
+      // })
+
+
+      // , function(err, match){
+      //   if(err) return err;
+      //   console.log('the match is: ', match);
+      // }
+
+    // .skip(1).limit(2)
+
+
+    //let authors = await User.find({ name: search_regex }); //matches search string, even if it's part of a bigger word!
+
+  }
+
+  await returnASearch(search_string, "name", "user", "name", "name", User);
+  
+  console.log('..................')
+  //   //# $where('this.status.currentHitpoints < this.status.maximumHitpoints')
+  // const author_page_by_name = await User.find({ name: search_regex }) //?   search_string
+  // console.log('author_page_by_name', author_page_by_name)
+  // const author_name_precise = (author_page_by_name && author_page_by_name[0] &&
+  //    (author_page_by_name[0].name.toLowerCase() === search_string.toLowerCase())) ?
+  // true : false;
+  // db.payments.find({ $where: function() { 
+  //   var value =  isString(this._id) && hex_md5(this._id) == '57fee1331906c3a8f0fa583d37ebbea9'; 
+  //   return value; 
+  // }}).pretty()
+  // //* by title
+  // if(rPkg.playlists) rPkg.playlists.title = await Playlist.find({ title: search_regex, is_creator_list, is_queue })
+  //   .populate('creator', "username name _id")
+  //   // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "title", "title", search_string) : doc }); 
+  //   .then((doc)=> markIt(doc, "playlist", "title", "title", search_string) ); 
+
+//------------ "new code" above ^_^
+
+  console.log('req.query is: ', req.query, ', req.params is: ', req.params);
+
+  // let stories_by_author; //* initialize raw variables
+  
+  // if (returnStories === "true") rPkg.stories = {};
+  // if (returnProfiles === "true") rPkg.profiles = {};
+  // if (returnPlaylists === "true") rPkg.playlists = {};
+  // if (returnDescriptions === "true") rPkg.description = {}; //what is this used for!?!?!
+  // // stories, playlists, profiles, 
+
+
+// function markIt(doc, type, type1, compareProp, searchString){ //* this will (hopefully help order searches clientside :) )
+//   let newArr = [];
+//   for(let d=0; d < doc.length; d++){
+//     const entry = doc[d]._doc;
+//     let precise = false;
+//     if(typeof(compareProp) === "string"){
+//       if(entry[compareProp].toLowerCase() === searchString.toLowerCase()){
+//         precise = true;
+//       }
+//     }
+//     else{
+//       console.log('compareProp is: ', compareProp)
+//       precise = compareProp;
+//     }
+    
+//     newArr.push({ type, type1, precise, ...entry })
+//   }
+//   // console.log('markIt.  newArr: ', newArr);
+//   return newArr;
+// }
 
 //   items.find({}).then(function(documents) {
       
@@ -162,79 +329,88 @@ const search = async (req, res) => {
 // })
   //@ Search Author pages
   //* by name
-  
-  const author_page_by_name = await User.find({ name: search_regex }) //?   search_string
-  console.log('author_page_by_name', author_page_by_name)
-  const author_name_precise = (author_page_by_name && author_page_by_name[0] &&
-     (author_page_by_name[0].name.toLowerCase() === search_string.toLowerCase())) ?
-  true : false;
+  //* this was being used, so tos peak!
+  // const author_page_by_name = await User.find({ name: search_regex }) //?   search_string
+  // console.log('author_page_by_name', author_page_by_name)
+  // const author_name_precise = (author_page_by_name && author_page_by_name[0] &&
+  //    (author_page_by_name[0].name.toLowerCase() === search_string.toLowerCase())) ?
+  // true : false;
 
   // if(author_page_by_name){
   //   if(author_page_by_name[0]){
   //     //console.log(author_page_by_name[0].name.toLowerCase(), ' vs ', search_string.toLowerCase())
   //   }
   // }
-  console.log('author_name_precise', author_name_precise)
-
+  // console.log('author_name_precise', author_name_precise)
 
   
-  const author_id = (author_page_by_name && author_page_by_name.length) ? author_page_by_name[0]._id : undefined;
-  if(author_id && rPkg.profiles) rPkg.profiles.author =  await Profile.find({ creator: author_id })
-    .populate('creator', "username name _id")
-    .then((doc)=> markIt(doc, "profile", "author", author_name_precise, search_string) );
-    // .then((doc)=>{ doc?.length ? markIt(doc, "profile", "author", null, search_string) : doc });
+  // const author_id = (author_page_by_name && author_page_by_name.length) ? author_page_by_name[0]._id : undefined;
+  // if(author_id && rPkg.profiles) rPkg.profiles.author =  await Profile.find({ creator: author_id })
+  //   .populate('creator', "username name _id")
+  //   .then((doc)=> markIt(doc, "profile", "author", author_name_precise, search_string) );
+  //   // .then((doc)=>{ doc?.length ? markIt(doc, "profile", "author", null, search_string) : doc });
                                   
-  //@ Search playlists
-  //* by title
-  if(rPkg.playlists) rPkg.playlists.title = await Playlist.find({ title: search_regex, is_creator_list, is_queue })
-    .populate('creator', "username name _id")
-    // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "title", "title", search_string) : doc }); 
-    .then((doc)=> markIt(doc, "playlist", "title", "title", search_string) ); 
+  // //@ Search playlists
+  // //* by title
+  // if(rPkg.playlists) rPkg.playlists.title = await Playlist.find({ title: search_regex, is_creator_list, is_queue })
+  //   .populate('creator', "username name _id")
+  //   // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "title", "title", search_string) : doc }); 
+  //   .then((doc)=> markIt(doc, "playlist", "title", "title", search_string) ); 
 
-  //* by author
-  if(author_id && rPkg.playlists) rPkg.playlists.author = await Playlist.find({ user_id: author_id, is_creator_list, is_queue })
-    .populate('creator', "username name _id")
-    .then((doc)=> markIt(doc, "playlist", "author", author_name_precise, search_string) );
-  // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "author", null, search_string) : doc });
+  // //* by author
+  // if(author_id && rPkg.playlists) rPkg.playlists.author = await Playlist.find({ user_id: author_id, is_creator_list, is_queue })
+  //   .populate('creator', "username name _id")
+  //   .then((doc)=> markIt(doc, "playlist", "author", author_name_precise, search_string) );
+  // // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "author", null, search_string) : doc });
 
-  //@ Search Stories
-  //* by author
-  if(author_id && rPkg.stories) rPkg.stories.author = await Story.find({ creator: author_id, is_creator_list }) 
-      .populate('creator', "username name _id")
-      .populate("ratings")
-      // .then((doc)=>{ doc?.length ? markIt(doc, "story", "author", null, search_string) : doc });
-      .then((doc)=> markIt(doc, "story", "author", author_name_precise, search_string) );
+  // //@ Search Stories
+  // //* by author
+  // if(author_id && rPkg.stories) rPkg.stories.author = await Story.find({ creator: author_id, is_creator_list }) 
+  //     .populate('creator', "username name _id")
+  //     .populate("ratings")
+  //     // .then((doc)=>{ doc?.length ? markIt(doc, "story", "author", null, search_string) : doc });
+  //     .then((doc)=> markIt(doc, "story", "author", author_name_precise, search_string) );
 
-      //* by title
-  if(rPkg.stories) rPkg.stories.title = await Story.find({ title: search_regex, is_creator_list })
-    .populate('creator', "username name")
-    .populate("ratings")
-    .then((doc)=> markIt(doc, "story", "title", "title", search_string) );
-    // .then((doc)=>{ doc?.length ? markIt(doc, "story", "title", "title", search_string) : doc });
-
-  
-  //* by story tag
-  //console.log('search_tags are: ', search_tags); //^ THIS IS THE ONLY "EXACT ONE"!!! (?)
-  if(rPkg.stories) rPkg.stories.tag = await Story.find({ tags: { $in: search_tags }, is_creator_list }) //"Congo"
-    .collation({ locale: "en", strength: 1 })
-    .populate('creator', "username name")
-    .populate("ratings")
-    .then((doc)=> markIt(doc, "story", "tag", "tags", search_string) );
-    // .then((doc)=>{ doc?.length ? markIt(doc, "story", "tag", "tags", search_string) : doc });
+  //     //* by title
+  // if(rPkg.stories) rPkg.stories.title = await Story.find({ title: search_regex, is_creator_list })
+  //   .populate('creator', "username name")
+  //   .populate("ratings")
+  //   .then((doc)=> markIt(doc, "story", "title", "title", search_string) );
+  //   // .then((doc)=>{ doc?.length ? markIt(doc, "story", "title", "title", search_string) : doc });
 
   
-  //* by description
-  if(rPkg.stories) rPkg.stories.description = await Story.find({ description: search_regex, is_creator_list })
-    //# .collation({ locale: "en", strength: 1 })
-    .populate('creator', "username name _id")
-    .populate("ratings")
-    .then((doc)=> markIt(doc, "story", "description", "description", search_string) );
-    // .then((doc)=>{ doc?.length ? markIt(doc, "story", "description", "description", search_string) : doc });
+  // //* by story tag
+  // //console.log('search_tags are: ', search_tags); //^ THIS IS THE ONLY "EXACT ONE"!!! (?)
+  // if(rPkg.stories) rPkg.stories.tag = await Story.find({ tags: { $in: search_tags }, is_creator_list }) //"Congo"
+  //   .collation({ locale: "en", strength: 1 })
+  //   .populate('creator', "username name")
+  //   .populate("ratings")
+  //   .then((doc)=> markIt(doc, "story", "tag", "tags", search_string) );
+  //   // .then((doc)=>{ doc?.length ? markIt(doc, "story", "tag", "tags", search_string) : doc });
+
   
-  console.log('rPkg is: ', rPkg)
-  res.json(rPkg);
+  // //* by description
+  // if(rPkg.stories) rPkg.stories.description = await Story.find({ description: search_regex, is_creator_list })
+  //   //# .collation({ locale: "en", strength: 1 })
+  //   .populate('creator', "username name _id")
+  //   .populate("ratings")
+  //   .then((doc)=> markIt(doc, "story", "description", "description", search_string) );
+  //   // .then((doc)=>{ doc?.length ? markIt(doc, "story", "description", "description", search_string) : doc });
+  
+  // console.log('rPkg is: ', rPkg)
+  // res.json(rPkg);
+  res.json({ testing: "true" })
 };
 
+
+// const matchiness = (glob, word)=> {
+//   const regex = new RegExp(word, 'ig');
+//   const count = (entry_string.match(regex) || []).length;                  
+//   glob.matched += count;
+
+//   return glob;
+// }
+// search_array.reduce(matchiness, { matched: 0, total: entry_string.length, });
 
 
 //* Get stories by playlist
@@ -415,11 +591,17 @@ module.exports = {
 
 
 
-//* from search :D
+//* pre 7/21/2022 search system!
 
-// //Search stories (tag, author, title)
 // const search = async (req, res) => {
-//   const { search_string } = req.params;
+//   const { search_string } = req.params; 
+//   //const is_creator_list = false; //? how shall we send this (!?!).  Is it safe to send in req.param or req.query?
+//   const is_creator_list = false;
+//   // let is_creator_list = req.body.is_creator_list;
+//   // if (!is_creator_list) is_creator_list = false; //* is_creator_list is not actually being sent!
+//   let is_queue = req.body.is_queue;
+//   if (!is_queue) is_queue = false; //* is_creator_list is not actually being sent!
+  
 //   const search_tags = [search_string]; //# search_string.split(",").trim();
 //   const search_regex = { "$regex": search_string, "$options": "i" };
 //   const { returnStories, returnProfiles, returnPlaylists, returnDescriptions } = req.query;
@@ -432,68 +614,111 @@ module.exports = {
 //   if (returnStories === "true") rPkg.stories = {};
 //   if (returnProfiles === "true") rPkg.profiles = {};
 //   if (returnPlaylists === "true") rPkg.playlists = {};
-//   if (returnDescriptions === "true") rPkg.descriptions = {};
+//   if (returnDescriptions === "true") rPkg.description = {}; //what is this used for!?!?!
 //   // stories, playlists, profiles, 
-//   const profiles = {
-//     author: profile_by_author //author_page_by_name,
+
+//   function markIt(doc, type, type1, compareProp, searchString){ //* this will (hopefully help order searches clientside :) )
+//     let newArr = [];
+//     for(let d=0; d < doc.length; d++){
+//       const entry = doc[d]._doc;
+//       let precise = false;
+//       if(typeof(compareProp) === "string"){
+//         if(entry[compareProp].toLowerCase() === searchString.toLowerCase()){
+//           precise = true;
+//         }
+//       }
+//       else{
+//         console.log('compareProp is: ', compareProp)
+//         precise = compareProp;
+//       }
+      
+//       newArr.push({ type, type1, precise, ...entry })
+//     }
+//     // console.log('markIt.  newArr: ', newArr);
+//     return newArr;
 //   }
 
-//   const playlists = {
-//     title: playlists_by_title,
-//     author: playlists_by_author,
-//   }
+// //   items.find({}).then(function(documents) {
+      
+// //     documents.forEach(function(u) {
+// //         exampleEmbed.addField(`${u.ItemName}`, `Price: ${u.Price}`)
 
-//   const stories = {
-//     title: stories_by_title,
-//     author: stories_by_author,    
-//     tag: stories_by_tag,
-//     description: stories_by_description,    
-//   }
-
+// //     });
+// // })
 //   //@ Search Author pages
 //   //* by name
   
 //   const author_page_by_name = await User.find({ name: search_regex }) //?   search_string
-//   const author_id = (author_page_by_name && author_page_by_name.length) ? author_page_by_name[0]._id : undefined;
-//   rPkg.profiles && author_id && const profile_by_author = author_id && await Profile.find({ creator: author_id })
-//     .populate('creator', "username name _id");
+//   console.log('author_page_by_name', author_page_by_name)
+//   const author_name_precise = (author_page_by_name && author_page_by_name[0] &&
+//      (author_page_by_name[0].name.toLowerCase() === search_string.toLowerCase())) ?
+//   true : false;
 
+//   // if(author_page_by_name){
+//   //   if(author_page_by_name[0]){
+//   //     //console.log(author_page_by_name[0].name.toLowerCase(), ' vs ', search_string.toLowerCase())
+//   //   }
+//   // }
+//   console.log('author_name_precise', author_name_precise)
+
+
+  
+//   const author_id = (author_page_by_name && author_page_by_name.length) ? author_page_by_name[0]._id : undefined;
+//   if(author_id && rPkg.profiles) rPkg.profiles.author =  await Profile.find({ creator: author_id })
+//     .populate('creator', "username name _id")
+//     .then((doc)=> markIt(doc, "profile", "author", author_name_precise, search_string) );
+//     // .then((doc)=>{ doc?.length ? markIt(doc, "profile", "author", null, search_string) : doc });
+                                  
 //   //@ Search playlists
 //   //* by title
-//   const playlists_by_title = await Playlist.find({ title: search_regex }) 
-//   //#   .collation({ locale: "en", strength: 1 })
+//   if(rPkg.playlists) rPkg.playlists.title = await Playlist.find({ title: search_regex, is_creator_list, is_queue })
+//     .populate('creator', "username name _id")
+//     // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "title", "title", search_string) : doc }); 
+//     .then((doc)=> markIt(doc, "playlist", "title", "title", search_string) ); 
 
 //   //* by author
-//   const playlists_by_author = author_id && await Playlist.find({ user_id: author_id }) 
-//     .collation({ locale: "en", strength: 1 })
+//   if(author_id && rPkg.playlists) rPkg.playlists.author = await Playlist.find({ user_id: author_id, is_creator_list, is_queue })
+//     .populate('creator', "username name _id")
+//     .then((doc)=> markIt(doc, "playlist", "author", author_name_precise, search_string) );
+//   // .then((doc)=>{ doc?.length ? markIt(doc, "playlist", "author", null, search_string) : doc });
 
 //   //@ Search Stories
 //   //* by author
-//   if(author_page_by_name && author_page_by_name.length){ 
-//     stories_by_author = author_id && await Story.find({ creator: author_id }) 
+//   if(author_id && rPkg.stories) rPkg.stories.author = await Story.find({ creator: author_id, is_creator_list }) 
 //       .populate('creator', "username name _id")
-//       .populate("ratings");
-//     // console.log('156: ', stories_by_author);
-//   }
+//       .populate("ratings")
+//       // .then((doc)=>{ doc?.length ? markIt(doc, "story", "author", null, search_string) : doc });
+//       .then((doc)=> markIt(doc, "story", "author", author_name_precise, search_string) );
 
+//       //* by title
+//   if(rPkg.stories) rPkg.stories.title = await Story.find({ title: search_regex, is_creator_list })
+//     .populate('creator', "username name")
+//     .populate("ratings")
+//     .then((doc)=> markIt(doc, "story", "title", "title", search_string) );
+//     // .then((doc)=>{ doc?.length ? markIt(doc, "story", "title", "title", search_string) : doc });
+
+  
 //   //* by story tag
 //   //console.log('search_tags are: ', search_tags); //^ THIS IS THE ONLY "EXACT ONE"!!! (?)
-//   let stories_by_tag = await Story.find({ tags: { $in: search_tags } }) //"Congo"
+//   if(rPkg.stories) rPkg.stories.tag = await Story.find({ tags: { $in: search_tags }, is_creator_list }) //"Congo"
 //     .collation({ locale: "en", strength: 1 })
 //     .populate('creator', "username name")
-//     .populate("ratings");
+//     .populate("ratings")
+//     .then((doc)=> markIt(doc, "story", "tag", "tags", search_string) );
+//     // .then((doc)=>{ doc?.length ? markIt(doc, "story", "tag", "tags", search_string) : doc });
 
-//   //* by title
-//   let stories_by_title = await Story.find({ title: search_regex })
-//     //# .collation({ locale: "en", strength: 1 })
-//     .populate('creator', "username name")
-//     .populate("ratings");
-
+  
 //   //* by description
-//   const stories_by_description = await Story.find({ "description": search_regex })
+//   if(rPkg.stories) rPkg.stories.description = await Story.find({ description: search_regex, is_creator_list })
 //     //# .collation({ locale: "en", strength: 1 })
 //     .populate('creator', "username name _id")
-//     .populate("ratings");
+//     .populate("ratings")
+//     .then((doc)=> markIt(doc, "story", "description", "description", search_string) );
+//     // .then((doc)=>{ doc?.length ? markIt(doc, "story", "description", "description", search_string) : doc });
+  
+//   console.log('rPkg is: ', rPkg)
+//   res.json(rPkg);
+// };
 
 //   // Books.find({
 //   //   "authors": {
