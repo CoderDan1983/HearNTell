@@ -107,6 +107,8 @@ const popularByTag = async (req, res) => {
   res.json(stories);
 };
 
+
+
 const search = async (req, res) => {
   //todo new system goals: 
   // b) only pass back values that are true for options
@@ -119,7 +121,7 @@ const search = async (req, res) => {
   const { search_string } = req.params; //* get initial variables, so to speak :)
   let { 
     is_q: is_queue, is_cl: is_creator_list,
-    searchFor, //* all, tag, author, title, description
+    searchFor, //* all, tags, author, title, description
     r_st: returnStories, r_pro: returnProfiles, r_play: returnPlaylists, 
     //# r_des: returnDescriptions, //? keep ?
     sc_size: sectionSize, sc_start: sectionStart, sc: sections,
@@ -141,8 +143,9 @@ const search = async (req, res) => {
 
   //* create "special searchers" :)
   // const search_tags = [search_string]; //# search_string.split(",").trim();
-  const search_regex = { "$regex": search_string, "$options": "i" };
+  // const search_regex = { "$regex": search_string, "$options": "i" };
   const search_chunks = search_string.trim().split(" ");
+  console.log('search_chunks is: ', search_chunks);
 
   function orWithRegex(string_array, property, extra){
     return {
@@ -153,138 +156,280 @@ const search = async (req, res) => {
       }) 
     };
   }
-  
 
-  function markIt(doc, searchFor, returnA, property, searchString, laxness = 3){ //* this will (hopefully help order searches clientside :) )
+  function calculatePrecision(entryVal, searchString, laxness){
+    let precision = 0;
+    if(entryVal.toLowerCase() === searchString.toLowerCase()){
+      precision = 1; //* check for precise match (matches will be top tier!  laxness = 1)
+    }
+    else if (laxness > 1){ //* check for a percentage of words matched.
+      const search_array = searchString.trim().toLowerCase().split(" ");
+      const entry_string = entryVal.trim().toLowerCase();
+      const entry_array = entry_string.split(" ");
+      let foundNum = 0;
+      for(let s=0; s < search_array.length; s++){
+        for(let e=0; e < entry_array.length; e++){
+          if(search_array[s] === entry_array[e]) { //* word match, the second tier (laxness = 2)
+            foundNum++;
+          }
+          else if(laxness > 2){ //* partial word matches, 3rd tier (laxness = 3)
+            let matchy0 = 0; let matchy1 = 0;
+            if (entry_array[e].includes(search_array[s])) matchy0 = (search_array[s].length / entry_array[e].length);
+            if (search_array[s].includes(entry_array[e])) matchy1 = (entry_array[e].length / search_array[s].length);
+            if(matchy0 > matchy1) foundNum += matchy0;
+            else foundNum += matchy1;
+          }
+        }
+      }
+      precision = foundNum / (search_array.length * entry_array.length);
+    }
+    return precision;
+  }
+
+  //^ searchFor can be "all, tags, title, description, author" (ie -name(?)), 
+  function markIt(doc, searchFor, returnA, searchString, 
+    { laxness = 3, sort = true, sortBy = "precision", desc = true, pris = {}, searchDisplay } = {}){ //* this will (hopefully help order searches clientside :) )
+    const lookN = searchFor === "all" ? ["tags", "title", "description", ["creator","name"]] : [searchFor];
+    // console.log('lookN is: ', lookN)
     let newArr = [];
     for(let d=0; d < doc.length; d++){
       const entry = doc[d]._doc;
-      let precision = 0;
-      if((typeof(property) === "string")||(Array.isArray(property))){
-        let entryVal;
-        if(typeof(property) === "string") entryVal = entry[property];
-        if(Array.isArray(property)) entryVal = entry[property[0]][property[1]];
+      let precision = { ...pris };
+      // console.log('198.  precision is: ', precision, ', searchFor is: ', searchFor, ', returnA is: ', returnA);
+      //* if we didn't pass in precision, calculate it here :)
+      //# &&((typeof(searchFor) === "string")||(Array.isArray(searchFor)))
+      
+      for(let s=0; s < lookN.length; s++){
+        let propName = lookN[s];
+        let entryVal = entry[lookN[s]];
 
-        if(entryVal.toLowerCase() === searchString.toLowerCase()){
-          precision = 1; //* check for precise match (matches will be top tier!  laxness = 1)
+        if(Array.isArray(lookN[s])) {
+          propName = lookN[s][1];
+          const obj = entry[lookN[s][0]];
+          if(obj) entryVal = obj[lookN[s][1]]
+          console.log('207!  entryVal is: ', entryVal, ", lookN[s] is: ", lookN[s]);
         }
-        else if (laxness > 1){ //* check for a percentage of words matched.
-          const search_array = searchString.trim().toLowerCase().split(" ");
-          const entry_string = entryVal.trim().toLowerCase();
-          const entry_array = entry_string.split(" ");
-          let foundNum = 0;
-          for(let s=0; s < search_array.length; s++){
-            for(let e=0; e < entry_array.length; e++){
-              if(search_array[s] === entry_array[e]) { //* word match, the second tier (laxness = 2)
-                foundNum++;
-              }
-              else if(laxness > 2){ //* partial word matches, 3rd tier (laxness = 3)
-                let matchy0 = 0; let matchy1 = 0;
-                if (entry_array[e].includes(search_array[s])) matchy0 = (search_array[s].length / entry_array[e].length);
-                if (search_array[s].includes(entry_array[e])) matchy1 = (entry_array[e].length / search_array[s].length);
-                if(matchy0 > matchy1) foundNum += matchy0;
-                else foundNum += matchy1;
-              }
+
+        if((!precision[propName])){ //# lookN[s]
+          //# precision.lookN[s] = 0;
+          
+          //# let entryVal;
+          //# if(typeof(searchFor) === "string") entryVal = entry[searchFor]; //* get the entryVal
+          //# if(Array.isArray(searchFor)) entryVal = entry[searchFor[0]][searchFor[1]];
+          // console.log('entryVal is: ', entryVal, ', of type ', typeof(entryVal));
+  
+          if(typeof(entryVal) === "string") precision[propName] = calculatePrecision(entryVal, searchString, laxness) || undefined;
+          else if (Array.isArray(entryVal)){ //* if entryVal is an array is an array, (ie-tags), process here instead :)
+            let precisionPart = 0;
+            console.log('line 192')
+            for(let e=0; e < entryVal.length; e++){
+              console.log('entryVal[e] is: ', entryVal[e]);
+              precisionPart += calculatePrecision(entryVal[e], searchString, laxness);
             }
+            precision[propName] = (precisionPart/entryVal.length) || undefined;
           }
-          precision = foundNum / (search_array.length * entry_array.length);
+          if(precision[propName] === undefined){
+            console.log('precision for ', propName, ' is undefined!', '.  returnA is: ', returnA);
+          }
         }
       }
-      else if(typeof(property) === "number"){ //* lolz, another way of doing it ^_^
-        precision = property; //* recieve precision from outside source :)
-      } 
-      newArr.push({ searchFor, returnA, precision, ...entry }); //* only the entries that pass this will count! ^_^
+      searchDisplay && newArr.push({ searchFor: searchDisplay, returnA, precision, ...entry }); //* only the entries that pass this will count! ^_^
+      !searchDisplay && newArr.push({ searchFor, returnA, precision, ...entry }); //* only the entries that pass this will count! ^_^
     }
+    
+    if((sort === undefined)||(desc === undefined)||(sortBy === undefined)){
+      console.log('sort, desc, and/or sortBy is undefined!', sort, desc, sortBy);
+    }
+    //* optional sorting :)
+    sort && desc && newArr.sort((a, b) => b[sortBy] - a[sortBy]);
+    sort && !desc && newArr.sort((a, b) => a[sortBy] - b[sortBy]);
+
     return newArr;
   }
   
-  //* all, tag, author, title, description (This is what we search by)
+  //* all, tags, author, title, description (This is what we search by)
   // user - null, name, null, null, //* this is where we'll search
   // profile - null, creator.name, null, null,
   // playlist - null, creator.name, title, null
-  // story - tag, creator.name, title, description
+  // story - tags, creator.name, title, description
 
   //* when we search by author, we search by author and anything that the author created.  
   //It doesn't determine determine what we return.  that's determined by returnby variables!
 
   if ((searchFor === "all") || (searchFor === "author")) {
     // let fullOr = {};
+    
     const authorOr = orWithRegex(search_chunks, "name");
     
-    const authors = await Modal.find( authorOr ) //* NOTE:  This part DOESN"T actully give anything to return, so to speak!  :D
+    console.log('authorOr is: ', authorOr);
+    
+    const authors = await User.find( authorOr ) //* NOTE:  This part DOESN"T actully give anything to return, so to speak!  :D
       .collation({ locale: "en", strength: 1 })//matches any word of a single search string.
-      .limit(maxDocs)
+      //# .limit(maxDocs)
       .then((doc)=> {
-        return markIt(doc, searchFor, returnA, property, search_string) 
+        return markIt(doc, "name", "user", search_string) 
       });
     authors.sort((a,b)=> b.precision - a.precision);
 
     for(let a=0; a < authors.length; a++){ //* check for (up to) profiles, playlists, and stories
       const author_id = authors[a]._id;
+      const options = { laxness: 1, pris: authors[a].precision, searchDisplay: "author" }
+      console.log('options is: ', options);
       if(author_id && returnProfiles) rPkg.profiles.author =  await Profile.find({ creator: author_id })
         .populate('creator', "username name _id")
-        .then((doc)=> markIt(doc, "profile", "author", ['creator', 'name'], search_string, 1) );
+        .then((doc)=> markIt(doc, ["creator","name"], "profile", search_string, options) ); //# "author"
 
       if(author_id && returnPlaylists) rPkg.playlists.author =  await Playlist.find({ creator: author_id, is_creator_list, is_queue })
         .populate('creator', "username name _id")
-        .then((doc)=> markIt(doc, "playlist", "author", ['creator', 'name'], search_string, 1) );
+        .then((doc)=> markIt(doc, ["creator","name"], "playlist", search_string, options) );
 
       if(author_id && returnStories) rPkg.stories.author =  await Story.find({ creator: author_id, is_creator_list })
         .populate('creator', "username name _id")
         .populate("ratings")
-        .then((doc)=> markIt(doc, "story", "author", ['creator', 'name'], search_string, 1) );
+        .then((doc)=> markIt(doc, ["creator","name"], "story", search_string, options) ); //# ['creator', 'name']
     }
   }
 
   if ((searchFor === "all") || (searchFor === "title")) {
     const playlist_titleOr = orWithRegex(search_chunks, "title", { is_creator_list, is_queue });
     const story_titleOr = orWithRegex(search_chunks, "title", { is_creator_list });
+    // console.log('playlist_titleOr is: ', playlist_titleOr);
+    // console.log('story_titleOr is: ', story_titleOr);
       //* NOTE:  There is currently no case for profile titles, so to speak :)
       if(returnPlaylists) rPkg.playlists.title =  await Playlist.find( playlist_titleOr )
         .collation({ locale: "en", strength: 1 })
         .populate('creator', "username name _id")
-        .limit(maxDocs)
-        .then((doc)=> markIt(doc, "playlist", "title", "title", search_string) );
+        //# .limit(maxDocs)
+        .then((doc)=> markIt(doc, "all", "playlist", search_string) ); //# "title"
 
       if(returnStories) rPkg.stories.title =  await Story.find( story_titleOr )
         .collation({ locale: "en", strength: 1 })
         .populate('creator', "username name _id")
         .populate("ratings")
-        .limit(maxDocs)
-        .then((doc)=> markIt(doc, "story", "title", "title", search_string) );
+        //# .limit(maxDocs)
+        .then((doc)=> markIt(doc, "title", "story", search_string) );
   }
 
   if ((searchFor === "all") || (searchFor === "description")) {
     const descriptionOr = orWithRegex(search_chunks, "description", { is_creator_list });
+    // console.log('descriptionOr is: ', descriptionOr);
+    // console.log('descriptionOr["$or"] is: ', descriptionOr["$or"]);
+    
+
       //* NOTE:  There is currently no case for profile description
       //* NOTE:  There is currently no case for playlist description
       if(returnStories) rPkg.stories.description =  await Story.find( descriptionOr )
         .collation({ locale: "en", strength: 1 })
         .populate('creator', "username name _id")
         .populate("ratings")
-        .limit(maxDocs)
-        .then((doc)=> markIt(doc, "story", "description", "description", search_string) );
+        //# .limit(maxDocs)
+        .then((doc)=> markIt(doc, "description", "story", search_string) );
   }
 
-  if ((searchFor === "all") || (searchFor === "tag")) {
+  if ((searchFor === "all") || (searchFor === "tags")) {
     const descriptionOr = orWithRegex(search_chunks, "description", { is_creator_list });
       //* NOTE:  There is currently no case for profile description
       //* NOTE:  There is currently no case for playlist description
-      if(returnStories) rPkg.stories.tag =  await Story.find( descriptionOr )
+      if(returnStories) rPkg.stories.tags =  await Story.find( descriptionOr )
         .collation({ locale: "en", strength: 1 })
         .populate('creator', "username name _id")
         .populate("ratings")
-        .limit(maxDocs)
-        .then((doc)=> markIt(doc, "story", "tag", "tags", search_string) );
+        //# .limit(maxDocs)
+        .then((doc)=> markIt(doc, "description", "story", search_string) );
   }
 
   //? how precise should I make it?  It's currently at 2.  It's easy to make it one.  But to make it 3 might be quite difficult :)
-  // if(rPkg.stories) rPkg.stories.tag = await Story.find({ tags: { $in: search_tags }, is_creator_list }) //"Congo"
-  if(rPkg.stories) rPkg.stories.tag = await Story.find({ tags: { $in: search_chunks }, is_creator_list }) //"Congo"
+  if(rPkg.stories) rPkg.stories.tags = await Story.find({ tags: { $in: search_chunks }, is_creator_list }) //"Congo"
     .collation({ locale: "en", strength: 1 })
     .populate('creator', "username name")
     .populate("ratings")
-    .then((doc)=> markIt(doc, "story", "tag", "tags", search_string, 2) );
+    .then((doc)=> markIt(doc, "tags", "story", search_string, { laxness: 2 }) );
+    
+
+
+
+
+
+    // if ((searchFor === "all") || (searchFor === "author")) {
+    //   // let fullOr = {};
+    //   const authorOr = orWithRegex(search_chunks, "name");
+      
+    //   const authors = await Modal.find( authorOr ) //* NOTE:  This part DOESN"T actully give anything to return, so to speak!  :D
+    //     .collation({ locale: "en", strength: 1 })//matches any word of a single search string.
+    //     //# .limit(maxDocs)
+    //     .then((doc)=> {
+    //       return markIt(doc, searchFor, returnA, property, search_string) 
+    //     });
+    //   authors.sort((a,b)=> b.precision - a.precision);
+  
+    //   for(let a=0; a < authors.length; a++){ //* check for (up to) profiles, playlists, and stories
+    //     const author_id = authors[a]._id;
+    //     if(author_id && returnProfiles) rPkg.profiles.author =  await Profile.find({ creator: author_id })
+    //       .populate('creator', "username name _id")
+    //       .then((doc)=> markIt(doc, "profile", "author", ['creator', 'name'], search_string, 1) );
+  
+    //     if(author_id && returnPlaylists) rPkg.playlists.author =  await Playlist.find({ creator: author_id, is_creator_list, is_queue })
+    //       .populate('creator', "username name _id")
+    //       .then((doc)=> markIt(doc, "playlist", "author", ['creator', 'name'], search_string, 1) );
+  
+    //     if(author_id && returnStories) rPkg.stories.author =  await Story.find({ creator: author_id, is_creator_list })
+    //       .populate('creator', "username name _id")
+    //       .populate("ratings")
+    //       .then((doc)=> markIt(doc, "story", "author", ['creator', 'name'], search_string, 1) );
+    //   }
+    // }
+  
+    // if ((searchFor === "all") || (searchFor === "title")) {
+    //   const playlist_titleOr = orWithRegex(search_chunks, "title", { is_creator_list, is_queue });
+    //   const story_titleOr = orWithRegex(search_chunks, "title", { is_creator_list });
+    //     //* NOTE:  There is currently no case for profile titles, so to speak :)
+    //     if(returnPlaylists) rPkg.playlists.title =  await Playlist.find( playlist_titleOr )
+    //       .collation({ locale: "en", strength: 1 })
+    //       .populate('creator', "username name _id")
+    //       //# .limit(maxDocs)
+    //       .then((doc)=> markIt(doc, "playlist", "title", "title", search_string) );
+  
+    //     if(returnStories) rPkg.stories.title =  await Story.find( story_titleOr )
+    //       .collation({ locale: "en", strength: 1 })
+    //       .populate('creator', "username name _id")
+    //       .populate("ratings")
+    //       //# .limit(maxDocs)
+    //       .then((doc)=> markIt(doc, "story", "title", "title", search_string) );
+    // }
+  
+    // if ((searchFor === "all") || (searchFor === "description")) {
+    //   const descriptionOr = orWithRegex(search_chunks, "description", { is_creator_list });
+    //     //* NOTE:  There is currently no case for profile description
+    //     //* NOTE:  There is currently no case for playlist description
+    //     if(returnStories) rPkg.stories.description =  await Story.find( descriptionOr )
+    //       .collation({ locale: "en", strength: 1 })
+    //       .populate('creator', "username name _id")
+    //       .populate("ratings")
+    //       //# .limit(maxDocs)
+    //       .then((doc)=> markIt(doc, "story", "description", "description", search_string) );
+    // }
+  
+    // if ((searchFor === "all") || (searchFor === "tag")) {
+    //   const descriptionOr = orWithRegex(search_chunks, "description", { is_creator_list });
+    //     //* NOTE:  There is currently no case for profile description
+    //     //* NOTE:  There is currently no case for playlist description
+    //     if(returnStories) rPkg.stories.tag =  await Story.find( descriptionOr )
+    //       .collation({ locale: "en", strength: 1 })
+    //       .populate('creator', "username name _id")
+    //       .populate("ratings")
+    //       //# .limit(maxDocs)
+    //       .then((doc)=> markIt(doc, "story", "tag", "tags", search_string) );
+    // }
+  
+    // //? how precise should I make it?  It's currently at 2.  It's easy to make it one.  But to make it 3 might be quite difficult :)
+    // if(rPkg.stories) rPkg.stories.tag = await Story.find({ tags: { $in: search_chunks }, is_creator_list }) //"Congo"
+    //   .collation({ locale: "en", strength: 1 })
+    //   .populate('creator', "username name")
+    //   .populate("ratings")
+    //   .then((doc)=> markIt(doc, "story", "tag", "tags", search_string, 2) );
+
+  console.log('req.query is: ', req.query, ', req.params is: ', req.params);
+
 
   // let authors; //* by author (name) in User
   // if ((searchFor === "all") || (searchFor === "author")) {
@@ -293,7 +438,7 @@ const search = async (req, res) => {
     
   //   authors = await Modal.find( authorOr ) //* NOTE:  This DOESN"T actully give anything to return, so to speak!  :D
   //     .collation({ locale: "en", strength: 1 })//matches any word of a single search string.
-  //     .limit(maxDocs)
+  //     //# .limit(maxDocs)
   //     .then((doc)=> {
   //       return markIt(doc, searchFor, returnA, property, search_string) 
   //     });
@@ -318,7 +463,6 @@ const search = async (req, res) => {
 
 //------------ "new code" above ^_^
 
-  console.log('req.query is: ', req.query, ', req.params is: ', req.params);
 
   // let stories_by_author; //* initialize raw variables
   
@@ -405,7 +549,7 @@ const search = async (req, res) => {
   //   .then((doc)=> markIt(doc, "story", "description", "description", search_string) );
   //   // .then((doc)=>{ doc?.length ? markIt(doc, "story", "description", "description", search_string) : doc });
   
-  // console.log('rPkg is: ', rPkg)
+  console.log('rPkg is: ', rPkg)
   //* b) prepare and return matches :)
   res.json(rPkg);
 };
@@ -699,7 +843,7 @@ module.exports = {
 //     const authorOr = orWithRegex(search_chunks, "name");
 //     authors = await Modal.find( authorOr )
 //       .collation({ locale: "en", strength: 1 })//matches any word of a single search string.
-//       .limit(maxDocs)
+//       //# .limit(maxDocs)
 //       .then((doc)=> {
 //         return markIt(doc, searchIn, returnA, property, search_string) 
 //       });
@@ -1032,19 +1176,19 @@ module.exports = {
 //   //@ b) search in mongoose for matches :)
 //   let preciseMatch = await Modal.find({ [property]: search_string }) //find the exact matches... except not case sensitive :)
 //     .collation({ locale: "en", strength: 1 }) //$ appears to be working correctly :)
-//     .limit(maxDocs)
+//     //# .limit(maxDocs)
 //     .then((doc)=> markIt(doc, searchIn, returnA, 1, search_string) );
   
 //   let wordMatch = await Modal.find({ [property]: { $in: search_chunks } }) //$ appears to be working correctly :)
 //     .collation({ locale: "en", strength: 1 })//matches any word of a single search string.
-//     .limit(maxDocs)
+//     //# .limit(maxDocs)
 //     .then((doc)=> markIt(doc, searchIn, returnA, compareProp, search_string) );
 
 //   wordMatch = wordMatch.filter((word)=> uniqueIdsOnly(word, preciseMatch));
   
 //   let anywhereMatch = await Modal.find({ orRegex })
 //     .collation({ locale: "en", strength: 1 })//matches any word of a single search string.
-//     .limit(maxDocs)
+//     //# .limit(maxDocs)
 //     .then((doc)=> {
 //       return markIt(doc, searchIn, returnA, compareProp, search_string) 
 //     });

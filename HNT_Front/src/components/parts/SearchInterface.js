@@ -79,7 +79,7 @@ export default function SearchInterface({ options, playlists, goTo, subscription
 
             if(stories && stories["author"]) displayArr = displayArr.concat(stories["author"]);
             if(stories && stories["title"]) displayArr = displayArr.concat(stories["title"]);
-            if(stories && stories["tag"]) displayArr = displayArr.concat(stories["tag"]);
+            if(stories && stories["tags"]) displayArr = displayArr.concat(stories["tags"]);
             if(stories && stories["description"]) displayArr = displayArr.concat(stories["description"]);
         }
         else {
@@ -87,7 +87,7 @@ export default function SearchInterface({ options, playlists, goTo, subscription
             console.log('82.  section is: ', section);
             if(section && section["author"]) displayArr = displayArr.concat(section["author"]);
             if(section && section["title"]) displayArr = displayArr.concat(section["title"]);
-            if(section && section["tag"]) displayArr = displayArr.concat(section["tag"]);
+            if(section && section["tags"]) displayArr = displayArr.concat(section["tags"]);
             if(section && section["description"]) displayArr = displayArr.concat(section["description"]);
         };
 
@@ -131,7 +131,7 @@ export default function SearchInterface({ options, playlists, goTo, subscription
             // const is_queue: 
             let queries = {
                 // is_q: is_queue, is_cl: is_creator_list,
-                searchIn: style, //* all, tag, author, title, description
+                searchFor: style, //* all, tags, author, title, description
                 r_st: returnStories, r_pro: returnProfiles, r_play: returnPlaylists, 
                 // r_des: returnDescriptions, //? keep ?
                 sc_size: sectionSize, sc_start: sectionStart, sc: sections,  
@@ -159,8 +159,8 @@ export default function SearchInterface({ options, playlists, goTo, subscription
             <button 
                 type="button" 
                 name="searchButton" 
-                value="tag" className = "blurred"
-                onClick={ (e) => prepareDisplayResults(e, results, "tag") }
+                value="tags" className = "blurred"
+                onClick={ (e) => prepareDisplayResults(e, results, "tags") }
             >
                 Tag
             </button>
