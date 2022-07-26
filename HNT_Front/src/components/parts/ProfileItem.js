@@ -5,15 +5,12 @@ export default function ProfileItem({ options = {}, to, IcoArray = [], menu, ent
     const { createdAt, updatedAt, user_id, about_me, image_name, creator, } = entry; //private //* unused: account_id, audio_url, description
     const name = creator ? creator.name : "";
     const subscriptions = options.subscriptions ? options.subscriptions : [];
-    console.log('line 8.  subscriptions are: ', subscriptions)
+    
     const sub2This = subscriptions.filter((sub)=> {
         console.log(sub.creator_id, ' vs ', entry.creator._id, ".  also: ", sub.playlist_id);
          return ((sub.creator_id === entry.creator._id)&&(!sub.playlist_id))
     });
     const subText = sub2This.length ? (sub2This[0].status === "approved" ? "subscribed" : "pending") : "";
-    console.log('10 subscriptions: ', subscriptions)
-    console.log('10 sub2This: ', sub2This)
-    console.log('10 subText: ', subText)
                         //const status = (matchedSub && matchedSub.length) ? matchedSub.status === "approved" ? "subscribed" : "pending" : ""
     const ProfileIcoArray = [{ //* adds profile icon to any profile! :)
         Icon: AccountBoxIcon,

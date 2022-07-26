@@ -13,11 +13,6 @@ export default function PlaylistItem({ options = {}, to, IcoArray = [], menu, en
     }, ...IcoArray];
     const opts = { wrapperClass: "playlistItemWithPre", ...options }
 
-    console.log('17 subscriptions: ', subscriptions)
-    console.log('17 sub2This: ', sub2This)
-    console.log('17 sub2This.status: ', sub2This.status)
-    console.log('17 subText: ', subText)
-
     return(<LinkCapsule to = { to } IcoArray = { PlaylistIcoArray } menu = { menu } 
     classy = "link" options = { opts } entry = { entry } >
         <>
